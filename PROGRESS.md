@@ -116,6 +116,14 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P3 – Domenico Panaro
 
+### 2026-11-17 19:19 · SCAFFOLD · chore(github): prima pubblicazione della storia del progetto su GitHub
+- **Cosa:** creata a mano la pre-release `history-latest` (tag su `develop`) e caricato come allegato il PDF della storia generato da questo branch. Da ora è scaricabile al link fisso indicato nel README.
+- **Perché:** Domenico vuole il PDF già su GitHub, non solo in locale. Il workflow `history.yml` che lo aggiorna esiste solo su questo branch e parte dal primo push su `develop`; fino al merge questa pubblicazione manuale fa da prima versione, poi ogni PR mergiata da chiunque lo ricostruisce e lo sovrascrive (`--clobber`). Nessuno deve rigenerarlo a mano: basta scrivere le voci in `PROGRESS.md`.
+- **File:** nessuno nel repository oltre a questa voce (release GitHub).
+- **Come verificare:** `gh release view history-latest` mostra l'allegato `SideQuest_Group40_History.pdf`; il link del README lo scarica.
+- **Prossimi passi:** dopo il merge controllare che la prima esecuzione del workflow `history` sia verde e aggiorni l'allegato.
+- **Commit/PR:** questo commit.
+
 ### 2026-11-17 19:16 · SCAFFOLD · fix(repo): autore dei commit collegato all'account giusto
 - **Cosa:** i tre commit di questo branch (scaffold diviso, storia del progetto, storia in italiano) erano firmati con `panaro.domenico10@gmail.com`, che GitHub collega all'account `zZerith` e non a `Mynamesdsuper`. Impostato `user.email` del repository a `domenico.panaro1003@gmail.com` (la stessa email dei commit del setup), riscritto l'autore dei tre commit mantenendo le date originali (`git rebase --exec "git commit --amend --author=…"`), aggiornati gli hash citati in questo registro (`70cfef1` → `978dfbe`, `1389bd4` → `ad8cf80`) e fatto un force-push del solo branch `chore/split-scaffold`.
 - **Perché:** l'analisi del repository Git (DOC-GIT) conta i commit per account GitHub: con l'email sbagliata questo lavoro sarebbe risultato di un altro account. Il force-push era sicuro perché il branch non è protetto, non è ancora mergiato e lo usa solo P3; `--force-with-lease` evita di sovrascrivere eventuali push altrui.
