@@ -114,3 +114,11 @@ Newest entries go at the TOP of your own section. Never edit other members' sect
 ## P2 – Matteo Marino
 
 ## P3 – Domenico Panaro
+
+### 2026-11-17 · SCAFFOLD · chore(plan): split the code scaffold into three parallel parts
+- **What:** Replaced the single SCAFFOLD task with SCAFFOLD-BE (P3, 18–21 Nov: backend, shared core, `docker-compose.yml`), SCAFFOLD-FE (P1, 18–22 Nov: Angular frontend, incl. the `core/auth` and `core/realtime` stubs) and SCAFFOLD-E2E (P2, 18–22 Nov: Playwright, fixtures, smoke test, `docker-compose.demo.yml`). SCAFFOLD (P3, 23–24 Nov) now integrates them: `ci.yml`, `sonar.yml`, `setup:dev`, branch protection, README quick start. Checklists and allowed paths per part are in `task-details.json`.
+- **Why:** Every member is active from day one instead of waiting for one person, and each one builds the skeleton of the area they will own (Vincenzo the frontend, Matteo the E2E tests). The SCAFFOLD ID is kept as the integration task, so R01 and SONAR-SETUP keep their blockers unchanged. SCAFFOLD-BE is merged first because it sets the TypeScript/ESLint/Prettier conventions the other two follow.
+- **Files:** `docs/plan/tasks.json`, `docs/plan/task-details.json`, `docs/plan/PLAN.md`, `docs/plan/START-HERE.md`, the three guides, their PDFs, `CLAUDE.md` (status line), `README.md` (status line).
+- **How to verify:** `npm run plan:validate` prints "Plan OK: 50 tasks, no cycles, 0 warning(s)"; `npm run deps -- SCAFFOLD` lists the three parts as blockers.
+- **Next / open points:** after the merge: `npm run issues:sync` (creates the three issues), refresh the SCAFFOLD issue (#2) title, body and status label, set the new issues to `status:ready`. This branch is stacked on PR #47 and is rebased on `develop` once #47 is merged.
+- **Commit/PR:** this commit.

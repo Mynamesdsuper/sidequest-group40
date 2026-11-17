@@ -2,7 +2,7 @@
 
 University project (Università degli Studi di Napoli Federico II, A.A. 2026/27) for two exams with one product: **Ingegneria del Software (INGSW)** and **Tecnologie Web (TECWEB)**. Type: **integrated**. Delivery: **early** (requirements R01–R12). Packages: core R01–R06 + **A** (R07–R09) + **B** (R10–R12).
 
-> **Status: setup only, scaffold pending: task SCAFFOLD.** The repository currently contains documentation, the plan, the personal guides and the planning scripts. There is no application code yet, so there is nothing to run apart from the planning tools below.
+> **Status: setup only, scaffold pending: tasks SCAFFOLD-BE, SCAFFOLD-FE, SCAFFOLD-E2E, then SCAFFOLD.** The repository currently contains documentation, the plan, the personal guides and the planning scripts. There is no application code yet, so there is nothing to run apart from the planning tools below.
 
 ## Group
 

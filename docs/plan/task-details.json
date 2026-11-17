@@ -18,23 +18,79 @@
       "PROGRESS.md"
     ]
   },
+  "SCAFFOLD-BE": {
+    "checklist": [
+      "Implement the backend part of `docs/design/scaffold-spec.md`: §6.1 (8 empty modules with the standard layout and `register(ctx)`), §6.2 (all of `backend/src/shared/`, `app.ts`, `server.ts`, `modules/registry.ts`), §6.5 (migration/seed naming, model registration, ESLint boundary rule for `modules/` with a test), §7.1; infrastructure only, no requirement logic",
+      "`docker-compose.yml` with the `db` service (`postgres:17-alpine`, named volume, healthcheck, port from the root `.env`) and `docker/postgres/init.sql` creating `sidequest_test` (§7.4); root `.env.example`, `.nvmrc` (22), `.prettierrc` (§7.5)",
+      "Set the shared conventions the other two parts follow: TypeScript strict config, ESLint flat config, Prettier",
+      "Local checks green: lint, typecheck, unit and integration tests, `docker compose up -d db`, migrations and empty seeds, `GET /api/v1/health` returns `db: \"up\"`",
+      "Open the PR `chore/scaffold-backend` → `develop`; the module folders have different code owners, so it needs the approval of both Vincenzo and Matteo"
+    ],
+    "files": [
+      "backend/",
+      "docker/",
+      "docker-compose.yml",
+      ".env.example",
+      ".nvmrc",
+      ".prettierrc",
+      "sonar-project.properties"
+    ],
+    "docs": [
+      "docs/design/scaffold-spec.md",
+      "docs/design/module-contracts.md",
+      "docs/decisions/adr/0001-tech-stack.md",
+      "docs/decisions/adr/0006-alignment-with-the-course.md"
+    ]
+  },
+  "SCAFFOLD-FE": {
+    "checklist": [
+      "Implement the frontend part of `docs/design/scaffold-spec.md`: §6.3 and §7.2, plus the ESLint boundary rule for `features/` with a test (§6.5); infrastructure only, no requirement logic",
+      "Angular CLI (latest stable, standalone, routing, SCSS, no SSR), **no UI component library**; `environment.ts` / `environment.development.ts` with `apiBaseUrl` and `socketUrl`",
+      "`core/api` (base URL + HTTP error interceptor → toast), `core/layout` (responsive shell with off-canvas drawer), `shared/ui` components, design tokens in `src/styles/`",
+      "Stubs with TODOs: `core/auth` (`AuthService`, `authInterceptor`, `authGuard`, `adminGuard`, `TODO(R01, P1)`) and `core/realtime` (`RealtimeService`, `TODO(R06A, P2)`)",
+      "`app.routes.ts` written once with every feature lazy-loaded; each feature has `<feature>.routes.ts`, `public-api.ts` and a placeholder page; home page calls `/health` and shows the backend status",
+      "`frontend/Dockerfile` (build, then nginx with the SPA fallback)",
+      "Follow the TypeScript/ESLint/Prettier conventions of SCAFFOLD-BE (rebase on it once merged)",
+      "Local checks green: lint, unit tests if any, production build; home page shows \"backend ok\" with the backend running",
+      "Open the PR `chore/scaffold-frontend` → `develop`; it needs the approval of Matteo (P1/P2 paths) and Domenico (P3 feature folders)"
+    ],
+    "files": [
+      "frontend/"
+    ],
+    "docs": [
+      "docs/design/scaffold-spec.md",
+      "docs/decisions/adr/0006-alignment-with-the-course.md"
+    ]
+  },
+  "SCAFFOLD-E2E": {
+    "checklist": [
+      "Implement the E2E part of `docs/design/scaffold-spec.md`: §7.3 (`@playwright/test`, projects `desktop-chromium` 1280×800 and `mobile-chromium` 390×844, `webServer` for backend with `NODE_ENV=test` and the frontend dev server, `globalSetup` calling `POST /api/v1/__test__/reset`)",
+      "`fixtures/`: `api.ts`, `auth.ts` (`loginAs` stub, `TODO(R01, P1)`), `clock.ts` (`setServerClockOffset`), `users.ts` (demo users of §7.6); `tests/smoke.spec.ts`",
+      "`docker-compose.demo.yml`: full stack (db + backend + frontend) built from the two Dockerfiles; check that it builds",
+      "Config and fixtures can be written from day one; the smoke test runs only once SCAFFOLD-BE and SCAFFOLD-FE are merged: rebase, then make it green",
+      "Open the PR `chore/scaffold-e2e` → `develop` after the other two parts are merged; it needs the approval of Domenico"
+    ],
+    "files": [
+      "e2e/",
+      "docker-compose.demo.yml"
+    ],
+    "docs": [
+      "docs/design/scaffold-spec.md",
+      "docs/tecweb/e2e-catalogue.md"
+    ]
+  },
   "SCAFFOLD": {
     "checklist": [
-      "Implement `docs/design/scaffold-spec.md` exactly: §6.1–§6.3, §6.5 and §7 of the setup prompt; infrastructure only, no requirement logic, stubs only where the spec says so",
+      "Integrate the three parts (SCAFFOLD-BE, SCAFFOLD-FE, SCAFFOLD-E2E) and check the whole of `docs/design/scaffold-spec.md` is covered",
       "Create `ci.yml` (jobs `backend`, `frontend`, `e2e`, `plan`) and `sonar.yml`, then delete `plan.yml`",
-      "Local checks green: lint, typecheck, unit and integration tests, frontend production build, E2E smoke test, `docker compose up -d db`, migrations and empty seeds",
-      "Open the PR from `chore/scaffold` to `develop`; it touches shared paths, so it needs the approval of Vincenzo or Matteo",
+      "Root `package.json`: `setup:dev` (installs backend, frontend, e2e and copies the `.env.example` files) and `test:all`",
+      "Local checks green end to end: `npm run setup:dev`, `docker compose up -d db`, migrations and empty seeds, backend tests, frontend build, E2E smoke test",
+      "Open the PR `chore/scaffold` → `develop`; it touches shared paths, so it needs the approval of Vincenzo or Matteo",
       "After the merge, update the branch protection of `develop` and `main` to require `[\"backend\",\"frontend\",\"e2e\",\"plan\"]`, then read it back",
       "Update the README quick start and the status line (\"scaffold ready\")"
     ],
     "files": [
-      "backend/",
-      "frontend/",
-      "e2e/",
-      "docker/",
-      "docker-compose*.yml",
       ".github/workflows/",
-      "sonar-project.properties",
       "package.json",
       "README.md"
     ],

@@ -6,7 +6,7 @@ Read this file at the start of every session. Speak the member's language (the t
 - **SideQuest**: a web app where users create and play missions (ordinary or secret-timed), explore them on a map, invite others, form teams and follow live updates.
 - Group **40** · Federico II · A.A. 2026/27 · **integrated** project for INGSW + TECWEB · early delivery (R01–R12: core R01–R06 + package A R07–R09 + package B R10–R12).
 - Stack: Node.js 22 + TypeScript + Express 5 + Sequelize 6 + PostgreSQL 17 + Socket.IO; Angular (no UI library) + Leaflet/OSM; Jest/supertest + Playwright; Docker; GitHub Actions + SonarCloud.
-- Monorepo: `backend/`, `frontend/`, `e2e/`, `docs/`, `scripts/`, `docker/`, `.github/`. **Current status: setup only; the code scaffold is the task SCAFFOLD (P3).**
+- Monorepo: `backend/`, `frontend/`, `e2e/`, `docs/`, `scripts/`, `docker/`, `.github/`. **Current status: setup only; the code scaffold is split into SCAFFOLD-BE (P3), SCAFFOLD-FE (P1) and SCAFFOLD-E2E (P2), integrated by SCAFFOLD (P3).**
 - Plan: `docs/plan/PLAN.md`. Progress log: `PROGRESS.md`. Task dependencies: `npm run deps`.
 
 ## 2. Who owns what
