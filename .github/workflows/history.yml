@@ -1,7 +1,7 @@
 name: history
 
-# Rebuilds the project history PDF (docs/history/overview.md + PROGRESS.md in chronological order +
-# commit history + task status) after every push to develop, and publishes it as the asset of the
+# Rebuilds the project history PDF, in Italian (docs/history/overview.md + PROGRESS.md in chronological
+# order + commit history + task status) after every push to develop, and publishes it as the asset of the
 # pre-release `history-latest`, so the link never changes.
 on:
   push:
@@ -19,6 +19,8 @@ concurrency:
 jobs:
   history:
     runs-on: ubuntu-latest
+    env:
+      TZ: Europe/Rome # commit dates in the PDF in Italian local time, like the PROGRESS.md entries
     steps:
       - uses: actions/checkout@v4
         with:
@@ -38,7 +40,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
       - name: Publish to the pre-release history-latest
         run: |
-          gh release view history-latest >/dev/null 2>&1 || gh release create history-latest --prerelease --target develop --title "Project history (latest)" --notes "Rebuilt automatically on every push to develop by .github/workflows/history.yml."
+          gh release view history-latest >/dev/null 2>&1 || gh release create history-latest --prerelease --target develop --title "Storia del progetto (ultima versione)" --notes "Ricostruita automaticamente a ogni push su develop da .github/workflows/history.yml."
           gh release upload history-latest docs/history/SideQuest_Group40_History.pdf --clobber
         env:
           GH_TOKEN: ${{ github.token }}

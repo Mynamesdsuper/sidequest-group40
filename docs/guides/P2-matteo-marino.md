@@ -176,19 +176,19 @@ The coordinator (Domenico, P3) can send instructions to anyone as GitHub issues 
 Add an entry at the top of **your** section after **every** progress step. Format:
 
 ```markdown
-### 2026-11-25 14:30 · R01 · feat: JWT login and logout
-- **What:** what was done, in 1–3 lines.
-- **Why:** the reason or decision behind it (link the assumption A-xx, ADR or issue if relevant).
-- **Files:** the main files or folders touched.
-- **How to verify:** the command, test or screen that proves it works.
-- **Next / open points:** what remains, blockers, questions for the team (or "none").
-- **Commit/PR:** short hash or #PR (add it when known).
+### 2026-11-25 14:30 · R01 · feat: login e logout con JWT
+- **Cosa:** cosa è stato fatto, in 1–3 righe.
+- **Perché:** il motivo o la decisione (con il riferimento all'assunzione A-xx, all'ADR o alla issue, se c'è).
+- **File:** i file o le cartelle principali toccati.
+- **Come verificare:** il comando, il test o la schermata che dimostra che funziona.
+- **Prossimi passi:** cosa resta, blocchi, domande per il team (oppure "nessuno").
+- **Commit/PR:** hash breve o #PR (da aggiungere quando si conosce).
 ```
 
 - An entry is added after every progress step: each completed sub-step, each commit that changes behaviour, each decision, each fix, each merged PR. Several entries per day are normal; a day of work with no entry is not.
 - Each person writes only in their own section, always at the top of it. If a merge conflict happens anyway, keep both entries.
 - The entry is committed in the same commit as the work it describes, never in a separate PR.
-- Write in English, concise and concrete; explain the *why*.
+- Write the entries **in Italian** (the only exception to "everything in the repository is in English"), concise and concrete; explain the *why*. The title always starts with date **and time** (`YYYY-MM-DD HH:MM`): the project history orders the entries by it.
 - When a task is closed, the last entry says "DONE" and links the merged PR.
 
 ## 7. Definition of Done
@@ -270,7 +270,7 @@ Copy a prompt into Claude Code (started inside your clone of the repository). Th
 
 ```text
 I am Matteo Marino (P2) of Group 40, working on the SideQuest project (integrated INGSW + TECWEB, Federico II).
-Repository: https://github.com/Mynamesdsuper/sidequest-group40 — my GitHub login is reverinn. Speak Italian with me; write everything in the repo in English.
+Repository: https://github.com/Mynamesdsuper/sidequest-group40 — my GitHub login is reverinn. Speak Italian with me; write everything in the repo in English, except the PROGRESS.md entries, which are in Italian.
 This is my first session on this computer. Do the following, in order, and stop where I say to stop:
 1. Check that git, the GitHub CLI (logged in as reverinn), Node.js 22 LTS + npm, Docker (daemon running) are installed. If anything is missing, give me the exact install commands for my OS and wait for me.
 2. If I have not accepted the collaborator invitation yet, tell me to accept it at https://github.com/notifications and wait.
@@ -285,7 +285,7 @@ Rules for this and every session: follow CLAUDE.md; prefer what was taught in th
 ### Starter prompt 2 — every work session on a task
 
 ```text
-I am Matteo Marino (P2), Group 40, SideQuest. Speak Italian with me; write everything in the repo in English. Today I want to work on task <TASK-ID>.
+I am Matteo Marino (P2), Group 40, SideQuest. Speak Italian with me; write everything in the repo in English, except the PROGRESS.md entries, which are in Italian. Today I want to work on task <TASK-ID>.
 1. git fetch, switch to develop, pull. Run npm run deps -- <TASK-ID>. If it is BLOCKED, stop, tell me which blockers are still open, and propose my next READY task (npm run deps -- --mine P2).
 2. Read the issue (gh issue list --label task:<TASK-ID> then gh issue view), CLAUDE.md, the recent entries of PROGRESS.md (all sections), the requirement in docs/reference/requirements.md, the related assumptions, the data model, the module contracts, my module's OpenAPI fragment, and ONLY the public API (index.ts / public-api.ts) of other modules I depend on.
 3. If the branch does not exist yet, create it from develop: feature/<task-id-lowercase>-<short-slug> (docs/... for documentation tasks). Add the label status:in-progress to the issue (remove status:ready).

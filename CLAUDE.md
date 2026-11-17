@@ -1,6 +1,6 @@
 # CLAUDE.md – SideQuest, Group 40
 
-Read this file at the start of every session. Speak the member's language (the team speaks Italian); **everything written into the repository is in English**.
+Read this file at the start of every session. Speak the member's language (the team speaks Italian); **everything written into the repository is in English**, except the `PROGRESS.md` entries and the project history (`docs/history/`), which are in Italian.
 
 ## 1. The project in 5 lines
 - **SideQuest**: a web app where users create and play missions (ordinary or secret-timed), explore them on a map, invite others, form teams and follow live updates.
@@ -77,23 +77,23 @@ Definition of Done: `CONTRIBUTING.md` and `docs/plan/PLAN.md` §7. Unit tests fo
 Entry format (one entry per progress step, newest first inside your section):
 
 ```markdown
-### 2026-11-25 14:30 · R01 · feat: JWT login and logout
-- **What:** what was done, in 1–3 lines.
-- **Why:** the reason or decision behind it (link the assumption A-xx, ADR or issue if relevant).
-- **Files:** the main files or folders touched.
-- **How to verify:** the command, test or screen that proves it works.
-- **Next / open points:** what remains, blockers, questions for the team (or "none").
-- **Commit/PR:** short hash or #PR (add it when known).
+### 2026-11-25 14:30 · R01 · feat: login e logout con JWT
+- **Cosa:** cosa è stato fatto, in 1–3 righe.
+- **Perché:** il motivo o la decisione (con il riferimento all'assunzione A-xx, all'ADR o alla issue, se c'è).
+- **File:** i file o le cartelle principali toccati.
+- **Come verificare:** il comando, il test o la schermata che dimostra che funziona.
+- **Prossimi passi:** cosa resta, blocchi, domande per il team (oppure "nessuno").
+- **Commit/PR:** hash breve o #PR (da aggiungere quando si conosce).
 ```
 
 Rules:
 - An entry is added **after every progress step**: every completed sub-step of a task, every commit that changes behaviour, every decision, every fix, every merged PR. Several entries per day are normal; a day of work with no entry is not.
 - Each person writes **only in their own section**, always at the top of it, so that parallel branches do not conflict. If a merge conflict happens anyway in `PROGRESS.md`, keep both entries.
 - The entry is committed **in the same commit** as the work it describes (or immediately after, in the same branch), never in a separate PR.
-- Write in English, concise and concrete; explain the *why*, not only the *what*.
+- Write the entries **in Italian** (the only exception to "everything in the repository is in English"), concise and concrete; explain the *why*, not only the *what*. The title always starts with date **and time** (`YYYY-MM-DD HH:MM`): the project history orders the entries by it.
 - When a task is closed, the last entry says "DONE" and links the merged PR.
 - `PROGRESS.md` is a shared file (CODEOWNERS: all three), but appending in your own section never requires the contract-change process.
-- **Project history PDF.** `npm run history` builds `docs/history/SideQuest_Group40_History.pdf`: the hand-written `docs/history/overview.md`, then every `PROGRESS.md` entry of all sections in chronological order (by the commit that recorded it), the commit history and the task status. The workflow `history.yml` rebuilds and publishes it after every push to `develop` (pre-release `history-latest`). Never commit the generated files. Because your entries become this document, write the **Why** so that a teammate can understand and defend the step at the exam. The coordinator updates the "Phases so far" section of the overview at every milestone.
+- **Project history PDF (in Italian).** `npm run history` builds `docs/history/SideQuest_Group40_History.pdf`: the hand-written `docs/history/overview.md` (Italian), then every `PROGRESS.md` entry of all sections in chronological order (by the date and time in the entry title), the commit history and the task status. The workflow `history.yml` rebuilds and publishes it after every push to `develop` (pre-release `history-latest`). Never commit the generated files. Because your entries become this document, write the **Why** so that a teammate can understand and defend the step at the exam. The coordinator updates the "Le fasi finora" section of the overview at every milestone.
 
 ## 10. Where to find things
 | What | Where |

@@ -36,7 +36,7 @@ Shared code and contracts (`backend/src/shared/`, `docs/design/`, `docs/decision
 - CI green. PR approved by your reviewer buddy. Squash-merged with `Closes #<issue>`.
 
 ## Progress log
-Add an entry at the top of **your** section of `PROGRESS.md` after every progress step, in the same commit as the work. Format and rules: `CLAUDE.md` §9b. The entries are also the content of the project history PDF (`npm run history`, rebuilt automatically after every merge into `develop`), so explain the *why*.
+Add an entry at the top of **your** section of `PROGRESS.md` after every progress step, in the same commit as the work, **in Italian** and with date and time in the title. Format and rules: `CLAUDE.md` §9b. The entries are also the content of the project history PDF (in Italian; `npm run history`, rebuilt automatically after every merge into `develop`), so explain the *why*.
 
 ## Course alignment
 Use what was taught by default. A new dependency needs a written rationale in `docs/decisions/adr/0006-alignment-with-the-course.md`, added through a contract-change PR. No UI component library.

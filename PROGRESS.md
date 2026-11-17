@@ -1,113 +1,114 @@
-# SideQuest – Progress log
+# SideQuest – Registro di avanzamento
 
-How to use this file: see "Progress log rules" in CLAUDE.md.
-Newest entries go at the TOP of your own section. Never edit other members' sections.
+Come usare questo file: vedi "Progress log rules" in `CLAUDE.md` (§9b). Le voci si scrivono **in italiano**.
+Le voci più recenti vanno IN CIMA alla propria sezione. Non modificare mai le sezioni degli altri membri.
+Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia del progetto ordina le voci in base a quelle.
 
-## Setup (laptop session)
+## Setup (sessione sul laptop)
 
-### 2026-11-17 · SETUP · feat(scripts): coordinator directives (`npm run directive`)
-- **What:** Added `scripts/directive.mjs`: the coordinator (P3) creates GitHub issues labelled `type:directive` for P1, P2, P3 or all (title, body, due date, related task, priority; `--dry-run`, `--list`). `deps --mine Px` now ends with the open directives. Labels `type:directive` and `priority:high` created. `CLAUDE.md` (new section 3b) makes every member's Claude Code session list and honour them; only issues authored by the coordinator count, because the repository is public. Guides, Start-here page, CONTRIBUTING and an issue template updated; PDFs regenerated.
-- **Why:** Domenico wants to assign instructions to everyone from his own session. Issues give notification, assignment, history and a place to acknowledge, with no new tool; the author check blocks instruction injection from outsiders. Directives cannot override ownership, gating or security rules.
-- **Files:** `scripts/directive.mjs`, `scripts/deps.mjs`, `scripts/create-issues.mjs`, `package.json`, `CLAUDE.md`, `CONTRIBUTING.md`, `.github/ISSUE_TEMPLATE/directive.md`, `docs/guides/*`, `docs/plan/START-HERE.md`.
-- **How to verify:** `npm run directive -- --to P3 --title test --dry-run`; created and closed two self-test issues (#49, #50); `npm run directive -- --list P3` listed #50 (the GitHub search index lags a few seconds).
-- **Next / open points:** works for everyone only after PR #47 is merged (the scripts and CLAUDE.md are on that branch).
+### 2026-11-17 18:32 · SETUP · feat(scripts): direttive del coordinatore (`npm run directive`)
+- **Cosa:** aggiunto `scripts/directive.mjs`: il coordinatore (P3) crea issue GitHub con label `type:directive` per P1, P2, P3 o tutti (titolo, testo, scadenza, task collegato, priorità; opzioni `--dry-run` e `--list`). `deps --mine Px` ora termina con l'elenco delle direttive aperte. Create le label `type:directive` e `priority:high`. `CLAUDE.md` (nuova sezione 3b) fa sì che la sessione Claude Code di ogni membro le elenchi e le rispetti; contano solo le issue scritte dal coordinatore, perché il repository è pubblico. Aggiornati guide, pagina Start-here, CONTRIBUTING e un template di issue; PDF rigenerati.
+- **Perché:** Domenico vuole assegnare istruzioni a tutti dalla propria sessione. Le issue danno notifica, assegnazione, storico e un posto dove confermare, senza strumenti nuovi; il controllo sull'autore impedisce a estranei di iniettare istruzioni. Le direttive non possono scavalcare le regole di ownership, di gating o di sicurezza.
+- **File:** `scripts/directive.mjs`, `scripts/deps.mjs`, `scripts/create-issues.mjs`, `package.json`, `CLAUDE.md`, `CONTRIBUTING.md`, `.github/ISSUE_TEMPLATE/directive.md`, `docs/guides/*`, `docs/plan/START-HERE.md`.
+- **Come verificare:** `npm run directive -- --to P3 --title test --dry-run`; create e chiuse due issue di prova (#49, #50); `npm run directive -- --list P3` ha elencato la #50 (l'indice di ricerca di GitHub ha qualche secondo di ritardo).
+- **Prossimi passi:** funziona per tutti solo dopo il merge della PR #47 (gli script e `CLAUDE.md` sono su quel branch).
 - **Commit/PR:** PR #47.
 
-### 2026-11-17 · SETUP · docs(plan): Start-here page (what each member does now) + PDF
-- **What:** Added `docs/plan/START-HERE.md` and its PDF: this week's actions for everyone (invitation, tools, Starter prompt 1, review of PR #47, kickoff), the first tasks and dates of P1, P2 and P3, the kickoff agenda (Mon 23 Nov), key dates, rules and commands. Linked from the README.
-- **Why:** Domenico asked for a short hand-over document to give to Vincenzo and Matteo so that all three can start in the right order.
-- **Files:** `docs/plan/START-HERE.md`, `docs/plan/SideQuest_Group40_Start_Here.pdf`, `README.md`.
-- **How to verify:** open the PDF (5 pages); the dates match `npm run deps -- --all`.
-- **Next / open points:** merge PR #47 after a code-owner approval.
+### 2026-11-17 18:12 · SETUP · docs(plan): pagina Start-here (cosa fa ogni membro adesso) + PDF
+- **Cosa:** aggiunti `docs/plan/START-HERE.md` e il suo PDF: le azioni di questa settimana per tutti (invito, strumenti, Starter prompt 1, review della PR #47, kickoff), i primi task e le date di P1, P2 e P3, l'agenda del kickoff (lunedì 23 novembre), le date chiave, le regole e i comandi. Collegata dal README.
+- **Perché:** Domenico ha chiesto un breve documento di passaggio di consegne da dare a Vincenzo e Matteo, così che tutti e tre partano nell'ordine giusto.
+- **File:** `docs/plan/START-HERE.md`, `docs/plan/SideQuest_Group40_Start_Here.pdf`, `README.md`.
+- **Come verificare:** aprire il PDF (5 pagine); le date coincidono con `npm run deps -- --all`.
+- **Prossimi passi:** merge della PR #47 dopo l'approvazione di un code owner.
 - **Commit/PR:** PR #47.
 
-### 2026-11-17 · CLEANUP · chore(plan): add task CLEANUP before REL-RC
-- **What:** Added the task `CLEANUP` (P3, 2027-02-28, milestone M7, blocked by STABILIZE, DOC-TRACE, DOC-GIT) and made `REL-RC` depend on it. It removes the Claude Code traces from the final repository: files (`CLAUDE.md`, references in README, CONTRIBUTING, plan, guides, templates) and history (commit trailers). Updated `tasks.json`, `task-details.json`, `PLAN.md` (release checklist, risks, graph, Gantt, P3 plan), the P3 guide and the PDFs.
-- **Why:** Domenico wants the delivered product free of those traces, but the team needs `CLAUDE.md` and the starter prompts until the end, and a history rewrite needs a force-push (branch protection lifted) and a re-clone by everyone: so it is done once, late, after DOC-GIT (decision: option A).
-- **Files:** `docs/plan/tasks.json`, `docs/plan/task-details.json`, `docs/plan/PLAN.md`, `docs/plan/*.pdf`, `docs/guides/P3-domenico-panaro.*`.
-- **How to verify:** `node scripts/validate-plan.mjs` → "Plan OK: 47 tasks, no cycles, 0 warning(s)"; `npm run deps -- REL-RC` lists CLEANUP among the blockers.
-- **Next / open points:** needs the issue created on GitHub (`npm run issues:sync -- --refresh-bodies`) and an approval from Vincenzo or Matteo to merge this PR (branch protection).
-- **Commit/PR:** this PR.
+### 2026-11-17 18:06 · CLEANUP · chore(plan): aggiunto il task CLEANUP prima di REL-RC
+- **Cosa:** aggiunto il task `CLEANUP` (P3, 2027-02-28, milestone M7, bloccato da STABILIZE, DOC-TRACE, DOC-GIT) e reso `REL-RC` dipendente da esso. Rimuove dal repository finale le tracce di Claude Code: i file (`CLAUDE.md`, i riferimenti in README, CONTRIBUTING, piano, guide, template) e la storia (i trailer dei commit). Aggiornati `tasks.json`, `task-details.json`, `PLAN.md` (checklist di rilascio, rischi, grafo, Gantt, piano di P3), la guida P3 e i PDF.
+- **Perché:** Domenico vuole consegnare un prodotto senza quelle tracce, ma il team ha bisogno di `CLAUDE.md` e degli starter prompt fino alla fine; inoltre riscrivere la storia richiede un force-push (togliendo temporaneamente la branch protection) e un nuovo clone da parte di tutti: quindi si fa una volta sola, tardi, dopo DOC-GIT (decisione: opzione A).
+- **File:** `docs/plan/tasks.json`, `docs/plan/task-details.json`, `docs/plan/PLAN.md`, `docs/plan/*.pdf`, `docs/guides/P3-domenico-panaro.*`.
+- **Come verificare:** `node scripts/validate-plan.mjs` → "Plan OK: 47 tasks, no cycles, 0 warning(s)"; `npm run deps -- REL-RC` elenca CLEANUP tra i blocchi.
+- **Prossimi passi:** creare la issue su GitHub (`npm run issues:sync -- --refresh-bodies`) e ottenere l'approvazione di Vincenzo o Matteo per fare il merge di questa PR (branch protection).
+- **Commit/PR:** PR #47.
 
-### 2026-11-17 · SETUP · chore(repo): final verification and hand-over (setup session DONE)
-- **What:** Ran the §13 checks. Evidence below.
-  1. Scope: fresh clone of `develop` in a temp folder → `ls backend frontend e2e docker` = "No such file or directory" for all four; `git ls-files | grep -E "\.ts$|ci\.yml|sonar\.yml|Dockerfile|docker-compose|\.env"` = empty; `.github/workflows` = `deps-labeler.yml`, `plan.yml`. In the same clone `npm ci` → "found 0 vulnerabilities" and `npm run deps -- --mine P1` runs (next task S0-ASSUMPTIONS).
+### 2026-11-17 17:59 · SETUP · chore(repo): verifica finale e passaggio di consegne (sessione di setup CONCLUSA)
+- **Cosa:** eseguiti i controlli del §13 del prompt di setup. Evidenze:
+  1. Perimetro: clone pulito di `develop` in una cartella temporanea → `ls backend frontend e2e docker` = "No such file or directory" per tutte e quattro; `git ls-files | grep -E "\.ts$|ci\.yml|sonar\.yml|Dockerfile|docker-compose|\.env"` = vuoto; `.github/workflows` = `deps-labeler.yml`, `plan.yml`. Nello stesso clone `npm ci` → "found 0 vulnerabilities" e `npm run deps -- --mine P1` funziona (prossimo task S0-ASSUMPTIONS).
   2. `node scripts/validate-plan.mjs` → "Plan OK: 46 tasks, no cycles, 0 warning(s)".
-  3. `node scripts/deps.mjs --all` → 1 DONE (SETUP), 5 READY (SCAFFOLD, S0-ASSUMPTIONS, S0-DATAMODEL, S0-API, S0-EVENTS), 40 BLOCKED with their blockers (e.g. R01 ← SCAFFOLD); `deps R01` exits 1.
-  4. `plan` workflow: completed/success on `develop`; `deps-labeler` ran on closing the SETUP issue: success.
-  5. `docs/design/scaffold-spec.md` generated verbatim from the prompt: §4 + §4.1, §6.1–§6.3, §6.5, §7, §9 step 7 ci/sonar excerpt, SCAFFOLD checklist.
-  6. GitHub: 9 milestones, 77 labels created, 46 issues with "Blocked by" links and a status label each, 2 collaborator invitations pending, `develop` default, board https://github.com/users/Mynamesdsuper/projects/1. Branch protection is applied AFTER this commit (nothing can be pushed afterwards, even by the admin), so its read-back is not in this log: see the hand-over message and run `gh api repos/Mynamesdsuper/sidequest-group40/branches/develop/protection`.
-  7. PDFs rasterized and checked: the plan PDF has the dependency graph (landscape page) and the Gantt chart, both rendered.
-  8. `git log -p | grep -i -E "secret|password|token"` → only documentation text (rules, examples); no real secrets.
-- **Why:** §13 of the setup prompt: prove the setup is complete and in scope before handing over.
-- **Files:** `PROGRESS.md` only.
-- **How to verify:** repeat the commands above on a fresh clone.
-- **Next / open points:** (a) Matteo (`reverinn`) and Vincenzo (`vincenzolubrano05`) must accept the collaborator invitations; (b) send them their guide PDFs; (c) Sprint 0 kickoff call Mon 23 Nov; (d) P3 starts SCAFFOLD with Starter prompt 1 then 2; (e) SonarCloud later (SONAR-SETUP). Deviations: `task-details.json` and `scripts/lib.mjs` added; PLAN/guides generated by an unversioned throwaway script; `git push` needed a local credential helper because a second GitHub account was cached; board item for issue #24 is attached but not listed by `gh project item-list` (a listing glitch, not blocking).
-- **Commit/PR:** this commit.
+  3. `node scripts/deps.mjs --all` → 1 DONE (SETUP), 5 READY (SCAFFOLD, S0-ASSUMPTIONS, S0-DATAMODEL, S0-API, S0-EVENTS), 40 BLOCKED con i loro blocchi (es. R01 ← SCAFFOLD); `deps R01` esce con codice 1.
+  4. Workflow `plan`: completato con successo su `develop`; `deps-labeler` eseguito alla chiusura della issue SETUP: successo.
+  5. `docs/design/scaffold-spec.md` generato copiando alla lettera il prompt: §4 + §4.1, §6.1–§6.3, §6.5, §7, estratto ci/sonar del §9 passo 7, checklist di SCAFFOLD.
+  6. GitHub: 9 milestone, 77 label, 46 issue ciascuna con i link "Blocked by" e una label di stato, 2 inviti da collaboratore in attesa, `develop` branch di default, board https://github.com/users/Mynamesdsuper/projects/1. La branch protection è applicata DOPO questo commit (dopo nessuno può più fare push diretti, nemmeno l'admin), quindi la sua rilettura non è in questo registro: vedi il messaggio di consegna ed esegui `gh api repos/Mynamesdsuper/sidequest-group40/branches/develop/protection`.
+  7. PDF rasterizzati e controllati: il PDF del piano contiene il grafo delle dipendenze (pagina orizzontale) e il diagramma di Gantt, entrambi renderizzati.
+  8. `git log -p | grep -i -E "secret|password|token"` → solo testo di documentazione (regole, esempi); nessun segreto reale.
+- **Perché:** §13 del prompt di setup: dimostrare che il setup è completo e nel perimetro prima di passare le consegne.
+- **File:** solo `PROGRESS.md`.
+- **Come verificare:** ripetere i comandi sopra su un clone pulito.
+- **Prossimi passi:** (a) Matteo (`reverinn`) e Vincenzo (`vincenzolubrano05`) devono accettare gli inviti da collaboratore; (b) mandare loro i PDF delle guide; (c) call di kickoff dello Sprint 0 lunedì 23 novembre; (d) P3 inizia SCAFFOLD con lo Starter prompt 1 e poi il 2; (e) SonarCloud più avanti (SONAR-SETUP). Scostamenti: aggiunti `task-details.json` e `scripts/lib.mjs`; PLAN e guide generati da uno script usa-e-getta non versionato; `git push` ha richiesto un credential helper locale perché in cache c'era un secondo account GitHub; l'elemento della board per la issue #24 è collegato ma non compare in `gh project item-list` (un difetto di elencazione, non bloccante).
+- **Commit/PR:** questo commit.
 
-### 2026-11-17 · SETUP · chore(github): labels, milestones, issues, collaborators, board
-- **What:** Pushed `main`, created `develop` (default branch), set repo settings (wiki off, squash + merge commit on, rebase off, auto-delete branches, update-branch suggestion). `create-issues.mjs` created 77 labels, 9 milestones and 46 issues (idempotent: a second run created nothing), invited the 2 collaborators, created the public project board with fields Owner and Window end, closed the SETUP issue and synced status labels.
-- **Why:** The plan must live in GitHub so `deps.mjs` can gate the work; Domenico's issues are already assigned to him, the others self-assign via Starter prompt 1.
-- **Files:** none in the repo (GitHub configuration); `docs/plan/task-details.json` feeds the issue bodies.
-- **How to verify:** `npm run deps -- --all`; `gh issue list --label task:R01`.
-- **Next / open points:** final verification and branch protection.
-- **Commit/PR:** the verification commit below.
+### 2026-11-17 17:59 · SETUP · chore(github): label, milestone, issue, collaboratori, board
+- **Cosa:** push di `main`, creato `develop` (branch di default), impostazioni del repo (wiki disattivata, squash e merge commit attivi, rebase disattivato, cancellazione automatica dei branch, suggerimento di aggiornare i branch). `create-issues.mjs` ha creato 77 label, 9 milestone e 46 issue (idempotente: una seconda esecuzione non ha creato nulla), invitato i 2 collaboratori, creato la board pubblica del progetto con i campi Owner e Window end, chiuso la issue SETUP e sincronizzato le label di stato.
+- **Perché:** il piano deve vivere su GitHub perché `deps.mjs` possa regolare l'avvio dei lavori (gating); le issue di Domenico sono già assegnate a lui, gli altri se le auto-assegnano con lo Starter prompt 1.
+- **File:** nessuno nel repo (configurazione GitHub); `docs/plan/task-details.json` alimenta il testo delle issue.
+- **Come verificare:** `npm run deps -- --all`; `gh issue list --label task:R01`.
+- **Prossimi passi:** verifica finale e branch protection.
+- **Commit/PR:** il commit di verifica sopra.
 
-### 2026-11-17 · SETUP · ci: CODEOWNERS, PR and issue templates, plan and deps-labeler workflows
-- **What:** Added `CODEOWNERS` (every path has an owner plus a reviewer buddy; file-level exceptions last), the PR template, three issue templates, and only two workflows: `plan.yml` (job `plan` runs `validate-plan.mjs`) and `deps-labeler.yml` (recomputes `status:blocked`/`status:ready` when an issue is closed or reopened).
-- **Why:** Ownership enforcement and the gating rule must work from day one. `ci.yml` and `sonar.yml` are NOT created: they belong to the task SCAFFOLD (scope rule §0.1).
-- **Files:** `.github/CODEOWNERS`, `.github/pull_request_template.md`, `.github/ISSUE_TEMPLATE/*`, `.github/workflows/plan.yml`, `.github/workflows/deps-labeler.yml`.
-- **How to verify:** `ls .github/workflows` shows exactly two files; after the push, the `plan` run is green on GitHub.
-- **Next / open points:** push `main`, create `develop`, repo settings, labels, milestones, issues, collaborators, board, protection.
-- **Commit/PR:** this commit.
+### 2026-11-17 17:42 · SETUP · ci: CODEOWNERS, template di PR e issue, workflow plan e deps-labeler
+- **Cosa:** aggiunti `CODEOWNERS` (ogni percorso ha un owner più un revisore di riferimento; le eccezioni sui singoli file in fondo), il template delle PR, tre template di issue e solo due workflow: `plan.yml` (il job `plan` esegue `validate-plan.mjs`) e `deps-labeler.yml` (ricalcola `status:blocked`/`status:ready` quando una issue viene chiusa o riaperta).
+- **Perché:** il controllo dell'ownership e la regola di gating devono funzionare dal primo giorno. `ci.yml` e `sonar.yml` NON sono stati creati: appartengono al task SCAFFOLD (regola di perimetro §0.1).
+- **File:** `.github/CODEOWNERS`, `.github/pull_request_template.md`, `.github/ISSUE_TEMPLATE/*`, `.github/workflows/plan.yml`, `.github/workflows/deps-labeler.yml`.
+- **Come verificare:** `ls .github/workflows` mostra esattamente due file; dopo il push, l'esecuzione di `plan` è verde su GitHub.
+- **Prossimi passi:** push di `main`, creazione di `develop`, impostazioni del repo, label, milestone, issue, collaboratori, board, protezione.
+- **Commit/PR:** questo commit.
 
-### 2026-11-17 · SETUP · docs(plan): master plan, three personal guides and their PDFs
-- **What:** Wrote `PLAN.md` (15 sections incl. the Mermaid dependency graph and Gantt chart generated from `tasks.json`), the guides P1/P2/P3 (scope, machine setup, step-by-step plan, handovers, workflow, DoD, technologies to explain, exam prep, the four starter prompts verbatim) and rendered 4 PDFs with `render-pdf.mjs`.
-- **Why:** Each member needs a self-contained personal guide; the plan PDF is the shared overview. The task-derived parts (graph, Gantt, per-person plans, handovers) were generated by a throwaway script kept outside the repo, so if `tasks.json` changes they must be edited by hand (or regenerated by whoever has that script: not versioned on purpose, the setup allows only four scripts).
-- **Files:** `docs/plan/PLAN.md`, `docs/plan/SideQuest_Group40_Master_Plan.pdf`, `docs/guides/P*-*.md`, `docs/guides/P*-*.pdf`.
-- **How to verify:** PDFs checked visually by rasterizing pages: graph on a landscape page, Gantt readable, guide tables not cut off. `npm run pdf:plan` and `npm run pdf:guides` regenerate the PDFs.
-- **Next / open points:** GitHub config (`.github/`), labels, milestones, issues.
-- **Commit/PR:** this commit.
+### 2026-11-17 17:42 · SETUP · docs(plan): piano generale, tre guide personali e i loro PDF
+- **Cosa:** scritti `PLAN.md` (15 sezioni, compresi il grafo delle dipendenze e il diagramma di Gantt in Mermaid generati da `tasks.json`), le guide P1/P2/P3 (perimetro, preparazione del computer, piano passo per passo, consegne reciproche, flusso di lavoro, Definition of Done, tecnologie da saper spiegare, preparazione all'esame, i quattro starter prompt alla lettera) e prodotti 4 PDF con `render-pdf.mjs`.
+- **Perché:** ogni membro ha bisogno di una guida personale autosufficiente; il PDF del piano è la visione d'insieme condivisa. Le parti derivate dai task (grafo, Gantt, piani per persona, consegne) sono state generate da uno script usa-e-getta tenuto fuori dal repo: se `tasks.json` cambia vanno modificate a mano (lo script non è versionato di proposito, perché il setup ammetteva solo quattro script).
+- **File:** `docs/plan/PLAN.md`, `docs/plan/SideQuest_Group40_Master_Plan.pdf`, `docs/guides/P*-*.md`, `docs/guides/P*-*.pdf`.
+- **Come verificare:** PDF controllati a vista rasterizzando le pagine: grafo su pagina orizzontale, Gantt leggibile, tabelle delle guide non tagliate. `npm run pdf:plan` e `npm run pdf:guides` rigenerano i PDF.
+- **Prossimi passi:** configurazione GitHub (`.github/`), label, milestone, issue.
+- **Commit/PR:** questo commit.
 
-### 2026-11-17 · SETUP · chore(plan): tasks.json, team.json, milestones and the planning scripts
-- **What:** Added `docs/plan/tasks.json` (46 tasks, exactly as in the setup prompt §8.3), `team.json` (real GitHub logins), `milestones.json`, `task-details.json` (acceptance checklists, files and E2E IDs per task), and the scripts `validate-plan.mjs`, `deps.mjs`, `create-issues.mjs`, `render-pdf.mjs` (+ `lib.mjs`), plus the root `package.json` (+ lockfile; dev deps only `marked`, `playwright`, `mermaid` for the PDFs).
-- **Why:** The gating rule ("start a task only when its blockers are merged") needs machine-readable data and a checker; the scripts are Node `.mjs` so they work on Windows, macOS and Linux. `task-details.json` is an addition to the prompt: it keeps the long issue checklists out of the script.
-- **Files:** `docs/plan/*.json`, `scripts/*.mjs`, `package.json`, `package-lock.json`.
-- **How to verify:** `node scripts/validate-plan.mjs` prints "Plan OK: 46 tasks, no cycles, 0 warning(s)"; a temporary SETUP→SCAFFOLD dependency made it fail with "dependency cycle" and exit code 1.
-- **Next / open points:** PLAN.md, guides and PDFs; then GitHub labels, milestones and issues.
-- **Commit/PR:** this commit.
+### 2026-11-17 17:42 · SETUP · chore(plan): tasks.json, team.json, milestone e script di pianificazione
+- **Cosa:** aggiunti `docs/plan/tasks.json` (46 task, esattamente come nel prompt di setup §8.3), `team.json` (i login GitHub reali), `milestones.json`, `task-details.json` (checklist di accettazione, file e ID E2E per ogni task) e gli script `validate-plan.mjs`, `deps.mjs`, `create-issues.mjs`, `render-pdf.mjs` (+ `lib.mjs`), più il `package.json` della root (+ lockfile; solo dipendenze di sviluppo `marked`, `playwright`, `mermaid` per i PDF).
+- **Perché:** la regola di gating ("si inizia un task solo quando i suoi blocchi sono mergiati") ha bisogno di dati leggibili da una macchina e di un controllore; gli script sono `.mjs` per Node e funzionano su Windows, macOS e Linux. `task-details.json` è un'aggiunta rispetto al prompt: tiene le lunghe checklist delle issue fuori dallo script.
+- **File:** `docs/plan/*.json`, `scripts/*.mjs`, `package.json`, `package-lock.json`.
+- **Come verificare:** `node scripts/validate-plan.mjs` stampa "Plan OK: 46 tasks, no cycles, 0 warning(s)"; una dipendenza temporanea SETUP→SCAFFOLD lo ha fatto fallire con "dependency cycle" e codice di uscita 1.
+- **Prossimi passi:** PLAN.md, guide e PDF; poi label, milestone e issue su GitHub.
+- **Commit/PR:** questo commit.
 
-### 2026-11-17 · SETUP · docs(repo): CLAUDE.md, CONTRIBUTING, README, INGSW structure, E2E catalogue
-- **What:** Added the Claude Code rules (`CLAUDE.md`, incl. the progress-log rules), the git/review/DoD guide (`CONTRIBUTING.md`), a short `README.md` (status: setup only, scaffold pending: task SCAFFOLD), `docs/ingsw/README.md` (planned chapters with owners and due dates, no chapter files), the 12-test E2E catalogue and a meeting-notes template.
-- **Why:** These tell each member (and each Claude Code session) what they may touch and how to work, without any application code (scope rule §0.1).
-- **Files:** `CLAUDE.md`, `CONTRIBUTING.md`, `README.md`, `docs/ingsw/README.md`, `docs/tecweb/e2e-catalogue.md`, `docs/meetings/TEMPLATE.md`.
-- **How to verify:** open the files; `grep -c "E2E-" docs/tecweb/e2e-catalogue.md`.
-- **Next / open points:** plan data (`tasks.json`) and the planning scripts.
-- **Commit/PR:** this commit.
+### 2026-11-17 17:42 · SETUP · docs(repo): CLAUDE.md, CONTRIBUTING, README, struttura INGSW, catalogo E2E
+- **Cosa:** aggiunte le regole per Claude Code (`CLAUDE.md`, comprese le regole del registro di avanzamento), la guida a git, review e Definition of Done (`CONTRIBUTING.md`), un breve `README.md` (stato: solo setup, scaffold in attesa: task SCAFFOLD), `docs/ingsw/README.md` (i capitoli previsti con owner e scadenze, senza i file dei capitoli), il catalogo dei 12 test E2E e un template per le note delle riunioni.
+- **Perché:** dicono a ogni membro (e a ogni sessione di Claude Code) cosa può toccare e come lavorare, senza alcun codice applicativo (regola di perimetro §0.1).
+- **File:** `CLAUDE.md`, `CONTRIBUTING.md`, `README.md`, `docs/ingsw/README.md`, `docs/tecweb/e2e-catalogue.md`, `docs/meetings/TEMPLATE.md`.
+- **Come verificare:** aprire i file; `grep -c "E2E-" docs/tecweb/e2e-catalogue.md`.
+- **Prossimi passi:** dati del piano (`tasks.json`) e script di pianificazione.
+- **Commit/PR:** questo commit.
 
-### 2026-11-17 · SETUP · docs(design): data model, module contracts, realtime events, scaffold spec
-- **What:** Wrote the PROPOSED drafts `data-model.md` (tables + Mermaid ER), `module-contracts.md` (ports, public APIs, domain events, planned REST surface) and `realtime-events.md`. Generated `scaffold-spec.md` as a verbatim copy of §4/§4.1, §6.1–§6.3, §6.5, §7, the ci/sonar part of §9 step 7 and the SCAFFOLD checklist of the setup prompt (by a throwaway script, so the copy is exact).
-- **Why:** Contracts are frozen in Sprint 0; the scaffold spec lets the task SCAFFOLD be done later without this laptop session writing any code (scope rule §0.1). Signatures are Markdown only: no `.ts` files.
-- **Files:** `docs/design/data-model.md`, `docs/design/module-contracts.md`, `docs/design/scaffold-spec.md`, `docs/api/realtime-events.md`.
-- **How to verify:** `grep -n "^### 6\.\|^### 7\." docs/design/scaffold-spec.md`; `find . -name "*.ts"` returns nothing.
-- **Next / open points:** root docs (CLAUDE.md, CONTRIBUTING, README), then the plan files.
-- **Commit/PR:** this commit.
+### 2026-11-17 17:32 · SETUP · docs(design): modello dei dati, contratti dei moduli, eventi realtime, specifica dello scaffold
+- **Cosa:** scritte le bozze PROPOSED `data-model.md` (tabelle + diagramma ER in Mermaid), `module-contracts.md` (port, API pubbliche, eventi di dominio, superficie REST prevista) e `realtime-events.md`. Generato `scaffold-spec.md` come copia alla lettera di §4/§4.1, §6.1–§6.3, §6.5, §7, della parte ci/sonar del §9 passo 7 e della checklist di SCAFFOLD del prompt di setup (con uno script usa-e-getta, perché la copia fosse esatta).
+- **Perché:** i contratti si congelano nello Sprint 0; la specifica dello scaffold permette di fare il task SCAFFOLD più tardi senza che questa sessione sul laptop scriva codice (regola di perimetro §0.1). Le firme sono solo in Markdown: nessun file `.ts`.
+- **File:** `docs/design/data-model.md`, `docs/design/module-contracts.md`, `docs/design/scaffold-spec.md`, `docs/api/realtime-events.md`.
+- **Come verificare:** `grep -n "^### 6\.\|^### 7\." docs/design/scaffold-spec.md`; `find . -name "*.ts"` non restituisce nulla.
+- **Prossimi passi:** documenti della root (CLAUDE.md, CONTRIBUTING, README), poi i file del piano.
+- **Commit/PR:** questo commit.
 
-### 2026-11-17 · SETUP · docs(reference): requirements, assumptions A-01..A-26, ADRs 0001-0006
-- **What:** Wrote the requirements paraphrase (R01–R12 with owners and task IDs), the 26 domain assumptions (all PROPOSED) and six short ADRs.
-- **Why:** These are the single source of truth the three members will build on; Sprint 0 ratifies them (task S0-ASSUMPTIONS). ADR 0006 records the course-alignment rule (taught tools by default, written rationale otherwise).
-- **Files:** `docs/reference/requirements.md`, `docs/decisions/assumptions.md`, `docs/decisions/adr/0001..0006-*.md`.
-- **How to verify:** `ls docs/decisions/adr` shows six files; `grep -c "^| A-" docs/decisions/assumptions.md` prints 26.
-- **Next / open points:** design drafts (data model, module contracts, realtime events) and the scaffold spec.
-- **Commit/PR:** this commit.
+### 2026-11-17 17:31 · SETUP · docs(reference): requisiti, assunzioni A-01..A-26, ADR 0001-0006
+- **Cosa:** scritte la parafrasi dei requisiti (R01–R12 con owner e ID dei task), le 26 assunzioni di dominio (tutte PROPOSED) e sei ADR brevi.
+- **Perché:** sono l'unica fonte di verità su cui i tre membri costruiranno; lo Sprint 0 le ratifica (task S0-ASSUMPTIONS). L'ADR 0006 registra la regola di allineamento al corso (di default gli strumenti visti a lezione, altrimenti una motivazione scritta).
+- **File:** `docs/reference/requirements.md`, `docs/decisions/assumptions.md`, `docs/decisions/adr/0001..0006-*.md`.
+- **Come verificare:** `ls docs/decisions/adr` mostra sei file; `grep -c "^| A-" docs/decisions/assumptions.md` stampa 26.
+- **Prossimi passi:** bozze di design (modello dei dati, contratti dei moduli, eventi realtime) e specifica dello scaffold.
+- **Commit/PR:** questo commit.
 
-### 2026-11-17 · SETUP · chore(repo): create repository and base config files
-- **What:** Created the public repository `Mynamesdsuper/sidequest-group40`, cloned it locally, renamed the initial branch to `main`, added `.gitignore`, `.gitattributes`, `.editorconfig`, this log, and a copy of the setup prompt in `docs/plan/setup-prompt.md`.
-- **Why:** Step 1 of the setup (see `docs/plan/setup-prompt.md` §0.1 and §9). The session is documentation and planning only: no application code (scope rule §0.1). LF line endings are forced for cross-platform work.
-- **Files:** `.gitignore`, `.gitattributes`, `.editorconfig`, `PROGRESS.md`, `docs/plan/setup-prompt.md`.
-- **How to verify:** `git log --oneline` shows the commit; `gh repo view Mynamesdsuper/sidequest-group40`.
-- **Next / open points:** reference docs (requirements, assumptions, ADRs), then design docs.
-- **Commit/PR:** first commit on `main`.
+### 2026-11-17 17:29 · SETUP · chore(repo): creazione del repository e file di configurazione di base
+- **Cosa:** creato il repository pubblico `Mynamesdsuper/sidequest-group40`, clonato in locale, rinominato il branch iniziale in `main`, aggiunti `.gitignore`, `.gitattributes`, `.editorconfig`, questo registro e una copia del prompt di setup in `docs/plan/setup-prompt.md`.
+- **Perché:** passo 1 del setup (vedi `docs/plan/setup-prompt.md` §0.1 e §9). La sessione è solo documentazione e pianificazione: nessun codice applicativo (regola di perimetro §0.1). I fine riga LF sono forzati per lavorare su sistemi diversi.
+- **File:** `.gitignore`, `.gitattributes`, `.editorconfig`, `PROGRESS.md`, `docs/plan/setup-prompt.md`.
+- **Come verificare:** `git log --oneline` mostra il commit; `gh repo view Mynamesdsuper/sidequest-group40`.
+- **Prossimi passi:** documenti di riferimento (requisiti, assunzioni, ADR), poi documenti di design.
+- **Commit/PR:** primo commit su `main`.
 
 ## P1 – Vincenzo Pio Lubrano
 
@@ -115,26 +116,42 @@ Newest entries go at the TOP of your own section. Never edit other members' sect
 
 ## P3 – Domenico Panaro
 
-### 2026-11-17 19:05 · SCAFFOLD · docs(history): project history document, rebuilt after every merge
-- **What:** Added `npm run history` (`scripts/history.mjs`): it builds a PDF with a hand-written overview (`docs/history/overview.md`: purpose, the project, repository layout, way of working, phases so far, glossary), then every `PROGRESS.md` entry of all sections in chronological order, the commit history and the task status. The workflow `history.yml` rebuilds it on every push to `develop` and publishes it as the asset of the pre-release `history-latest` (fixed link in the README). `CLAUDE.md` §9b, §10 and `CONTRIBUTING.md` explain it. A `node:test` self-check covers the ordering.
-- **Why:** Domenico wants one document that explains, in order, everything done to the repository and stays current after each change. `PROGRESS.md` already holds that information, so the PDF is generated from it instead of being written twice. The order comes from `git blame` (the commit that added each entry), because entries are spread over four sections and often have no time. The PDF is not committed: three PRs run in parallel and would conflict on a binary file; a release asset gives a stable link without pushing to the protected branches. No new dependency: it reuses `render-pdf.mjs` and Node's built-in test runner.
-- **Files:** `scripts/history.mjs`, `scripts/history.test.mjs`, `docs/history/overview.md`, `.github/workflows/history.yml`, `package.json`, `.gitignore`, `CLAUDE.md`, `CONTRIBUTING.md`, `README.md`.
-- **How to verify:** `node --test scripts/history.test.mjs` (2 tests pass); `npm run history` writes `docs/history/SideQuest_Group40_History.pdf`; after the merge, the `history` workflow run is green and the release asset exists.
-- **Next / open points:** the first automatic build happens when this PR is merged into `develop`; until then the PDF is built locally.
-- **Commit/PR:** this commit.
+### 2026-11-17 19:16 · SCAFFOLD · fix(repo): autore dei commit collegato all'account giusto
+- **Cosa:** i tre commit di questo branch (scaffold diviso, storia del progetto, storia in italiano) erano firmati con `panaro.domenico10@gmail.com`, che GitHub collega all'account `zZerith` e non a `Mynamesdsuper`. Impostato `user.email` del repository a `domenico.panaro1003@gmail.com` (la stessa email dei commit del setup), riscritto l'autore dei tre commit mantenendo le date originali (`git rebase --exec "git commit --amend --author=…"`), aggiornati gli hash citati in questo registro (`70cfef1` → `978dfbe`, `1389bd4` → `ad8cf80`) e fatto un force-push del solo branch `chore/split-scaffold`.
+- **Perché:** l'analisi del repository Git (DOC-GIT) conta i commit per account GitHub: con l'email sbagliata questo lavoro sarebbe risultato di un altro account. Il force-push era sicuro perché il branch non è protetto, non è ancora mergiato e lo usa solo P3; `--force-with-lease` evita di sovrascrivere eventuali push altrui.
+- **File:** `PROGRESS.md` (hash aggiornati e questa voce); configurazione git locale.
+- **Come verificare:** `gh api repos/Mynamesdsuper/sidequest-group40/commits/978dfbe --jq .author.login` restituisce `Mynamesdsuper` (lo stesso per `ad8cf80` e per l'ultimo commit del branch).
+- **Prossimi passi:** nessuno.
+- **Commit/PR:** questo commit (riscritto insieme agli altri due).
 
-### 2026-11-17 18:58 · SCAFFOLD · chore(github): issues for the three scaffold parts
-- **What:** Ran `npm run issues:sync` from this branch: created the labels `task:SCAFFOLD-BE/FE/E2E` and the issues #51 (SCAFFOLD-BE, P3), #52 (SCAFFOLD-FE, P1), #53 (SCAFFOLD-E2E, P2), set them to `status:ready`, retitled #2 (SCAFFOLD) as the integration task with `status:blocked`, and refreshed every issue body from the plan (`--refresh-bodies`; no issue had ticked checkboxes, checked first).
-- **Why:** Vincenzo and Matteo must be able to start on 18 Nov with an issue, a checklist and Starter prompt 2, without waiting for this PR to be merged.
-- **Files:** none in the repository (GitHub configuration).
-- **How to verify:** `gh issue view 51` / `52` / `53`; `npm run deps -- --all` on this branch shows the three parts READY and SCAFFOLD BLOCKED by them.
-- **Next / open points:** until this PR is merged, `npm run deps` on `develop` does not know the new task IDs, and `deps-labeler` would recompute labels with the old plan if an issue is closed: merge PR #47 and then this PR quickly.
-- **Commit/PR:** none (GitHub only).
+### 2026-11-17 19:09 · SCAFFOLD · docs(history): storia del progetto e registro in italiano
+- **Cosa:** la storia del progetto (PDF) e `PROGRESS.md` sono ora in italiano. Tradotte tutte le voci esistenti e aggiunta a ciascuna l'ora del commit che l'ha registrata; introduzione (`docs/history/overview.md`) ed etichette del PDF in italiano; `render-pdf.mjs` ha l'opzione `--lang it` (indice e copertina in italiano). L'ordine cronologico ora viene dalla data e ora nel titolo di ogni voce, non più da `git blame`. Aggiornate le regole in `CLAUDE.md` §9b, `CONTRIBUTING.md` e nelle tre guide (formato della voce con le etichette Cosa / Perché / File / Come verificare / Prossimi passi / Commit/PR); PDF delle guide rigenerati.
+- **Perché:** Domenico vuole la storia del progetto in italiano da ora in poi, e il log del PDF è fatto con le voci di `PROGRESS.md`, quindi anche quelle passano all'italiano (eccezione alla regola "tutto il repository in inglese"; codice, commenti, messaggi di commit e gli altri documenti restano in inglese). `git blame` non andava più bene: tradurre una voce riscrive le sue righe, e su `develop` lo squash-merge mette tutte le voci di una PR nello stesso commit; l'ora scritta nel titolo invece resta stabile.
+- **File:** `PROGRESS.md`, `scripts/history.mjs`, `scripts/history.test.mjs`, `scripts/render-pdf.mjs`, `docs/history/overview.md`, `.github/workflows/history.yml`, `CLAUDE.md`, `CONTRIBUTING.md`, `docs/guides/*`.
+- **Come verificare:** `node --test scripts/history.test.mjs` (test verdi); `npm run history` produce il PDF in italiano con i passi in ordine; le voci senza ora generano un avviso.
+- **Prossimi passi:** comunicare a Vincenzo e Matteo che le loro voci in `PROGRESS.md` vanno scritte in italiano, con l'ora.
+- **Commit/PR:** questo commit.
 
-### 2026-11-17 · SCAFFOLD · chore(plan): split the code scaffold into three parallel parts
-- **What:** Replaced the single SCAFFOLD task with SCAFFOLD-BE (P3, 18–21 Nov: backend, shared core, `docker-compose.yml`), SCAFFOLD-FE (P1, 18–22 Nov: Angular frontend, incl. the `core/auth` and `core/realtime` stubs) and SCAFFOLD-E2E (P2, 18–22 Nov: Playwright, fixtures, smoke test, `docker-compose.demo.yml`). SCAFFOLD (P3, 23–24 Nov) now integrates them: `ci.yml`, `sonar.yml`, `setup:dev`, branch protection, README quick start. Checklists and allowed paths per part are in `task-details.json`.
-- **Why:** Every member is active from day one instead of waiting for one person, and each one builds the skeleton of the area they will own (Vincenzo the frontend, Matteo the E2E tests). The SCAFFOLD ID is kept as the integration task, so R01 and SONAR-SETUP keep their blockers unchanged. SCAFFOLD-BE is merged first because it sets the TypeScript/ESLint/Prettier conventions the other two follow.
-- **Files:** `docs/plan/tasks.json`, `docs/plan/task-details.json`, `docs/plan/PLAN.md`, `docs/plan/START-HERE.md`, the three guides, their PDFs, `CLAUDE.md` (status line), `README.md` (status line).
-- **How to verify:** `npm run plan:validate` prints "Plan OK: 50 tasks, no cycles, 0 warning(s)"; `npm run deps -- SCAFFOLD` lists the three parts as blockers.
-- **Next / open points:** after the merge: `npm run issues:sync` (creates the three issues), refresh the SCAFFOLD issue (#2) title, body and status label, set the new issues to `status:ready`. This branch is stacked on PR #47 and is rebased on `develop` once #47 is merged.
-- **Commit/PR:** this commit.
+### 2026-11-17 19:05 · SCAFFOLD · docs(history): storia del progetto ricostruita dopo ogni merge
+- **Cosa:** aggiunto `npm run history` (`scripts/history.mjs`): costruisce un PDF con un'introduzione scritta a mano (`docs/history/overview.md`: scopo, il progetto, organizzazione del repository, modo di lavorare, fasi finora, glossario), poi tutte le voci di `PROGRESS.md` di tutte le sezioni in ordine cronologico, la storia dei commit e lo stato dei task. Il workflow `history.yml` lo ricostruisce a ogni push su `develop` e lo pubblica come allegato della pre-release `history-latest` (link fisso nel README). `CLAUDE.md` §9b e §10 e `CONTRIBUTING.md` lo spiegano. Un self-check con `node:test` copre l'ordinamento.
+- **Perché:** Domenico vuole un unico documento che spieghi, in ordine, tutto ciò che è stato fatto al repository e che resti aggiornato dopo ogni modifica. `PROGRESS.md` contiene già queste informazioni, quindi il PDF viene generato da lì invece di essere scritto due volte. Il PDF non viene committato: tre PR corrono in parallelo e andrebbero in conflitto su un file binario; l'allegato di una release dà un link stabile senza fare push sui branch protetti. Nessuna dipendenza nuova: riusa `render-pdf.mjs` e il test runner integrato di Node.
+- **File:** `scripts/history.mjs`, `scripts/history.test.mjs`, `docs/history/overview.md`, `.github/workflows/history.yml`, `package.json`, `.gitignore`, `CLAUDE.md`, `CONTRIBUTING.md`, `README.md`.
+- **Come verificare:** `node --test scripts/history.test.mjs`; `npm run history` scrive `docs/history/SideQuest_Group40_History.pdf`; dopo il merge, l'esecuzione del workflow `history` è verde e l'allegato della release esiste.
+- **Prossimi passi:** la prima build automatica avviene al merge di questa PR su `develop`; fino ad allora il PDF si costruisce in locale.
+- **Commit/PR:** `ad8cf80`.
+
+### 2026-11-17 18:58 · SCAFFOLD · chore(github): issue per le tre parti dello scaffold
+- **Cosa:** eseguito `npm run issues:sync` da questo branch: create le label `task:SCAFFOLD-BE/FE/E2E` e le issue #51 (SCAFFOLD-BE, P3), #52 (SCAFFOLD-FE, P1), #53 (SCAFFOLD-E2E, P2), messe a `status:ready`; rinominata la #2 (SCAFFOLD) come task di integrazione con `status:blocked`; rigenerato il testo di tutte le issue dal piano (`--refresh-bodies`; prima verificato che nessuna issue avesse checkbox spuntate).
+- **Perché:** Vincenzo e Matteo devono poter iniziare il 18 novembre con una issue, una checklist e lo Starter prompt 2, senza aspettare il merge di questa PR.
+- **File:** nessuno nel repository (configurazione GitHub).
+- **Come verificare:** `gh issue view 51` / `52` / `53`; `npm run deps -- --all` su questo branch mostra le tre parti READY e SCAFFOLD BLOCKED da esse.
+- **Prossimi passi:** finché questa PR non è mergiata, `npm run deps` su `develop` non conosce i nuovi ID, e `deps-labeler` ricalcolerebbe le label con il vecchio piano alla chiusura di una issue: fare presto il merge della PR #47 e poi di questa.
+- **Commit/PR:** nessuno (solo GitHub).
+
+### 2026-11-17 18:57 · SCAFFOLD · chore(plan): scaffold del codice diviso in tre parti parallele
+- **Cosa:** sostituito l'unico task SCAFFOLD con SCAFFOLD-BE (P3, 18–21 novembre: backend, nucleo condiviso, `docker-compose.yml`), SCAFFOLD-FE (P1, 18–22 novembre: frontend Angular, compresi gli stub `core/auth` e `core/realtime`) e SCAFFOLD-E2E (P2, 18–22 novembre: Playwright, fixture, smoke test, `docker-compose.demo.yml`). SCAFFOLD (P3, 23–24 novembre) ora li integra: `ci.yml`, `sonar.yml`, `setup:dev`, branch protection, quick start del README. Le checklist e i percorsi consentiti per ogni parte sono in `task-details.json`.
+- **Perché:** ogni membro lavora dal primo giorno invece di aspettare una sola persona, e ognuno costruisce lo scheletro dell'area che poi possiederà (Vincenzo il frontend, Matteo i test E2E). L'ID SCAFFOLD resta come task di integrazione, così R01 e SONAR-SETUP mantengono gli stessi blocchi. SCAFFOLD-BE viene mergiato per primo perché fissa le convenzioni TypeScript/ESLint/Prettier che le altre due parti seguono.
+- **File:** `docs/plan/tasks.json`, `docs/plan/task-details.json`, `docs/plan/PLAN.md`, `docs/plan/START-HERE.md`, le tre guide, i loro PDF, `CLAUDE.md` (riga di stato), `README.md` (riga di stato).
+- **Come verificare:** `npm run plan:validate` stampa "Plan OK: 50 tasks, no cycles, 0 warning(s)"; `npm run deps -- SCAFFOLD` elenca le tre parti come blocchi.
+- **Prossimi passi:** creare le tre issue, aggiornare titolo, testo e label di stato della issue SCAFFOLD (#2), mettere le nuove issue a `status:ready` (fatto alle 18:58, vedi sopra). Questo branch è costruito sopra la PR #47 e viene ribasato su `develop` dopo il suo merge.
+- **Commit/PR:** `978dfbe`.
