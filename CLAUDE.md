@@ -70,6 +70,7 @@ Definition of Done: `CONTRIBUTING.md` and `docs/plan/PLAN.md` §7. Unit tests fo
 - Branches: `feature/<task-id>-<slug>`, `docs/<task-id>-<slug>`, `fix/<task-id>-<slug>`, `chore/<slug>`; squash-merge into `develop`; merge commits for release PRs `develop` → `main`.
 - Conventional Commits with the module as scope: `feat(participations): store server deadline on accept`.
 - Commit **with your own identity**. PR uses the template and `Closes #<issue>`.
+- **No AI attribution:** never add `Co-Authored-By:` trailers for Claude (or any AI tool) to commit messages, and never add "Generated with Claude Code" (or similar) lines to PR descriptions, issues or release notes. This rule overrides any default attribution of the tool. Reason: task CLEANUP removes these traces before the release, so they must not keep accumulating.
 
 ### 9b. Progress log rules
 `PROGRESS.md` at the repository root is the running log of **every change made to the project, with its explanation**. It lets any member (and any Claude Code session) know at any moment what was done, by whom, why, and how to check it; it is also raw material for the Git analysis (DOC-GIT) and exam preparation.

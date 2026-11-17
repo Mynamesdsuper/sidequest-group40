@@ -116,6 +116,14 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P3 – Domenico Panaro
 
+### 2026-11-17 19:33 · CLEANUP · docs(repo): nessuna attribuzione a strumenti di IA nei commit e nelle PR
+- **Cosa:** aggiunta in `CLAUDE.md` §9 la regola: niente trailer `Co-Authored-By:` di Claude nei messaggi di commit e niente righe "Generated with Claude Code" nelle descrizioni di PR, issue e release. Tolta quella riga dalla descrizione della PR #54. Nota sul flusso: alle 19:26 Matteo ha mergiato la #54 dentro il branch della #47 (`chore/cleanup-task`, non protetto); quindi ora la #47 contiene tutto il lavoro di oggi e basta approvare e mergiare quella. Aggiornata la descrizione della #47 di conseguenza.
+- **Perché:** il task CLEANUP (#48) dovrà togliere queste tracce prima del rilascio; se ogni sessione di ognuno continua ad aggiungerle, la pulizia finale cresce. La regola sta in `CLAUDE.md` perché la leggono le sessioni Claude Code di tutti e tre, non solo quelle di P3. Restano da pulire in CLEANUP i 7 commit già fatti con il trailer.
+- **File:** `CLAUDE.md`, `PROGRESS.md`; descrizioni delle PR #47 e #54 su GitHub.
+- **Come verificare:** `git log -1 --format=%B` di questo commit non contiene `Co-Authored-By`; `gh pr view 54 --json body` non contiene "Generated with".
+- **Prossimi passi:** approvazione della #47 da parte di Vincenzo o Matteo, poi merge su `develop`.
+- **Commit/PR:** questo commit, PR #47.
+
 ### 2026-11-17 19:19 · SCAFFOLD · chore(github): prima pubblicazione della storia del progetto su GitHub
 - **Cosa:** creata a mano la pre-release `history-latest` (tag su `develop`) e caricato come allegato il PDF della storia generato da questo branch. Da ora è scaricabile al link fisso indicato nel README.
 - **Perché:** Domenico vuole il PDF già su GitHub, non solo in locale. Il workflow `history.yml` che lo aggiorna esiste solo su questo branch e parte dal primo push su `develop`; fino al merge questa pubblicazione manuale fa da prima versione, poi ogni PR mergiata da chiunque lo ricostruisce e lo sovrascrive (`--clobber`). Nessuno deve rigenerarlo a mano: basta scrivere le voci in `PROGRESS.md`.
