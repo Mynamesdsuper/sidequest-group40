@@ -53,6 +53,6 @@ npm run deps -- --all          # whole-team view
 - Scaffold specification: [`docs/design/scaffold-spec.md`](docs/design/scaffold-spec.md)
 - E2E catalogue: [`docs/tecweb/e2e-catalogue.md`](docs/tecweb/e2e-catalogue.md)
 - INGSW document structure: [`docs/ingsw/README.md`](docs/ingsw/README.md)
-- Progress log: [`PROGRESS.md`](PROGRESS.md) · Project history (everything done, in order): [latest PDF](https://github.com/Mynamesdsuper/sidequest-group40/releases/download/history-latest/SideQuest_Group40_History.pdf), built by `npm run history` · Rules: [`CLAUDE.md`](CLAUDE.md), [`CONTRIBUTING.md`](CONTRIBUTING.md)
+- Progress log: [`PROGRESS.md`](PROGRESS.md) · Project history (everything done, in order): [latest PDF on the `history` branch](https://github.com/Mynamesdsuper/sidequest-group40/blob/history/SideQuest_Group40_History.pdf) (also on the [`history-latest` release](https://github.com/Mynamesdsuper/sidequest-group40/releases/tag/history-latest)), built by `npm run history` · Rules: [`CLAUDE.md`](CLAUDE.md), [`CONTRIBUTING.md`](CONTRIBUTING.md)
 
 The final README (quick start, configuration, demo accounts, tests, Docker demo) is written by P1 in task TW-README, after the scaffold exists.

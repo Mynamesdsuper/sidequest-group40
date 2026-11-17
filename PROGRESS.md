@@ -116,6 +116,22 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P3 – Domenico Panaro
 
+### 2026-11-17 19:39 · SCAFFOLD · ci(history): PDF della storia anche come file nel branch `history`
+- **Cosa:** il workflow `history.yml`, oltre ad aggiornare la release `history-latest`, ora pubblica il PDF come file nel branch `history` (con un `README.md` preso da `docs/history/BRANCH-README.md`). Il branch ha un solo commit orfano, sostituito a ogni push su `develop` con un force-push. Creato subito a mano il branch con il PDF di `develop@cdfa2d7`, così il link funziona già. Aggiornati i link in README, `CLAUDE.md` (§9b, §10) e nell'introduzione della storia.
+- **Perché:** Domenico vuole il PDF visibile come file nel repository, non solo come allegato di una release. Su `develop` il workflow non può fare commit (branch protection, che vale anche per i bot), e committare il PDF in ogni PR creerebbe conflitti sul file binario tra le PR parallele; un branch dedicato e non protetto risolve entrambi i problemi. Un solo commit sostituito ogni volta evita che i cloni di tutti crescano di circa 300 KB a ogni merge.
+- **File:** `.github/workflows/history.yml`, `docs/history/BRANCH-README.md`, `README.md`, `CLAUDE.md`, `docs/history/overview.md`; branch `history` su GitHub.
+- **Come verificare:** https://github.com/Mynamesdsuper/sidequest-group40/blob/history/SideQuest_Group40_History.pdf risponde; dopo il merge di questa PR l'esecuzione del workflow `history` è verde e il branch `history` ha un commit di `github-actions[bot]` che punta al nuovo `develop`.
+- **Prossimi passi:** approvazione di questa PR (Vincenzo, revisore di P3) e merge.
+- **Commit/PR:** questo commit.
+
+### 2026-11-17 19:35 · SCAFFOLD · chore(repo): PR #47 mergiata su `develop`
+- **Cosa:** Matteo ha approvato e mergiato con squash la PR #47 (commit `cdfa2d7` su `develop`), che conteneva anche la #54: task CLEANUP, pagina Start-here, direttive del coordinatore, scaffold diviso in tre parti, storia del progetto in PDF, registro in italiano, regola sull'attribuzione. Alle 19:36 il workflow `history` è andato a buon fine e ha sostituito da solo il PDF della release `history-latest`.
+- **Perché:** con il piano nuovo su `develop`, Vincenzo e Matteo possono partire con lo Starter prompt 1 e poi con lo Starter prompt 2 sui loro task (SCAFFOLD-FE, SCAFFOLD-E2E). Un primo tentativo di merge era bloccato perché la PR non aveva ancora l'approvazione di un code owner (branch protection): Matteo ha prima approvato, poi mergiato.
+- **File:** nessuno in più (merge).
+- **Come verificare:** `git log --oneline -1 origin/develop` mostra `cdfa2d7`; `gh run list --workflow history` mostra l'esecuzione verde; `npm run deps -- --all` su `develop` elenca SCAFFOLD-BE/FE/E2E.
+- **Prossimi passi:** il messaggio dello squash contiene i trailer `Co-Authored-By` dei commit del branch: si tolgono in CLEANUP; d'ora in poi cancellarli dal box di conferma dello squash-merge.
+- **Commit/PR:** PR #47, `cdfa2d7`.
+
 ### 2026-11-17 19:33 · CLEANUP · docs(repo): nessuna attribuzione a strumenti di IA nei commit e nelle PR
 - **Cosa:** aggiunta in `CLAUDE.md` §9 la regola: niente trailer `Co-Authored-By:` di Claude nei messaggi di commit e niente righe "Generated with Claude Code" nelle descrizioni di PR, issue e release. Tolta quella riga dalla descrizione della PR #54. Nota sul flusso: alle 19:26 Matteo ha mergiato la #54 dentro il branch della #47 (`chore/cleanup-task`, non protetto); quindi ora la #47 contiene tutto il lavoro di oggi e basta approvare e mergiare quella. Aggiornata la descrizione della #47 di conseguenza.
 - **Perché:** il task CLEANUP (#48) dovrà togliere queste tracce prima del rilascio; se ogni sessione di ognuno continua ad aggiungerle, la pulizia finale cresce. La regola sta in `CLAUDE.md` perché la leggono le sessioni Claude Code di tutti e tre, non solo quelle di P3. Restano da pulire in CLEANUP i 7 commit già fatti con il trailer.
