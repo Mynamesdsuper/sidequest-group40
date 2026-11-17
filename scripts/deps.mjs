@@ -63,7 +63,20 @@ function showMine(p) {
     }
     console.log('');
   }
+  showDirectives(p);
   console.log(next ? `Next task to do: ${next.id} - ${next.title}` : 'No READY task: follow the fallback order in your guide (docs, tests, reviews).');
+}
+
+function showDirectives(p) {
+  try {
+    const items = JSON.parse(gh(['issue', 'list', '--repo', repo, '--state', 'open', '--label', 'type:directive', '--label', team[p].label, '--author', team.P3.github, '--limit', '50', '--json', 'number,title,url']));
+    console.log(`== DIRECTIVES from the coordinator (${items.length})`);
+    for (const i of items) console.log(`        #${i.number} ${i.title}  ${i.url}`);
+    console.log('');
+  } catch {
+    console.log('== DIRECTIVES: could not be read (check gh login)');
+    console.log('');
+  }
 }
 
 function showAll() {

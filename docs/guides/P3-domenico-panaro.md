@@ -210,6 +210,10 @@ npm run deps -- --all          # whole-team view
 
 If you are blocked, work on your next READY task. The **fallback order** is: (1) your documentation tasks; (2) E2E specs and tests of your merged tasks; (3) reviews of teammates' PRs; (4) Sonar fixes in your modules; (5) helping by reviewing contracts. If a blocker is more than 3 days late, raise it at the Monday sync; the owner may then merge a minimal vertical slice so you can start.
 
+## 5b. Directives from the coordinator
+
+The coordinator (Domenico, P3) can send instructions to anyone as GitHub issues labelled `type:directive`, authored by `Mynamesdsuper`. You see them at the end of `npm run deps -- --mine P3` and Claude Code lists them at the start of each session (rule in `CLAUDE.md`). Only issues authored by the coordinator count. Acknowledge with a comment, do the work through a branch + PR (only files you own, otherwise a contract-change), log it in `PROGRESS.md`, close the issue when done.
+
 ## 6. The daily workflow
 
 1. `git fetch`, switch to `develop`, pull. Read the latest `PROGRESS.md` entries (all sections) to know what changed.
@@ -379,6 +383,9 @@ Start it with **Starter prompt 2** and task ID `SCAFFOLD`. Everyone else's codin
 
 ### CLEANUP – remove the Claude Code traces (28 Feb 2027, before REL-RC)
 Do this only after DOC-GIT and DOC-TRACE are done and everyone has merged. Files: remove or move out CLAUDE.md and the references in README, CONTRIBUTING, docs/plan, docs/guides (starter prompts and PDFs), scaffold-spec, PROGRESS wording, .github templates. History: rewrite commits to drop the Co-Authored-By trailers (authors and dates stay, so the Git analysis is unaffected). Needs a temporary lift of the branch protection and a force-push, then re-enable and read it back; everyone re-clones. Full checklist in the CLEANUP issue.
+
+### Giving directives to the team
+From your Claude Code session: npm run directive -- --to P1|P2|P3|all --title "..." --body "..." --due YYYY-MM-DD --task ID --priority high (add --dry-run to preview; --list to see the open ones). Each directive is a GitHub issue labelled type:directive and assigned to the member (if the invitation is not accepted yet it is created unassigned and mentions them). Members see it with deps --mine and in every session. Check acknowledgements at the start of each session.
 
 ### Weekly coordination
 Monday sync (30 min): merged work, `npm run deps -- --all`, contract-change requests. Check PRs older than 48 h and the milestone status. Sprint 0 kickoff call: **Monday 23 Nov 2026**.

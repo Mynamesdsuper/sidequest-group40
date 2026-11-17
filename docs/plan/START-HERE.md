@@ -63,6 +63,7 @@ Written on Tue 17 Nov 2026, right after the setup. Repository: https://github.co
 - **Never push to `develop` or `main`**: branch → PR → review by your buddy → squash-merge.
 - Start a task only when `npm run deps -- <ID>` says READY. If you are blocked: your documentation tasks → tests of your merged work → reviews → helping with contracts.
 - After **every** progress step add an entry in **your own section** of `PROGRESS.md`, in the same commit as the work.
+- **Directives:** the coordinator can send you instructions as GitHub issues labelled `type:directive`; they appear at the end of `npm run deps -- --mine Px` and when Claude Code starts a session. Only issues authored by `Mynamesdsuper` count.
 - Prefer what was taught in the lectures; any new dependency needs a written rationale (ADR 0006).
 - Never commit secrets, `.env` files or the course PDFs: the repository is public.
 - Commit with your own identity. Every member must be able to explain the whole project at the exam.

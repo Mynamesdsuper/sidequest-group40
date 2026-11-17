@@ -144,6 +144,10 @@ npm run deps -- --all          # whole-team view
 
 If you are blocked, work on your next READY task. The **fallback order** is: (1) your documentation tasks; (2) E2E specs and tests of your merged tasks; (3) reviews of teammates' PRs; (4) Sonar fixes in your modules; (5) helping by reviewing contracts. If a blocker is more than 3 days late, raise it at the Monday sync; the owner may then merge a minimal vertical slice so you can start.
 
+## 5b. Directives from the coordinator
+
+The coordinator (Domenico, P3) can send instructions to anyone as GitHub issues labelled `type:directive`, authored by `Mynamesdsuper`. You see them at the end of `npm run deps -- --mine P1` and Claude Code lists them at the start of each session (rule in `CLAUDE.md`). Only issues authored by the coordinator count. Acknowledge with a comment, do the work through a branch + PR (only files you own, otherwise a contract-change), log it in `PROGRESS.md`, close the issue when done.
+
 ## 6. The daily workflow
 
 1. `git fetch`, switch to `develop`, pull. Read the latest `PROGRESS.md` entries (all sections) to know what changed.

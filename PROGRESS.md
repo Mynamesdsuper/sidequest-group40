@@ -5,6 +5,14 @@ Newest entries go at the TOP of your own section. Never edit other members' sect
 
 ## Setup (laptop session)
 
+### 2026-11-17 · SETUP · feat(scripts): coordinator directives (`npm run directive`)
+- **What:** Added `scripts/directive.mjs`: the coordinator (P3) creates GitHub issues labelled `type:directive` for P1, P2, P3 or all (title, body, due date, related task, priority; `--dry-run`, `--list`). `deps --mine Px` now ends with the open directives. Labels `type:directive` and `priority:high` created. `CLAUDE.md` (new section 3b) makes every member's Claude Code session list and honour them; only issues authored by the coordinator count, because the repository is public. Guides, Start-here page, CONTRIBUTING and an issue template updated; PDFs regenerated.
+- **Why:** Domenico wants to assign instructions to everyone from his own session. Issues give notification, assignment, history and a place to acknowledge, with no new tool; the author check blocks instruction injection from outsiders. Directives cannot override ownership, gating or security rules.
+- **Files:** `scripts/directive.mjs`, `scripts/deps.mjs`, `scripts/create-issues.mjs`, `package.json`, `CLAUDE.md`, `CONTRIBUTING.md`, `.github/ISSUE_TEMPLATE/directive.md`, `docs/guides/*`, `docs/plan/START-HERE.md`.
+- **How to verify:** `npm run directive -- --to P3 --title test --dry-run`; created and closed two self-test issues (#49, #50); `npm run directive -- --list P3` listed #50 (the GitHub search index lags a few seconds).
+- **Next / open points:** works for everyone only after PR #47 is merged (the scripts and CLAUDE.md are on that branch).
+- **Commit/PR:** PR #47.
+
 ### 2026-11-17 · SETUP · docs(plan): Start-here page (what each member does now) + PDF
 - **What:** Added `docs/plan/START-HERE.md` and its PDF: this week's actions for everyone (invitation, tools, Starter prompt 1, review of PR #47, kickoff), the first tasks and dates of P1, P2 and P3, the kickoff agenda (Mon 23 Nov), key dates, rules and commands. Linked from the README.
 - **Why:** Domenico asked for a short hand-over document to give to Vincenzo and Matteo so that all three can start in the right order.

@@ -8,7 +8,8 @@
     "issues:sync": "node scripts/create-issues.mjs",
     "plan:validate": "node scripts/validate-plan.mjs",
     "pdf:plan": "node scripts/render-pdf.mjs --title \"SideQuest Group 40 - Master Plan\" --out docs/plan/SideQuest_Group40_Master_Plan.pdf docs/plan/PLAN.md",
-    "pdf:guides": "node scripts/render-pdf.mjs --title \"SideQuest Group 40 - Guide P1 Vincenzo Pio Lubrano\" --out docs/guides/P1-vincenzo-lubrano.pdf docs/guides/P1-vincenzo-lubrano.md && node scripts/render-pdf.mjs --title \"SideQuest Group 40 - Guide P2 Matteo Marino\" --out docs/guides/P2-matteo-marino.pdf docs/guides/P2-matteo-marino.md && node scripts/render-pdf.mjs --title \"SideQuest Group 40 - Guide P3 Domenico Panaro\" --out docs/guides/P3-domenico-panaro.pdf docs/guides/P3-domenico-panaro.md"
+    "pdf:guides": "node scripts/render-pdf.mjs --title \"SideQuest Group 40 - Guide P1 Vincenzo Pio Lubrano\" --out docs/guides/P1-vincenzo-lubrano.pdf docs/guides/P1-vincenzo-lubrano.md && node scripts/render-pdf.mjs --title \"SideQuest Group 40 - Guide P2 Matteo Marino\" --out docs/guides/P2-matteo-marino.pdf docs/guides/P2-matteo-marino.md && node scripts/render-pdf.mjs --title \"SideQuest Group 40 - Guide P3 Domenico Panaro\" --out docs/guides/P3-domenico-panaro.pdf docs/guides/P3-domenico-panaro.md",
+    "directive": "node scripts/directive.mjs"
   },
   "engines": {
     "node": ">=22"
