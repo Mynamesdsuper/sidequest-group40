@@ -116,6 +116,14 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P3 – Domenico Panaro
 
+### 2026-11-17 19:45 · SCAFFOLD · docs(history): README della cartella `docs/history` con il link al PDF
+- **Cosa:** aggiunto `docs/history/README.md`: link ben visibile al PDF nel branch `history` e alla release `history-latest`, spiegazione dei file della cartella e di come far comparire un passo nella storia. Prima, alle 19:42, la PR #55 era stata approvata e mergiata da Matteo (`0b869cb`); il primo aggiornamento automatico del branch `history` è andato a buon fine (commit di `github-actions[bot]` per `develop@0b869cb`).
+- **Perché:** aprendo `docs/history/` su `develop` Domenico non trovava il PDF, che sta nel branch `history`; GitHub mostra il README sotto l'elenco dei file, così chiunque apra la cartella trova subito il link.
+- **File:** `docs/history/README.md`, `PROGRESS.md`.
+- **Come verificare:** aprire https://github.com/Mynamesdsuper/sidequest-group40/tree/develop/docs/history: sotto i file compare il link "Apri il PDF aggiornato".
+- **Prossimi passi:** approvazione e merge di questa PR.
+- **Commit/PR:** questo commit.
+
 ### 2026-11-17 19:39 · SCAFFOLD · ci(history): PDF della storia anche come file nel branch `history`
 - **Cosa:** il workflow `history.yml`, oltre ad aggiornare la release `history-latest`, ora pubblica il PDF come file nel branch `history` (con un `README.md` preso da `docs/history/BRANCH-README.md`). Il branch ha un solo commit orfano, sostituito a ogni push su `develop` con un force-push. Creato subito a mano il branch con il PDF di `develop@cdfa2d7`, così il link funziona già. Aggiornati i link in README, `CLAUDE.md` (§9b, §10) e nell'introduzione della storia.
 - **Perché:** Domenico vuole il PDF visibile come file nel repository, non solo come allegato di una release. Su `develop` il workflow non può fare commit (branch protection, che vale anche per i bot), e committare il PDF in ogni PR creerebbe conflitti sul file binario tra le PR parallele; un branch dedicato e non protetto risolve entrambi i problemi. Un solo commit sostituito ogni volta evita che i cloni di tutti crescano di circa 300 KB a ogni merge.
