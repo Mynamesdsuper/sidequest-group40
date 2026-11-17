@@ -2,7 +2,7 @@
 
 University project (Università degli Studi di Napoli Federico II, A.A. 2026/27) for two exams with one product: **Ingegneria del Software (INGSW)** and **Tecnologie Web (TECWEB)**. Type: **integrated**. Delivery: **early** (requirements R01–R12). Packages: core R01–R06 + **A** (R07–R09) + **B** (R10–R12).
 
-> **Status: setup only, scaffold pending: task SCAFFOLD.** The repository currently contains documentation, the plan, the personal guides and the planning scripts. There is no application code yet, so there is nothing to run apart from the planning tools below.
+> **Status: setup only, scaffold pending: tasks SCAFFOLD-BE, SCAFFOLD-FE, SCAFFOLD-E2E, then SCAFFOLD.** The repository currently contains documentation, the plan, the personal guides and the planning scripts. There is no application code yet, so there is nothing to run apart from the planning tools below.
 
 ## Group
 
@@ -44,6 +44,7 @@ npm run deps -- --all          # whole-team view
 ```
 
 ## Documentation
+- **Start here (what to do now):** [`docs/plan/START-HERE.md`](docs/plan/START-HERE.md) · [PDF](docs/plan/SideQuest_Group40_Start_Here.pdf)
 - Master plan: [`docs/plan/PLAN.md`](docs/plan/PLAN.md) · [PDF](docs/plan/SideQuest_Group40_Master_Plan.pdf)
 - Personal guides: [`docs/guides/`](docs/guides/) (P1, P2, P3, Markdown + PDF)
 - Requirements: [`docs/reference/requirements.md`](docs/reference/requirements.md)
@@ -52,6 +53,6 @@ npm run deps -- --all          # whole-team view
 - Scaffold specification: [`docs/design/scaffold-spec.md`](docs/design/scaffold-spec.md)
 - E2E catalogue: [`docs/tecweb/e2e-catalogue.md`](docs/tecweb/e2e-catalogue.md)
 - INGSW document structure: [`docs/ingsw/README.md`](docs/ingsw/README.md)
-- Progress log: [`PROGRESS.md`](PROGRESS.md) · Rules: [`CLAUDE.md`](CLAUDE.md), [`CONTRIBUTING.md`](CONTRIBUTING.md)
+- Progress log: [`PROGRESS.md`](PROGRESS.md) · Project history (everything done, in order): [latest PDF](https://github.com/Mynamesdsuper/sidequest-group40/releases/download/history-latest/SideQuest_Group40_History.pdf), built by `npm run history` · Rules: [`CLAUDE.md`](CLAUDE.md), [`CONTRIBUTING.md`](CONTRIBUTING.md)
 
 The final README (quick start, configuration, demo accounts, tests, Docker demo) is written by P1 in task TW-README, after the scaffold exists.

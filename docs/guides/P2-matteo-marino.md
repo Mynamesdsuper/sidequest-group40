@@ -12,6 +12,7 @@ This guide is for **you**. Read it once fully, then use the starter prompts (sec
 | **Backend modules** | `participations` (supports `participantType: USER | TEAM` from day one), `notifications` (real `NotifierPort` and `RealtimePort`), `dashboard` |
 | **Frontend features** | `core/realtime`, `features/participation`, `waitlist`, `notifications`, `dashboard` (publishes `ObjectiveListComponent` and `ProofFormComponent` for P3) |
 | **INGSW** | UC-01 Cockburn use case + mockups, state diagram, design example, test plan + methodology, `TimerPolicy` documented unit tests |
+| **Scaffold part** | SCAFFOLD-E2E (18–22 Nov 2026): the Playwright E2E skeleton and the demo Docker stack from `docs/design/scaffold-spec.md` |
 | **TECWEB** | E2E specs of your requirements |
 | **E2E specs** | E2E-05, E2E-06, E2E-07, E2E-08 |
 | **Unit-test method** | UT-1: `TimerPolicy.evaluate(participation, now)` |
@@ -38,67 +39,72 @@ Accept the collaborator invitation (email, or https://github.com/notifications) 
 
 Ordered by start date. A task may be started only when all its blockers are DONE (`npm run deps -- <ID>`).
 
-1. **S0-EVENTS** – Freeze domain events, realtime events and ports
+1. **SCAFFOLD-E2E** – Scaffold part 3: Playwright e2e, fixtures, smoke test, demo compose
+   - Dates: 2026-11-18 → 2026-11-22 (milestone M1)
+   - Blocked by: SETUP
+   - Deliverables: E2E part of `docs/design/scaffold-spec.md` (§7.3): Playwright with desktop and mobile projects, `webServer`, `globalSetup` reset, fixtures (`api`, `auth` stub, `clock`, `users`), `smoke.spec.ts`; `docker-compose.demo.yml`. Write config and fixtures from day one; the smoke test goes green once SCAFFOLD-BE (P3) and SCAFFOLD-FE (P1) are merged, so open your PR after them. Full checklist in the issue. Start it with Starter prompt 2 and task ID `SCAFFOLD-E2E`
+   - You hand over to: SCAFFOLD (P3)
+2. **S0-EVENTS** – Freeze domain events, realtime events and ports
    - Dates: 2026-11-23 → 2026-11-29 (milestone M1)
    - Blocked by: SETUP
    - Deliverables: Review the domain-event catalogue, the Socket.IO events and the ports in `docs/design/module-contracts.md` and `docs/api/realtime-events.md`; Confirm payloads, rooms, the ack of `team-progress:join` and the ordering/reconnection protocol (A-21)
    - You hand over to: R10 (P3)
-2. **DOC-STATE** – Participation and mission state diagrams (PlantUML draft)
+3. **DOC-STATE** – Participation and mission state diagrams (PlantUML draft)
    - Dates: 2026-11-30 → 2026-12-13 (milestone M3)
    - Blocked by: S0-ASSUMPTIONS
    - Deliverables: Participation and mission state diagrams (PlantUML draft)
    - You hand over to: DOC-ARCH (P3)
-3. **DOC-UC01-DRAFT** – UC-01 Cockburn description and low-fi mockups
+4. **DOC-UC01-DRAFT** – UC-01 Cockburn description and low-fi mockups
    - Dates: 2026-11-30 → 2026-12-20 (milestone M3)
    - Blocked by: S0-ASSUMPTIONS
    - Deliverables: UC-01 Cockburn description and low-fi mockups
    - You hand over to: nobody directly (internal or later gating)
-4. **R06A** – R06 part A: notification infrastructure (persistence, REST, Socket.IO gateway, bell)
+5. **R06A** – R06 part A: notification infrastructure (persistence, REST, Socket.IO gateway, bell)
    - Dates: 2026-12-07 → 2026-12-16 (milestone M3)
    - Blocked by: R01, S0-EVENTS, S0-API
    - Deliverables: Notification persistence, REST (`GET /me/notifications`, mark read one/all), pagination; Socket.IO gateway with JWT handshake in `auth.token`; bind `NotifierPort` and `RealtimePort`
    - You hand over to: R08 (P3), R12 (P3), FREEZE (P3)
-5. **R04** – R04 Acceptance and server-authoritative timer
+6. **R04** – R04 Acceptance and server-authoritative timer
    - Dates: 2026-12-21 → 2027-01-03 (milestone M4)
    - Blocked by: R02, R06A
    - Deliverables: Accept a mission: server stores `deadlineAt = acceptedAt + timeLimit` from `Clock`; secret objectives revealed only now (A-07, A-08); Responses carry `deadlineAt` and `serverNow`; frontend countdown uses the server offset
    - You hand over to: R11 (P3), FREEZE (P3)
-6. **R05A** – R05 part A: progress, SELF/ANSWER verification, abandon, outcomes (USER and TEAM capable)
+7. **R05A** – R05 part A: progress, SELF/ANSWER verification, abandon, outcomes (USER and TEAM capable)
    - Dates: 2027-01-04 → 2027-01-10 (milestone M5)
    - Blocked by: R04
    - Deliverables: Objective progress with SELF and ANSWER verification (normalized answers, hash, max 5 wrong attempts); Outcomes ACTIVE → SUBMITTED → COMPLETED/FAILED, ABANDONED, EXPIRED (A-11); withdrawal is explicit and irreversible (A-14)
    - You hand over to: R11 (P3), FREEZE (P3)
-7. **R05B** – R05 part B: text/image proofs, author review, points ledger, reusable FE components
+8. **R05B** – R05 part B: text/image proofs, author review, points ledger, reusable FE components
    - Dates: 2027-01-11 → 2027-01-17 (milestone M5)
    - Blocked by: R05A
    - Deliverables: TEXT_PROOF and IMAGE_PROOF upload (JPEG/PNG/WebP, max 5 MB, random names, served only through an authenticated endpoint); Author review: approve or reject with reason; rejected objectives can be resubmitted while time remains
    - You hand over to: R11 (P3), FREEZE (P3)
-8. **R09** – R09 Capacity, waitlist and last-slot concurrency
+9. **R09** – R09 Capacity, waitlist and last-slot concurrency
    - Dates: 2027-01-18 → 2027-01-24 (milestone M6)
    - Blocked by: R04, R05A
    - Deliverables: `maxParticipants` and slot counting (ACTIVE/SUBMITTED/COMPLETED occupy; TEAM missions count teams); Last-slot race: transaction with `SELECT … FOR UPDATE` on the mission row; loser gets 409 `MISSION_FULL` (integration test with concurrent requests)
    - You hand over to: FREEZE (P3)
-9. **R06B** – R06 part B: personal area (created, participating, waitlist, notification history)
+10. **R06B** – R06 part B: personal area (created, participating, waitlist, notification history)
    - Dates: 2027-01-25 → 2027-01-31 (milestone M6)
    - Blocked by: R04, R05B, R09
    - Deliverables: Personal area: missions created, missions participating, waitlist entries, with status; Notification history page
    - You hand over to: FREEZE (P3)
-10. **DOC-UC01** – UC-01 final with mockups from the real app
+11. **DOC-UC01** – UC-01 final with mockups from the real app
    - Dates: 2027-02-01 → 2027-02-14 (milestone M7)
    - Blocked by: DOC-UC01-DRAFT, R06B
    - Deliverables: UC-01 final with mockups from the real app
    - You hand over to: DOC-TRACE (P3)
-11. **DOC-TESTPLAN** – System test plan for secret timed missions + methodology
+12. **DOC-TESTPLAN** – System test plan for secret timed missions + methodology
    - Dates: 2027-02-01 → 2027-02-21 (milestone M7)
    - Blocked by: R04, R05B
    - Deliverables: System test plan for secret timed missions + methodology
    - You hand over to: DOC-TRACE (P3)
-12. **DOC-UNIT-TIMER** – Documented unit tests: TimerPolicy.evaluate(participation, now)
+13. **DOC-UNIT-TIMER** – Documented unit tests: TimerPolicy.evaluate(participation, now)
    - Dates: 2027-02-08 → 2027-02-21 (milestone M7)
    - Blocked by: R04
    - Deliverables: Documented unit tests: TimerPolicy.evaluate(participation, now)
    - You hand over to: REL-RC (P3)
-13. **DOC-DESIGN-EXAMPLE** – Design example: server-authoritative timer and secret objective protection
+14. **DOC-DESIGN-EXAMPLE** – Design example: server-authoritative timer and secret objective protection
    - Dates: 2027-02-15 → 2027-02-28 (milestone M7)
    - Blocked by: R04
    - Deliverables: Design example: server-authoritative timer and secret objective protection
@@ -110,6 +116,7 @@ Ordered by start date. A task may be started only when all its blockers are DONE
 
 | Your task | Unblocks | Whose | When they want to start |
 |---|---|---|---|
+| SCAFFOLD-E2E (due 2026-11-22) | SCAFFOLD | P3 | starts 2026-11-23 |
 | S0-EVENTS (due 2026-11-29) | R10 | P3 | starts 2026-12-07 |
 | DOC-STATE (due 2026-12-13) | DOC-ARCH | P3 | starts 2027-02-01 |
 | R06A (due 2026-12-16) | R08 | P3 | starts 2027-01-04 |
@@ -132,6 +139,8 @@ Ordered by start date. A task may be started only when all its blockers are DONE
 
 | Your task | Blocked by | Whose | Their due date |
 |---|---|---|---|
+| SCAFFOLD-E2E | SETUP | P3 | due 2026-11-17 |
+| SCAFFOLD-E2E (smoke test green) | SCAFFOLD-BE, SCAFFOLD-FE (merged, not a formal blocker) | P3, P1 | due 2026-11-21, 2026-11-22 |
 | S0-EVENTS | SETUP | P3 | due 2026-11-17 |
 | DOC-STATE | S0-ASSUMPTIONS | P1 | due 2026-11-29 |
 | DOC-UC01-DRAFT | S0-ASSUMPTIONS | P1 | due 2026-11-29 |
@@ -149,6 +158,10 @@ npm run deps -- --all          # whole-team view
 
 If you are blocked, work on your next READY task. The **fallback order** is: (1) your documentation tasks; (2) E2E specs and tests of your merged tasks; (3) reviews of teammates' PRs; (4) Sonar fixes in your modules; (5) helping by reviewing contracts. If a blocker is more than 3 days late, raise it at the Monday sync; the owner may then merge a minimal vertical slice so you can start.
 
+## 5b. Directives from the coordinator
+
+The coordinator (Domenico, P3) can send instructions to anyone as GitHub issues labelled `type:directive`, authored by `Mynamesdsuper`. You see them at the end of `npm run deps -- --mine P2` and Claude Code lists them at the start of each session (rule in `CLAUDE.md`). Only issues authored by the coordinator count. Acknowledge with a comment, do the work through a branch + PR (only files you own, otherwise a contract-change), log it in `PROGRESS.md`, close the issue when done.
+
 ## 6. The daily workflow
 
 1. `git fetch`, switch to `develop`, pull. Read the latest `PROGRESS.md` entries (all sections) to know what changed.
@@ -163,19 +176,19 @@ If you are blocked, work on your next READY task. The **fallback order** is: (1)
 Add an entry at the top of **your** section after **every** progress step. Format:
 
 ```markdown
-### 2026-11-25 14:30 · R01 · feat: JWT login and logout
-- **What:** what was done, in 1–3 lines.
-- **Why:** the reason or decision behind it (link the assumption A-xx, ADR or issue if relevant).
-- **Files:** the main files or folders touched.
-- **How to verify:** the command, test or screen that proves it works.
-- **Next / open points:** what remains, blockers, questions for the team (or "none").
-- **Commit/PR:** short hash or #PR (add it when known).
+### 2026-11-25 14:30 · R01 · feat: login e logout con JWT
+- **Cosa:** cosa è stato fatto, in 1–3 righe.
+- **Perché:** il motivo o la decisione (con il riferimento all'assunzione A-xx, all'ADR o alla issue, se c'è).
+- **File:** i file o le cartelle principali toccati.
+- **Come verificare:** il comando, il test o la schermata che dimostra che funziona.
+- **Prossimi passi:** cosa resta, blocchi, domande per il team (oppure "nessuno").
+- **Commit/PR:** hash breve o #PR (da aggiungere quando si conosce).
 ```
 
 - An entry is added after every progress step: each completed sub-step, each commit that changes behaviour, each decision, each fix, each merged PR. Several entries per day are normal; a day of work with no entry is not.
 - Each person writes only in their own section, always at the top of it. If a merge conflict happens anyway, keep both entries.
 - The entry is committed in the same commit as the work it describes, never in a separate PR.
-- Write in English, concise and concrete; explain the *why*.
+- Write the entries **in Italian** (the only exception to "everything in the repository is in English"), concise and concrete; explain the *why*. The title always starts with date **and time** (`YYYY-MM-DD HH:MM`): the project history orders the entries by it.
 - When a task is closed, the last entry says "DONE" and links the merged PR.
 
 ## 7. Definition of Done
@@ -257,7 +270,7 @@ Copy a prompt into Claude Code (started inside your clone of the repository). Th
 
 ```text
 I am Matteo Marino (P2) of Group 40, working on the SideQuest project (integrated INGSW + TECWEB, Federico II).
-Repository: https://github.com/Mynamesdsuper/sidequest-group40 — my GitHub login is reverinn. Speak Italian with me; write everything in the repo in English.
+Repository: https://github.com/Mynamesdsuper/sidequest-group40 — my GitHub login is reverinn. Speak Italian with me; write everything in the repo in English, except the PROGRESS.md entries, which are in Italian.
 This is my first session on this computer. Do the following, in order, and stop where I say to stop:
 1. Check that git, the GitHub CLI (logged in as reverinn), Node.js 22 LTS + npm, Docker (daemon running) are installed. If anything is missing, give me the exact install commands for my OS and wait for me.
 2. If I have not accepted the collaborator invitation yet, tell me to accept it at https://github.com/notifications and wait.
@@ -265,14 +278,14 @@ This is my first session on this computer. Do the following, in order, and stop 
 4. Read, in this order: CLAUDE.md, PROGRESS.md (to know what has been done so far), docs/plan/PLAN.md, docs/guides/P2-matteo-marino.md, docs/reference/requirements.md, docs/decisions/assumptions.md, docs/design/data-model.md, docs/design/module-contracts.md, CONTRIBUTING.md. Then summarise for me in Italian, in at most 15 lines: my scope, my files, my first tasks, my blockers.
 5. Check whether the SCAFFOLD issue is closed (npm run deps -- SCAFFOLD). If it is NOT closed yet, the code does not exist: skip this step, tell me, and remind me to run it again later. If it is closed, prepare the local environment: install Docker Desktop if missing, npm run setup:dev, create the .env files from .env.example (generate a random TOKEN_SECRET), docker compose up -d db, run migrations and seeds on the dev DB, start backend and frontend, open the health page, run the backend tests and the E2E smoke test. Report what works and fix only problems that are inside my ownership or local configuration; for anything else, draft an issue for the owner.
 6. Self-assign all my issues: gh issue list --label owner:P2-matteo --state open, then gh issue edit <n> --add-assignee @me for each.
-7. Run npm run deps -- --mine P2 and show me the result. My first tasks are: S0-EVENTS (lead) and your part of S0-API, then DOC-STATE and DOC-UC01-DRAFT. Propose which READY task to start and why. Do NOT start coding until I confirm.
+7. Run npm run deps -- --mine P2 and show me the result. My first tasks are: SCAFFOLD-E2E first (18–22 Nov, the E2E part of the code scaffold), then S0-EVENTS (lead) and your part of S0-API, then DOC-STATE and DOC-UC01-DRAFT. Propose which READY task to start and why. Do NOT start coding until I confirm.
 Rules for this and every session: follow CLAUDE.md; prefer what was taught in the lectures and never add a dependency without asking me; only edit files I own; never push to develop or main; never start a task whose blockers are not merged; explain what you do so that I can defend it at the exam.
 ```
 
 ### Starter prompt 2 — every work session on a task
 
 ```text
-I am Matteo Marino (P2), Group 40, SideQuest. Speak Italian with me; write everything in the repo in English. Today I want to work on task <TASK-ID>.
+I am Matteo Marino (P2), Group 40, SideQuest. Speak Italian with me; write everything in the repo in English, except the PROGRESS.md entries, which are in Italian. Today I want to work on task <TASK-ID>.
 1. git fetch, switch to develop, pull. Run npm run deps -- <TASK-ID>. If it is BLOCKED, stop, tell me which blockers are still open, and propose my next READY task (npm run deps -- --mine P2).
 2. Read the issue (gh issue list --label task:<TASK-ID> then gh issue view), CLAUDE.md, the recent entries of PROGRESS.md (all sections), the requirement in docs/reference/requirements.md, the related assumptions, the data model, the module contracts, my module's OpenAPI fragment, and ONLY the public API (index.ts / public-api.ts) of other modules I depend on.
 3. If the branch does not exist yet, create it from develop: feature/<task-id-lowercase>-<short-slug> (docs/... for documentation tasks). Add the label status:in-progress to the issue (remove status:ready).

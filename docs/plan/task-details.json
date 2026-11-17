@@ -5,20 +5,100 @@
       "Documentation, plan, guides and PDFs committed (no application code)",
       "Branch protection active with required check `plan`"
     ],
-    "files": ["README.md", "CLAUDE.md", "CONTRIBUTING.md", "docs/", "scripts/", ".github/"],
-    "docs": ["docs/plan/setup-prompt.md", "PROGRESS.md"]
+    "files": [
+      "README.md",
+      "CLAUDE.md",
+      "CONTRIBUTING.md",
+      "docs/",
+      "scripts/",
+      ".github/"
+    ],
+    "docs": [
+      "docs/plan/setup-prompt.md",
+      "PROGRESS.md"
+    ]
+  },
+  "SCAFFOLD-BE": {
+    "checklist": [
+      "Implement the backend part of `docs/design/scaffold-spec.md`: §6.1 (8 empty modules with the standard layout and `register(ctx)`), §6.2 (all of `backend/src/shared/`, `app.ts`, `server.ts`, `modules/registry.ts`), §6.5 (migration/seed naming, model registration, ESLint boundary rule for `modules/` with a test), §7.1; infrastructure only, no requirement logic",
+      "`docker-compose.yml` with the `db` service (`postgres:17-alpine`, named volume, healthcheck, port from the root `.env`) and `docker/postgres/init.sql` creating `sidequest_test` (§7.4); root `.env.example`, `.nvmrc` (22), `.prettierrc` (§7.5)",
+      "Set the shared conventions the other two parts follow: TypeScript strict config, ESLint flat config, Prettier",
+      "Local checks green: lint, typecheck, unit and integration tests, `docker compose up -d db`, migrations and empty seeds, `GET /api/v1/health` returns `db: \"up\"`",
+      "Open the PR `chore/scaffold-backend` → `develop`; the module folders have different code owners, so it needs the approval of both Vincenzo and Matteo"
+    ],
+    "files": [
+      "backend/",
+      "docker/",
+      "docker-compose.yml",
+      ".env.example",
+      ".nvmrc",
+      ".prettierrc",
+      "sonar-project.properties"
+    ],
+    "docs": [
+      "docs/design/scaffold-spec.md",
+      "docs/design/module-contracts.md",
+      "docs/decisions/adr/0001-tech-stack.md",
+      "docs/decisions/adr/0006-alignment-with-the-course.md"
+    ]
+  },
+  "SCAFFOLD-FE": {
+    "checklist": [
+      "Implement the frontend part of `docs/design/scaffold-spec.md`: §6.3 and §7.2, plus the ESLint boundary rule for `features/` with a test (§6.5); infrastructure only, no requirement logic",
+      "Angular CLI (latest stable, standalone, routing, SCSS, no SSR), **no UI component library**; `environment.ts` / `environment.development.ts` with `apiBaseUrl` and `socketUrl`",
+      "`core/api` (base URL + HTTP error interceptor → toast), `core/layout` (responsive shell with off-canvas drawer), `shared/ui` components, design tokens in `src/styles/`",
+      "Stubs with TODOs: `core/auth` (`AuthService`, `authInterceptor`, `authGuard`, `adminGuard`, `TODO(R01, P1)`) and `core/realtime` (`RealtimeService`, `TODO(R06A, P2)`)",
+      "`app.routes.ts` written once with every feature lazy-loaded; each feature has `<feature>.routes.ts`, `public-api.ts` and a placeholder page; home page calls `/health` and shows the backend status",
+      "`frontend/Dockerfile` (build, then nginx with the SPA fallback)",
+      "Follow the TypeScript/ESLint/Prettier conventions of SCAFFOLD-BE (rebase on it once merged)",
+      "Local checks green: lint, unit tests if any, production build; home page shows \"backend ok\" with the backend running",
+      "Open the PR `chore/scaffold-frontend` → `develop`; it needs the approval of Matteo (P1/P2 paths) and Domenico (P3 feature folders)"
+    ],
+    "files": [
+      "frontend/"
+    ],
+    "docs": [
+      "docs/design/scaffold-spec.md",
+      "docs/decisions/adr/0006-alignment-with-the-course.md"
+    ]
+  },
+  "SCAFFOLD-E2E": {
+    "checklist": [
+      "Implement the E2E part of `docs/design/scaffold-spec.md`: §7.3 (`@playwright/test`, projects `desktop-chromium` 1280×800 and `mobile-chromium` 390×844, `webServer` for backend with `NODE_ENV=test` and the frontend dev server, `globalSetup` calling `POST /api/v1/__test__/reset`)",
+      "`fixtures/`: `api.ts`, `auth.ts` (`loginAs` stub, `TODO(R01, P1)`), `clock.ts` (`setServerClockOffset`), `users.ts` (demo users of §7.6); `tests/smoke.spec.ts`",
+      "`docker-compose.demo.yml`: full stack (db + backend + frontend) built from the two Dockerfiles; check that it builds",
+      "Config and fixtures can be written from day one; the smoke test runs only once SCAFFOLD-BE and SCAFFOLD-FE are merged: rebase, then make it green",
+      "Open the PR `chore/scaffold-e2e` → `develop` after the other two parts are merged; it needs the approval of Domenico"
+    ],
+    "files": [
+      "e2e/",
+      "docker-compose.demo.yml"
+    ],
+    "docs": [
+      "docs/design/scaffold-spec.md",
+      "docs/tecweb/e2e-catalogue.md"
+    ]
   },
   "SCAFFOLD": {
     "checklist": [
-      "Implement `docs/design/scaffold-spec.md` exactly: §6.1–§6.3, §6.5 and §7 of the setup prompt; infrastructure only, no requirement logic, stubs only where the spec says so",
+      "Integrate the three parts (SCAFFOLD-BE, SCAFFOLD-FE, SCAFFOLD-E2E) and check the whole of `docs/design/scaffold-spec.md` is covered",
       "Create `ci.yml` (jobs `backend`, `frontend`, `e2e`, `plan`) and `sonar.yml`, then delete `plan.yml`",
-      "Local checks green: lint, typecheck, unit and integration tests, frontend production build, E2E smoke test, `docker compose up -d db`, migrations and empty seeds",
-      "Open the PR from `chore/scaffold` to `develop`; it touches shared paths, so it needs the approval of Vincenzo or Matteo",
+      "Root `package.json`: `setup:dev` (installs backend, frontend, e2e and copies the `.env.example` files) and `test:all`",
+      "Local checks green end to end: `npm run setup:dev`, `docker compose up -d db`, migrations and empty seeds, backend tests, frontend build, E2E smoke test",
+      "Open the PR `chore/scaffold` → `develop`; it touches shared paths, so it needs the approval of Vincenzo or Matteo",
       "After the merge, update the branch protection of `develop` and `main` to require `[\"backend\",\"frontend\",\"e2e\",\"plan\"]`, then read it back",
       "Update the README quick start and the status line (\"scaffold ready\")"
     ],
-    "files": ["backend/", "frontend/", "e2e/", "docker/", "docker-compose*.yml", ".github/workflows/", "sonar-project.properties", "package.json", "README.md"],
-    "docs": ["docs/design/scaffold-spec.md", "docs/decisions/adr/0001-tech-stack.md", "docs/decisions/adr/0006-alignment-with-the-course.md"]
+    "files": [
+      ".github/workflows/",
+      "package.json",
+      "README.md"
+    ],
+    "docs": [
+      "docs/design/scaffold-spec.md",
+      "docs/decisions/adr/0001-tech-stack.md",
+      "docs/decisions/adr/0006-alignment-with-the-course.md"
+    ]
   },
   "S0-ASSUMPTIONS": {
     "checklist": [
@@ -27,8 +107,13 @@
       "Record open questions for the professors, if any",
       "Merge the PR: from now on changes need a contract-change"
     ],
-    "files": ["docs/decisions/assumptions.md"],
-    "docs": ["docs/reference/requirements.md", "docs/decisions/assumptions.md"]
+    "files": [
+      "docs/decisions/assumptions.md"
+    ],
+    "docs": [
+      "docs/reference/requirements.md",
+      "docs/decisions/assumptions.md"
+    ]
   },
   "S0-DATAMODEL": {
     "checklist": [
@@ -36,8 +121,13 @@
       "Resolve open points with the module owners; update the Mermaid ER diagram",
       "Mark the document FROZEN and merge: later changes need a contract-change"
     ],
-    "files": ["docs/design/data-model.md"],
-    "docs": ["docs/design/data-model.md", "docs/decisions/adr/0005-postgres-and-concurrency.md"]
+    "files": [
+      "docs/design/data-model.md"
+    ],
+    "docs": [
+      "docs/design/data-model.md",
+      "docs/decisions/adr/0005-postgres-and-concurrency.md"
+    ]
   },
   "S0-API": {
     "checklist": [
@@ -46,8 +136,14 @@
       "Check naming against the REST rules of the course (plural nouns, lowercase-hyphen, no trailing slash, correct status codes)",
       "Freeze and merge"
     ],
-    "files": ["docs/design/module-contracts.md", "backend/src/modules/*/*.openapi.yaml (after SCAFFOLD)"],
-    "docs": ["docs/design/module-contracts.md", "docs/decisions/adr/0006-alignment-with-the-course.md"]
+    "files": [
+      "docs/design/module-contracts.md",
+      "backend/src/modules/*/*.openapi.yaml (after SCAFFOLD)"
+    ],
+    "docs": [
+      "docs/design/module-contracts.md",
+      "docs/decisions/adr/0006-alignment-with-the-course.md"
+    ]
   },
   "S0-EVENTS": {
     "checklist": [
@@ -55,11 +151,23 @@
       "Confirm payloads, rooms, the ack of `team-progress:join` and the ordering/reconnection protocol (A-21)",
       "Freeze and merge"
     ],
-    "files": ["docs/api/realtime-events.md", "docs/design/module-contracts.md"],
-    "docs": ["docs/api/realtime-events.md", "docs/decisions/adr/0004-realtime-with-socketio.md"]
+    "files": [
+      "docs/api/realtime-events.md",
+      "docs/design/module-contracts.md"
+    ],
+    "docs": [
+      "docs/api/realtime-events.md",
+      "docs/decisions/adr/0004-realtime-with-socketio.md"
+    ]
   },
   "R01": {
-    "assumptions": ["A-01", "A-02", "A-03", "A-04", "A-26"],
+    "assumptions": [
+      "A-01",
+      "A-02",
+      "A-03",
+      "A-04",
+      "A-26"
+    ],
     "checklist": [
       "Register, login, logout with email + password (bcrypt); JWT HS256 with `tokenVersion`; logout/suspension/password change increment it (A-02)",
       "Rate limiting on login and register",
@@ -68,11 +176,27 @@
       "Middleware `requireAuth`, `optionalAuth`, `requireRole`; the frontend `AuthService`, interceptor and guards replace the stubs (remove the `TODO(R01, P1)` markers)",
       "Seeds `01-users` with the demo accounts of the README"
     ],
-    "e2e": ["E2E-01"],
-    "files": ["backend/src/modules/auth/", "backend/src/modules/users/", "frontend/src/app/core/auth/", "frontend/src/app/features/auth/", "frontend/src/app/features/profile/", "frontend/src/app/features/admin/", "e2e/tests/p1-*", "e2e/fixtures/auth.ts (loginAs)"]
+    "e2e": [
+      "E2E-01"
+    ],
+    "files": [
+      "backend/src/modules/auth/",
+      "backend/src/modules/users/",
+      "frontend/src/app/core/auth/",
+      "frontend/src/app/features/auth/",
+      "frontend/src/app/features/profile/",
+      "frontend/src/app/features/admin/",
+      "e2e/tests/p1-*",
+      "e2e/fixtures/auth.ts (loginAs)"
+    ]
   },
   "R02": {
-    "assumptions": ["A-05", "A-06", "A-22", "A-23"],
+    "assumptions": [
+      "A-05",
+      "A-06",
+      "A-22",
+      "A-23"
+    ],
     "checklist": [
       "Create/edit missions with title, teaser, description, category, objectives, optional place, ORDINARY or SECRET_TIMED mode, conditions",
       "Lifecycle DRAFT → PUBLISHED → CLOSED → ARCHIVED; only DRAFT can be deleted (A-05)",
@@ -80,22 +204,43 @@
       "Reusable `shared/map/` Leaflet component with OSM attribution, picker mode and markers mode (A-22)",
       "Seeds `02-categories` and `03-missions`; objectives never leak (DTO mappers, A-07)"
     ],
-    "e2e": ["E2E-02"],
-    "files": ["backend/src/modules/missions/", "frontend/src/app/features/missions/", "frontend/src/app/shared/map/", "e2e/tests/p1-*"]
+    "e2e": [
+      "E2E-02"
+    ],
+    "files": [
+      "backend/src/modules/missions/",
+      "frontend/src/app/features/missions/",
+      "frontend/src/app/shared/map/",
+      "e2e/tests/p1-*"
+    ]
   },
   "R03": {
-    "assumptions": ["A-07", "A-24"],
+    "assumptions": [
+      "A-07",
+      "A-24"
+    ],
     "checklist": [
       "List and interactive map for guests and users; search by keyword, category, availability, mode, participation type, bounding box (A-24)",
       "Availability read through `ParticipationQueryPort` (AVAILABLE until R09 binds it)",
       "Secret-timed preview shows only the fields of A-07; objectives absent from DOM **and** API response (tested)",
       "Pagination `?page=&pageSize=` and empty/loading/error states; usable at 360 px"
     ],
-    "e2e": ["E2E-03"],
-    "files": ["backend/src/modules/missions/", "frontend/src/app/features/explore/", "e2e/tests/p1-*"]
+    "e2e": [
+      "E2E-03"
+    ],
+    "files": [
+      "backend/src/modules/missions/",
+      "frontend/src/app/features/explore/",
+      "e2e/tests/p1-*"
+    ]
   },
   "R04": {
-    "assumptions": ["A-08", "A-09", "A-13", "A-06"],
+    "assumptions": [
+      "A-08",
+      "A-09",
+      "A-13",
+      "A-06"
+    ],
     "checklist": [
       "Accept a mission: server stores `deadlineAt = acceptedAt + timeLimit` from `Clock`; secret objectives revealed only now (A-07, A-08)",
       "Responses carry `deadlineAt` and `serverNow`; frontend countdown uses the server offset",
@@ -104,11 +249,23 @@
       "`TimerPolicy` as a pure domain class (UT-1); `OffsetClock` used by the test router",
       "Bind `ParticipationQueryPort` (`hasStarted`, `isUserEngaged`)"
     ],
-    "e2e": ["E2E-05", "E2E-06"],
-    "files": ["backend/src/modules/participations/", "frontend/src/app/features/participation/", "e2e/tests/p2-*"]
+    "e2e": [
+      "E2E-05",
+      "E2E-06"
+    ],
+    "files": [
+      "backend/src/modules/participations/",
+      "frontend/src/app/features/participation/",
+      "e2e/tests/p2-*"
+    ]
   },
   "R05A": {
-    "assumptions": ["A-10", "A-11", "A-12", "A-14"],
+    "assumptions": [
+      "A-10",
+      "A-11",
+      "A-12",
+      "A-14"
+    ],
     "checklist": [
       "Objective progress with SELF and ANSWER verification (normalized answers, hash, max 5 wrong attempts)",
       "Outcomes ACTIVE → SUBMITTED → COMPLETED/FAILED, ABANDONED, EXPIRED (A-11); withdrawal is explicit and irreversible (A-14)",
@@ -116,10 +273,18 @@
       "Optimistic locking with `version` on `ObjectiveProgress`; loser gets 409 with the latest state"
     ],
     "e2e": [],
-    "files": ["backend/src/modules/participations/", "frontend/src/app/features/participation/", "e2e/tests/p2-*"]
+    "files": [
+      "backend/src/modules/participations/",
+      "frontend/src/app/features/participation/",
+      "e2e/tests/p2-*"
+    ]
   },
   "R05B": {
-    "assumptions": ["A-10", "A-12", "A-25"],
+    "assumptions": [
+      "A-10",
+      "A-12",
+      "A-25"
+    ],
     "checklist": [
       "TEXT_PROOF and IMAGE_PROOF upload (JPEG/PNG/WebP, max 5 MB, random names, served only through an authenticated endpoint)",
       "Author review: approve or reject with reason; rejected objectives can be resubmitted while time remains",
@@ -127,11 +292,19 @@
       "Publish `ObjectiveListComponent` and `ProofFormComponent` through `features/participation/public-api.ts` for P3",
       "Seeds `05-participations`"
     ],
-    "e2e": ["E2E-07"],
-    "files": ["backend/src/modules/participations/", "frontend/src/app/features/participation/", "e2e/tests/p2-*"]
+    "e2e": [
+      "E2E-07"
+    ],
+    "files": [
+      "backend/src/modules/participations/",
+      "frontend/src/app/features/participation/",
+      "e2e/tests/p2-*"
+    ]
   },
   "R06A": {
-    "assumptions": ["A-15"],
+    "assumptions": [
+      "A-15"
+    ],
     "checklist": [
       "Notification persistence, REST (`GET /me/notifications`, mark read one/all), pagination",
       "Socket.IO gateway with JWT handshake in `auth.token`; bind `NotifierPort` and `RealtimePort`",
@@ -139,83 +312,148 @@
       "Seeds `07-notifications`"
     ],
     "e2e": [],
-    "files": ["backend/src/modules/notifications/", "frontend/src/app/core/realtime/", "frontend/src/app/features/notifications/", "e2e/tests/p2-*"]
+    "files": [
+      "backend/src/modules/notifications/",
+      "frontend/src/app/core/realtime/",
+      "frontend/src/app/features/notifications/",
+      "e2e/tests/p2-*"
+    ]
   },
   "R06B": {
-    "assumptions": ["A-15"],
+    "assumptions": [
+      "A-15"
+    ],
     "checklist": [
       "Personal area: missions created, missions participating, waitlist entries, with status",
       "Notification history page",
       "Aggregation only through the public APIs of `missions` and `participations`"
     ],
     "e2e": [],
-    "files": ["backend/src/modules/dashboard/", "frontend/src/app/features/dashboard/", "frontend/src/app/features/notifications/", "e2e/tests/p2-*"]
+    "files": [
+      "backend/src/modules/dashboard/",
+      "frontend/src/app/features/dashboard/",
+      "frontend/src/app/features/notifications/",
+      "e2e/tests/p2-*"
+    ]
   },
   "R07": {
-    "assumptions": ["A-16"],
+    "assumptions": [
+      "A-16"
+    ],
     "checklist": [
       "PUBLIC/RESTRICTED visibility; `MissionAccess` allow-list; bind `MissionAccessPort`",
       "Unauthorized users get **404** from detail, objectives, proofs and every related endpoint; mission absent from list, map and search (A-16)",
       "Visibility can only widen after the first acceptance (A-06)",
       "At least one authorization-negative integration test"
     ],
-    "e2e": ["E2E-04"],
-    "files": ["backend/src/modules/missions/", "frontend/src/app/features/missions/", "frontend/src/app/features/explore/", "e2e/tests/p1-*"]
+    "e2e": [
+      "E2E-04"
+    ],
+    "files": [
+      "backend/src/modules/missions/",
+      "frontend/src/app/features/missions/",
+      "frontend/src/app/features/explore/",
+      "e2e/tests/p1-*"
+    ]
   },
   "R08": {
-    "assumptions": ["A-17", "A-16"],
+    "assumptions": [
+      "A-17",
+      "A-16"
+    ],
     "checklist": [
       "Invitations by nickname to RESTRICTED missions; one record per (mission, invitee); re-invite reopens as PENDING; duplicate PENDING → 409",
       "Accept grants access through `missions.grantAccess` (does not accept the mission nor reserve a slot); decline; revoke removes access, started participation continues",
       "Author sees the status of every invitation; notifications through `NotifierPort`",
       "Seeds `06-invitations`"
     ],
-    "e2e": ["E2E-10"],
-    "files": ["backend/src/modules/invitations/", "frontend/src/app/features/invitations/", "e2e/tests/p3-*"]
+    "e2e": [
+      "E2E-10"
+    ],
+    "files": [
+      "backend/src/modules/invitations/",
+      "frontend/src/app/features/invitations/",
+      "e2e/tests/p3-*"
+    ]
   },
   "R09": {
-    "assumptions": ["A-18", "A-14"],
+    "assumptions": [
+      "A-18",
+      "A-14"
+    ],
     "checklist": [
       "`maxParticipants` and slot counting (ACTIVE/SUBMITTED/COMPLETED occupy; TEAM missions count teams)",
       "Last-slot race: transaction with `SELECT … FOR UPDATE` on the mission row; loser gets 409 `MISSION_FULL` (integration test with concurrent requests)",
       "FIFO waitlist, 15-minute offer hold, claim = acceptance, offer expiry passes to the next entry; leaving the waitlist",
       "Bind `ParticipationQueryPort.availability`; `waitlist` frontend feature"
     ],
-    "e2e": ["E2E-08"],
-    "files": ["backend/src/modules/participations/", "frontend/src/app/features/waitlist/", "e2e/tests/p2-*"]
+    "e2e": [
+      "E2E-08"
+    ],
+    "files": [
+      "backend/src/modules/participations/",
+      "frontend/src/app/features/waitlist/",
+      "e2e/tests/p2-*"
+    ]
   },
   "R10": {
-    "assumptions": ["A-19"],
+    "assumptions": [
+      "A-19"
+    ],
     "checklist": [
       "Create team (unique name 3–30, max 6 members), TEAM_ADMIN and MEMBER roles",
       "Invite by nickname, accept/decline; leave; admin removes members; admin transfers role before leaving; last member disbands",
       "Bind `TeamMembershipPort`; notifications for invitations and join/leave",
       "Seeds `04-teams`"
     ],
-    "e2e": ["E2E-09"],
-    "files": ["backend/src/modules/teams/", "frontend/src/app/features/teams/", "e2e/tests/p3-*"]
+    "e2e": [
+      "E2E-09"
+    ],
+    "files": [
+      "backend/src/modules/teams/",
+      "frontend/src/app/features/teams/",
+      "e2e/tests/p3-*"
+    ]
   },
   "R11": {
-    "assumptions": ["A-20", "A-12"],
+    "assumptions": [
+      "A-20",
+      "A-12"
+    ],
     "checklist": [
       "TEAM missions: only TEAM_ADMIN accepts on behalf of the team; team needs at least `minTeamSize` members",
       "Wraps the `participations` public API; 409 `ALREADY_PARTICIPATING` for individual + team or two teams",
       "Shared progress with optimistic locking; completion needs all objectives approved **and** at least `minContributors` distinct contributors",
       "`TeamProgressReducer` as a pure domain class (UT-2); reuse `ObjectiveListComponent` and `ProofFormComponent` in `team-play`"
     ],
-    "e2e": ["E2E-12"],
-    "files": ["backend/src/modules/teams/", "frontend/src/app/features/teams/", "frontend/src/app/features/team-play/", "e2e/tests/p3-*"]
+    "e2e": [
+      "E2E-12"
+    ],
+    "files": [
+      "backend/src/modules/teams/",
+      "frontend/src/app/features/teams/",
+      "frontend/src/app/features/team-play/",
+      "e2e/tests/p3-*"
+    ]
   },
   "R12": {
-    "assumptions": ["A-21"],
+    "assumptions": [
+      "A-21"
+    ],
     "checklist": [
       "One Socket.IO room per team participation; `team-progress:join/leave` with ack `{ ok, lastSeq }` authorized through `TeamMembershipPort`",
       "`TeamProgressEvent` appended with strictly increasing `seq` in the same transaction; emit only after commit",
       "Client applies only `seq = lastSeq + 1`; on a gap or reconnection fetches the snapshot and resumes; presence shown",
       "Test with two browser contexts including a disconnect/reconnect"
     ],
-    "e2e": ["E2E-11"],
-    "files": ["backend/src/modules/teams/", "frontend/src/app/features/team-play/", "e2e/tests/p3-*"]
+    "e2e": [
+      "E2E-11"
+    ],
+    "files": [
+      "backend/src/modules/teams/",
+      "frontend/src/app/features/team-play/",
+      "e2e/tests/p3-*"
+    ]
   },
   "SONAR-SETUP": {
     "checklist": [
@@ -226,7 +464,10 @@
       "Create a token, then `gh secret set SONAR_TOKEN`",
       "Push and check the first analysis is green"
     ],
-    "files": ["sonar-project.properties", ".github/workflows/sonar.yml"]
+    "files": [
+      "sonar-project.properties",
+      ".github/workflows/sonar.yml"
+    ]
   },
   "E2E-CATALOGUE": {
     "checklist": [
@@ -234,7 +475,10 @@
       "At least one negative/authorization case present (E2E-04 and E2E-12)",
       "Run instructions for the demo data and the tests are in the README"
     ],
-    "files": ["e2e/tests/", "docs/tecweb/e2e-catalogue.md"]
+    "files": [
+      "e2e/tests/",
+      "docs/tecweb/e2e-catalogue.md"
+    ]
   },
   "FREEZE": {
     "checklist": [
@@ -248,7 +492,10 @@
       "Release PR `develop` → `main` with a merge commit; tag `v1.0.0`",
       "Final PDFs generated and committed; README and summary sheet up to date"
     ],
-    "files": ["README.md", "docs/"]
+    "files": [
+      "README.md",
+      "docs/"
+    ]
   },
   "SUBMIT": {
     "checklist": [
@@ -256,5 +503,29 @@
       "Check the repo is public and contains no `node_modules`, secrets or course PDFs"
     ],
     "files": []
+  },
+  "CLEANUP": {
+    "checklist": [
+      "Agree the final list of what to remove at the Monday sync; everyone has merged their work, no open PRs, all member branches pushed",
+      "Files: remove or move out of the repository `CLAUDE.md`; remove the Claude Code references from README, CONTRIBUTING, docs/plan/ (PLAN.md, setup-prompt.md, task data and the PDFs), docs/guides/ (starter prompts and PDFs), docs/design/scaffold-spec.md, PROGRESS.md wording and the .github templates; regenerate the PDFs",
+      "History: rewrite all commits on main and develop to drop the Co-Authored-By trailers that name Claude (git filter-repo --message-callback); keep authors and dates so the Git analysis (DOC-GIT) numbers stay valid, and do not cite commit hashes in the INGSW document before this step",
+      "Procedure: temporarily disable branch protection, force-push with lease, re-enable protection and read it back; every member deletes the local clone and clones again; open branches are rebased",
+      "GitHub: edit issue/PR bodies and comments that mention Claude; check the project board and labels",
+      "Verify on a fresh clone: grep -ri claude returns nothing, git log --format=%B | grep -i claude returns nothing, CI is green; then remove the traces of this task itself from tasks.json and the plan",
+      "Record the step in PROGRESS.md (without naming the tool) and tell the team to re-clone before REL-RC starts"
+    ],
+    "files": [
+      "CLAUDE.md",
+      "README.md",
+      "CONTRIBUTING.md",
+      "docs/plan/",
+      "docs/guides/",
+      "docs/design/scaffold-spec.md",
+      "PROGRESS.md",
+      ".github/"
+    ],
+    "docs": [
+      "docs/plan/PLAN.md"
+    ]
   }
 }
