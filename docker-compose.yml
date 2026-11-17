@@ -1,0 +1,33 @@
+# Local development database. Usage: copy .env.example to .env, then `docker compose up -d db`.
+# Adminer (DB web UI) is optional: `docker compose --profile tools up -d`.
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-sidequest}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sidequest}
+      POSTGRES_DB: ${POSTGRES_DB:-sidequest_dev}
+    ports:
+      - '${DB_PORT:-5432}:5432'
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      # Runs only on the first start (empty volume): creates sidequest_test.
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-sidequest} -d ${POSTGRES_DB:-sidequest_dev}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  adminer:
+    image: adminer:4
+    profiles: [tools]
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - '${ADMINER_PORT:-8080}:8080'
+
+volumes:
+  db-data:

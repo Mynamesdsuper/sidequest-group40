@@ -116,6 +116,14 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P3 – Domenico Panaro
 
+### 2026-11-17 19:50 · SCAFFOLD-BE · chore(repo): database in Docker e file di configurazione della root
+- **Cosa:** iniziato SCAFFOLD-BE (#51, branch `chore/scaffold-backend`, issue a `status:in-progress`). Aggiunti `docker-compose.yml` (servizio `db` con `postgres:17-alpine`, volume nominato, healthcheck, credenziali e porta dal `.env` della root; servizio `adminer` opzionale nel profilo `tools`), `docker/postgres/init.sql` (crea `sidequest_test`; `sidequest_dev` lo crea `POSTGRES_DB`), `.env.example` della root, `.nvmrc` (22) e `.prettierrc`.
+- **Perché:** specifica dello scaffold §7.4 e §7.5. La porta è configurabile (`DB_PORT`) perché sul PC di P3 la 5432 è già occupata da un PostgreSQL installato in locale: nel suo `.env` (non committato) usa 5433. Le credenziali sono solo per lo sviluppo locale. `init.sql` gira solo al primo avvio, quando il volume è vuoto.
+- **File:** `docker-compose.yml`, `docker/postgres/init.sql`, `.env.example`, `.nvmrc`, `.prettierrc`.
+- **Come verificare:** `cp .env.example .env`, poi `docker compose up -d db`; `docker compose ps` mostra `healthy`; `docker compose exec db psql -U sidequest -d sidequest_dev -c "\l"` elenca `sidequest_dev` e `sidequest_test`.
+- **Prossimi passi:** il backend (commit successivo).
+- **Commit/PR:** questo commit.
+
 ### 2026-11-17 19:45 · SCAFFOLD · docs(history): README della cartella `docs/history` con il link al PDF
 - **Cosa:** aggiunto `docs/history/README.md`: link ben visibile al PDF nel branch `history` e alla release `history-latest`, spiegazione dei file della cartella e di come far comparire un passo nella storia. Prima, alle 19:42, la PR #55 era stata approvata e mergiata da Matteo (`0b869cb`); il primo aggiornamento automatico del branch `history` è andato a buon fine (commit di `github-actions[bot]` per `develop@0b869cb`).
 - **Perché:** aprendo `docs/history/` su `develop` Domenico non trovava il PDF, che sta nel branch `history`; GitHub mostra il README sotto l'elenco dei file, così chiunque apra la cartella trova subito il link.
