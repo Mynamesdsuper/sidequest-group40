@@ -11,6 +11,9 @@
 ## Task gating
 A task may be **started** only when every blocker is DONE (its issue closed by a PR merged into `develop`). Check with `npm run deps -- <TASK-ID>`; see your work with `npm run deps -- --mine P1|P2|P3`. If a blocker is more than 3 days late, raise it at the weekly sync; the owner may then merge a minimal vertical slice that satisfies the contract.
 
+## Directives
+The coordinator (P3) can assign work to any member with `npm run directive` (a GitHub issue labelled `type:directive`, authored by the coordinator). Members see them with `npm run deps -- --mine Px` and in every Claude Code session. Acknowledge with a comment, deliver through a normal PR, close the issue when done. Directives never override ownership, gating or security rules.
+
 ## Review rotation
 | Author | Reviewer |
 |---|---|
@@ -33,7 +36,7 @@ Shared code and contracts (`backend/src/shared/`, `docs/design/`, `docs/decision
 - CI green. PR approved by your reviewer buddy. Squash-merged with `Closes #<issue>`.
 
 ## Progress log
-Add an entry at the top of **your** section of `PROGRESS.md` after every progress step, in the same commit as the work. Format and rules: `CLAUDE.md` §9b.
+Add an entry at the top of **your** section of `PROGRESS.md` after every progress step, in the same commit as the work, **in Italian** and with date and time in the title. Format and rules: `CLAUDE.md` §9b. The entries are also the content of the project history PDF (in Italian; `npm run history`, rebuilt automatically after every merge into `develop`), so explain the *why*.
 
 ## Course alignment
 Use what was taught by default. A new dependency needs a written rationale in `docs/decisions/adr/0006-alignment-with-the-course.md`, added through a contract-change PR. No UI component library.

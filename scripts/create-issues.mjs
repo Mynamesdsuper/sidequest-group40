@@ -39,6 +39,7 @@ function allLabelDefs() {
   const defs = [];
   for (const o of ['P1', 'P2', 'P3']) defs.push([ownerLabel(o), '1f6feb', `Tasks owned by ${team[o].name}`]);
   for (const t of ['feature', 'docs', 'infra', 'test', 'bug', 'contract-change']) defs.push([`type:${t}`, '0e8a16', `Task type: ${t}`]);
+  defs.push(['type:directive', 'd93f0b', 'Directive from the coordinator (P3) to a member'], ['priority:high', 'b60205', 'High priority']);
   const st = { blocked: 'b60205', ready: '0e8a16', 'in-progress': 'fbca04', 'in-review': '5319e7', done: '6e7781' };
   for (const [s, c] of Object.entries(st)) defs.push([`status:${s}`, c, `Task status: ${s}`]);
   for (let i = 1; i <= 12; i++) defs.push([`req:R${String(i).padStart(2, '0')}`, 'd4c5f9', `Requirement R${String(i).padStart(2, '0')}`]);
