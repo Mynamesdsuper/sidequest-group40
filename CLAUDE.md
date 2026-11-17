@@ -93,6 +93,7 @@ Rules:
 - Write in English, concise and concrete; explain the *why*, not only the *what*.
 - When a task is closed, the last entry says "DONE" and links the merged PR.
 - `PROGRESS.md` is a shared file (CODEOWNERS: all three), but appending in your own section never requires the contract-change process.
+- **Project history PDF.** `npm run history` builds `docs/history/SideQuest_Group40_History.pdf`: the hand-written `docs/history/overview.md`, then every `PROGRESS.md` entry of all sections in chronological order (by the commit that recorded it), the commit history and the task status. The workflow `history.yml` rebuilds and publishes it after every push to `develop` (pre-release `history-latest`). Never commit the generated files. Because your entries become this document, write the **Why** so that a teammate can understand and defend the step at the exam. The coordinator updates the "Phases so far" section of the overview at every milestone.
 
 ## 10. Where to find things
 | What | Where |
@@ -106,4 +107,5 @@ Rules:
 | E2E catalogue (TECWEB) | `docs/tecweb/e2e-catalogue.md` |
 | INGSW document structure | `docs/ingsw/README.md` |
 | Meeting notes | `docs/meetings/` |
+| Project history (everything done, in order) | `docs/history/overview.md`; PDF from `npm run history` or the `history-latest` release |
 | Setup prompt (history) | `docs/plan/setup-prompt.md` |

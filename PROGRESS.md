@@ -115,6 +115,22 @@ Newest entries go at the TOP of your own section. Never edit other members' sect
 
 ## P3 – Domenico Panaro
 
+### 2026-11-17 19:05 · SCAFFOLD · docs(history): project history document, rebuilt after every merge
+- **What:** Added `npm run history` (`scripts/history.mjs`): it builds a PDF with a hand-written overview (`docs/history/overview.md`: purpose, the project, repository layout, way of working, phases so far, glossary), then every `PROGRESS.md` entry of all sections in chronological order, the commit history and the task status. The workflow `history.yml` rebuilds it on every push to `develop` and publishes it as the asset of the pre-release `history-latest` (fixed link in the README). `CLAUDE.md` §9b, §10 and `CONTRIBUTING.md` explain it. A `node:test` self-check covers the ordering.
+- **Why:** Domenico wants one document that explains, in order, everything done to the repository and stays current after each change. `PROGRESS.md` already holds that information, so the PDF is generated from it instead of being written twice. The order comes from `git blame` (the commit that added each entry), because entries are spread over four sections and often have no time. The PDF is not committed: three PRs run in parallel and would conflict on a binary file; a release asset gives a stable link without pushing to the protected branches. No new dependency: it reuses `render-pdf.mjs` and Node's built-in test runner.
+- **Files:** `scripts/history.mjs`, `scripts/history.test.mjs`, `docs/history/overview.md`, `.github/workflows/history.yml`, `package.json`, `.gitignore`, `CLAUDE.md`, `CONTRIBUTING.md`, `README.md`.
+- **How to verify:** `node --test scripts/history.test.mjs` (2 tests pass); `npm run history` writes `docs/history/SideQuest_Group40_History.pdf`; after the merge, the `history` workflow run is green and the release asset exists.
+- **Next / open points:** the first automatic build happens when this PR is merged into `develop`; until then the PDF is built locally.
+- **Commit/PR:** this commit.
+
+### 2026-11-17 18:58 · SCAFFOLD · chore(github): issues for the three scaffold parts
+- **What:** Ran `npm run issues:sync` from this branch: created the labels `task:SCAFFOLD-BE/FE/E2E` and the issues #51 (SCAFFOLD-BE, P3), #52 (SCAFFOLD-FE, P1), #53 (SCAFFOLD-E2E, P2), set them to `status:ready`, retitled #2 (SCAFFOLD) as the integration task with `status:blocked`, and refreshed every issue body from the plan (`--refresh-bodies`; no issue had ticked checkboxes, checked first).
+- **Why:** Vincenzo and Matteo must be able to start on 18 Nov with an issue, a checklist and Starter prompt 2, without waiting for this PR to be merged.
+- **Files:** none in the repository (GitHub configuration).
+- **How to verify:** `gh issue view 51` / `52` / `53`; `npm run deps -- --all` on this branch shows the three parts READY and SCAFFOLD BLOCKED by them.
+- **Next / open points:** until this PR is merged, `npm run deps` on `develop` does not know the new task IDs, and `deps-labeler` would recompute labels with the old plan if an issue is closed: merge PR #47 and then this PR quickly.
+- **Commit/PR:** none (GitHub only).
+
 ### 2026-11-17 · SCAFFOLD · chore(plan): split the code scaffold into three parallel parts
 - **What:** Replaced the single SCAFFOLD task with SCAFFOLD-BE (P3, 18–21 Nov: backend, shared core, `docker-compose.yml`), SCAFFOLD-FE (P1, 18–22 Nov: Angular frontend, incl. the `core/auth` and `core/realtime` stubs) and SCAFFOLD-E2E (P2, 18–22 Nov: Playwright, fixtures, smoke test, `docker-compose.demo.yml`). SCAFFOLD (P3, 23–24 Nov) now integrates them: `ci.yml`, `sonar.yml`, `setup:dev`, branch protection, README quick start. Checklists and allowed paths per part are in `task-details.json`.
 - **Why:** Every member is active from day one instead of waiting for one person, and each one builds the skeleton of the area they will own (Vincenzo the frontend, Matteo the E2E tests). The SCAFFOLD ID is kept as the integration task, so R01 and SONAR-SETUP keep their blockers unchanged. SCAFFOLD-BE is merged first because it sets the TypeScript/ESLint/Prettier conventions the other two follow.
