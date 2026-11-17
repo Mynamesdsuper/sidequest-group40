@@ -5,6 +5,14 @@ Newest entries go at the TOP of your own section. Never edit other members' sect
 
 ## Setup (laptop session)
 
+### 2026-11-17 · CLEANUP · chore(plan): add task CLEANUP before REL-RC
+- **What:** Added the task `CLEANUP` (P3, 2027-02-28, milestone M7, blocked by STABILIZE, DOC-TRACE, DOC-GIT) and made `REL-RC` depend on it. It removes the Claude Code traces from the final repository: files (`CLAUDE.md`, references in README, CONTRIBUTING, plan, guides, templates) and history (commit trailers). Updated `tasks.json`, `task-details.json`, `PLAN.md` (release checklist, risks, graph, Gantt, P3 plan), the P3 guide and the PDFs.
+- **Why:** Domenico wants the delivered product free of those traces, but the team needs `CLAUDE.md` and the starter prompts until the end, and a history rewrite needs a force-push (branch protection lifted) and a re-clone by everyone: so it is done once, late, after DOC-GIT (decision: option A).
+- **Files:** `docs/plan/tasks.json`, `docs/plan/task-details.json`, `docs/plan/PLAN.md`, `docs/plan/*.pdf`, `docs/guides/P3-domenico-panaro.*`.
+- **How to verify:** `node scripts/validate-plan.mjs` → "Plan OK: 47 tasks, no cycles, 0 warning(s)"; `npm run deps -- REL-RC` lists CLEANUP among the blockers.
+- **Next / open points:** needs the issue created on GitHub (`npm run issues:sync -- --refresh-bodies`) and an approval from Vincenzo or Matteo to merge this PR (branch protection).
+- **Commit/PR:** this PR.
+
 ### 2026-11-17 · SETUP · chore(repo): final verification and hand-over (setup session DONE)
 - **What:** Ran the §13 checks. Evidence below.
   1. Scope: fresh clone of `develop` in a temp folder → `ls backend frontend e2e docker` = "No such file or directory" for all four; `git ls-files | grep -E "\.ts$|ci\.yml|sonar\.yml|Dockerfile|docker-compose|\.env"` = empty; `.github/workflows` = `deps-labeler.yml`, `plan.yml`. In the same clone `npm ci` → "found 0 vulnerabilities" and `npm run deps -- --mine P1` runs (next task S0-ASSUMPTIONS).

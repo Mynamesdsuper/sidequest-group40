@@ -248,6 +248,7 @@ flowchart LR
   DOC_SONAR["DOC-SONAR"]
   DOC_UNIT_TEAM["DOC-UNIT-TEAM"]
   DOC_TRACE["DOC-TRACE"]
+  CLEANUP["CLEANUP"]
   REL_RC["REL-RC"]
   REL_DRYRUN["REL-DRYRUN"]
   REL_V1["REL-V1"]
@@ -311,13 +312,14 @@ flowchart LR
   DOC_ARCH --> DOC_TRACE
   DOC_TESTPLAN --> DOC_TRACE
   DOC_UC01 --> DOC_TRACE
-  STABILIZE --> REL_RC
-  DOC_TRACE --> REL_RC
+  STABILIZE --> CLEANUP
+  DOC_TRACE --> CLEANUP
+  DOC_GIT --> CLEANUP
+  CLEANUP --> REL_RC
   DOC_SONAR --> REL_RC
   DOC_UNIT_TIMER --> REL_RC
   DOC_UNIT_TEAM --> REL_RC
   DOC_DESIGN_EXAMPLE --> REL_RC
-  DOC_GIT --> REL_RC
   TW_README --> REL_RC
   TW_SCHEDA --> REL_RC
   REL_RC --> REL_DRYRUN
@@ -328,7 +330,7 @@ flowchart LR
   classDef p3 fill:#ffe1bf,stroke:#d9801a,color:#4a2a05
   class S0_ASSUMPTIONS,R01,R02,R07,R03,QA_SEED,QA_RESPONSIVE,E2E_CATALOGUE,DOC_SRS,TW_README,TW_SCHEDA,DOC_GIT p1
   class S0_EVENTS,DOC_STATE,DOC_UC01_DRAFT,R06A,R04,R05A,R05B,R09,R06B,DOC_UC01,DOC_TESTPLAN,DOC_UNIT_TIMER,DOC_DESIGN_EXAMPLE p2
-  class SCAFFOLD,S0_DATAMODEL,S0_API,SONAR_SETUP,DOC_ARCH_DRAFT,R10,DOC_DESIGN_DRAFT,R08,R11,R12,FREEZE,STABILIZE,DOC_ARCH,DOC_SONAR,DOC_UNIT_TEAM,DOC_TRACE,REL_RC,REL_DRYRUN,REL_V1,SUBMIT p3
+  class SCAFFOLD,S0_DATAMODEL,S0_API,SONAR_SETUP,DOC_ARCH_DRAFT,R10,DOC_DESIGN_DRAFT,R08,R11,R12,FREEZE,STABILIZE,DOC_ARCH,DOC_SONAR,DOC_UNIT_TEAM,DOC_TRACE,CLEANUP,REL_RC,REL_DRYRUN,REL_V1,SUBMIT p3
 ```
 
 </div>
@@ -385,6 +387,7 @@ gantt
   DOC-SONAR :doc_sonar, 2027-02-01, 21d
   DOC-UNIT-TEAM :doc_unit_team, 2027-02-08, 14d
   DOC-TRACE :doc_trace, 2027-02-22, 7d
+  CLEANUP :cleanup, 2027-02-28, 1d
   REL-RC :rel_rc, 2027-03-01, 8d
   REL-DRYRUN :rel_dryrun, 2027-03-09, 6d
   REL-V1 :rel_v1, 2027-03-15, 1d
@@ -402,7 +405,7 @@ gantt
 | M4 | Holiday sprint | 2027-01-03 | R07, R04, DOC-DESIGN-DRAFT |
 | M5 | Core gameplay | 2027-01-17 | R03, R05A, R05B, R08 |
 | M6 | Feature freeze | 2027-01-31 | R09, R11, QA-SEED, R06B, R12, QA-RESPONSIVE, E2E-CATALOGUE, FREEZE |
-| M7 | Documentation and quality | 2027-02-28 | STABILIZE, DOC-SRS, TW-README, TW-SCHEDA, DOC-GIT, DOC-UC01, DOC-TESTPLAN, DOC-UNIT-TIMER, DOC-DESIGN-EXAMPLE, DOC-ARCH, DOC-SONAR, DOC-UNIT-TEAM, DOC-TRACE |
+| M7 | Documentation and quality | 2027-02-28 | STABILIZE, DOC-SRS, TW-README, TW-SCHEDA, DOC-GIT, DOC-UC01, DOC-TESTPLAN, DOC-UNIT-TIMER, DOC-DESIGN-EXAMPLE, DOC-ARCH, DOC-SONAR, DOC-UNIT-TEAM, DOC-TRACE, CLEANUP |
 | M8 | Release and submission | 2027-03-25 | REL-RC, REL-DRYRUN, REL-V1, SUBMIT |
 
 # 10. Step-by-step plan per person
@@ -468,7 +471,7 @@ gantt
    - Dates: 2027-02-15 → 2027-02-28 (milestone M7)
    - Blocked by: FREEZE
    - Deliverables: Git repository analysis (commits, contributors, trend)
-   - You hand over to: REL-RC (P3)
+   - You hand over to: CLEANUP (P3), REL-RC (P3)
 
 ## P2 – Matteo Marino
 
@@ -625,22 +628,27 @@ gantt
    - Blocked by: DOC-SRS, DOC-ARCH, DOC-TESTPLAN, DOC-UC01
    - Deliverables: Traceability table and INGSW PDF assembly
    - You hand over to: nobody directly (internal or later gating)
-18. **REL-RC** – Release candidate: code and docs frozen, full CI green, tag v1.0.0-rc.1
+18. **CLEANUP** – Remove Claude Code traces from the final repository (files and history)
+   - Dates: 2027-02-28 → 2027-02-28 (milestone M7)
+   - Blocked by: STABILIZE, DOC-TRACE, DOC-GIT
+   - Deliverables: Agree the final list of what to remove at the Monday sync; everyone has merged their work, no open PRs, all member branches pushed; Files: remove or move out of the repository `CLAUDE.md`; remove the Claude Code references from README, CONTRIBUTING, docs/plan/ (PLAN.md, setup-prompt.md, task data and the PDFs), docs/guides/ (starter prompts and PDFs), docs/design/scaffold-spec.md, PROGRESS.md wording and the .github templates; regenerate the PDFs
+   - You hand over to: nobody directly (internal or later gating)
+19. **REL-RC** – Release candidate: code and docs frozen, full CI green, tag v1.0.0-rc.1
    - Dates: 2027-03-01 → 2027-03-08 (milestone M8)
-   - Blocked by: STABILIZE, DOC-TRACE, DOC-SONAR, DOC-UNIT-TIMER, DOC-UNIT-TEAM, DOC-DESIGN-EXAMPLE, DOC-GIT, TW-README, TW-SCHEDA
+   - Blocked by: CLEANUP, STABILIZE, DOC-TRACE, DOC-SONAR, DOC-UNIT-TIMER, DOC-UNIT-TEAM, DOC-DESIGN-EXAMPLE, DOC-GIT, TW-README, TW-SCHEDA
    - Deliverables: Release candidate: code and docs frozen, full CI green, tag v1.0.0-rc.1
    - You hand over to: nobody directly (internal or later gating)
-19. **REL-DRYRUN** – Exam dry-run: demo rehearsal and cross-module knowledge sessions (everyone explains everyone's code)
+20. **REL-DRYRUN** – Exam dry-run: demo rehearsal and cross-module knowledge sessions (everyone explains everyone's code)
    - Dates: 2027-03-09 → 2027-03-14 (milestone M8)
    - Blocked by: REL-RC
    - Deliverables: Exam dry-run: demo rehearsal and cross-module knowledge sessions (everyone explains everyone's code)
    - You hand over to: nobody directly (internal or later gating)
-20. **REL-V1** – Release v1.0.0: merge develop into main, tag, final PDFs
+21. **REL-V1** – Release v1.0.0: merge develop into main, tag, final PDFs
    - Dates: 2027-03-15 → 2027-03-15 (milestone M8)
    - Blocked by: REL-DRYRUN
    - Deliverables: Release PR `develop` → `main` with a merge commit; tag `v1.0.0`; Final PDFs generated and committed; README and summary sheet up to date
    - You hand over to: nobody directly (internal or later gating)
-21. **SUBMIT** – Submit repository URL on the Teams assignment
+22. **SUBMIT** – Submit repository URL on the Teams assignment
    - Dates: 2027-03-16 → 2027-03-25 (milestone M8)
    - Blocked by: REL-V1
    - Deliverables: Post the repository URL on the Teams assignment before 25 Mar 2027; Check the repo is public and contains no `node_modules`, secrets or course PDFs
@@ -740,6 +748,7 @@ Both are pure domain classes (no DB); dependencies (Clock, membership) are injec
 - [ ] Single PDF assembled (P3, DOC-TRACE)
 
 **Release**
+- [ ] Claude Code traces removed from files and history (CLEANUP, P3, before REL-RC)
 - [ ] Tag `v1.0.0-rc.1` (REL-RC), exam dry-run (REL-DRYRUN), release `v1.0.0` on `main` (REL-V1)
 - [ ] Repository URL posted on Teams before 25 Mar 2027 (SUBMIT)
 
@@ -754,6 +763,7 @@ Both are pure domain classes (no DB); dependencies (Clock, membership) are injec
 | **Sonar setup** | Task SONAR-SETUP early (30 Nov – 6 Dec) with exact steps in P3's guide; `sonar.yml` skips gracefully without token |
 | **"Everyone must know everything"** | Review rotation, explanations required in every Claude Code session, REL-DRYRUN cross-module sessions |
 | **Non-taught technologies challenged at the exam** | ADR 0006 rationale in every guide; re-check Angular and test tools when the course covers them |
+| **Traces of the AI assistant in the delivered repo** | Task CLEANUP (28 Feb 2027, P3) before REL-RC: remove files, rewrite commit trailers, everyone re-clones; do it only after DOC-GIT |
 | **Secret leak** (objectives before acceptance) | DTO mappers + tests; E2E-03; security invariants in CLAUDE.md |
 
 # 15. Appendix

@@ -97,7 +97,7 @@ Ordered by start date. A task may be started only when all its blockers are DONE
    - Dates: 2027-02-15 → 2027-02-28 (milestone M7)
    - Blocked by: FREEZE
    - Deliverables: Git repository analysis (commits, contributors, trend)
-   - You hand over to: REL-RC (P3)
+   - You hand over to: CLEANUP (P3), REL-RC (P3)
 
 ## 4. What others need from you, and what you need from others
 
@@ -118,6 +118,7 @@ Ordered by start date. A task may be started only when all its blockers are DONE
 | DOC-SRS (due 2027-02-21) | DOC-TRACE | P3 | starts 2027-02-22 |
 | TW-README (due 2027-02-21) | REL-RC | P3 | starts 2027-03-01 |
 | TW-SCHEDA (due 2027-02-21) | REL-RC | P3 | starts 2027-03-01 |
+| DOC-GIT (due 2027-02-28) | CLEANUP | P3 | starts 2027-02-28 |
 | DOC-GIT (due 2027-02-28) | REL-RC | P3 | starts 2027-03-01 |
 
 ### What you need from others

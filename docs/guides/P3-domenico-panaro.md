@@ -124,22 +124,27 @@ Ordered by start date. A task may be started only when all its blockers are DONE
    - Blocked by: DOC-SRS, DOC-ARCH, DOC-TESTPLAN, DOC-UC01
    - Deliverables: Traceability table and INGSW PDF assembly
    - You hand over to: nobody directly (internal or later gating)
-18. **REL-RC** – Release candidate: code and docs frozen, full CI green, tag v1.0.0-rc.1
+18. **CLEANUP** – Remove Claude Code traces from the final repository (files and history)
+   - Dates: 2027-02-28 → 2027-02-28 (milestone M7)
+   - Blocked by: STABILIZE, DOC-TRACE, DOC-GIT
+   - Deliverables: Agree the final list of what to remove at the Monday sync; everyone has merged their work, no open PRs, all member branches pushed; Files: remove or move out of the repository `CLAUDE.md`; remove the Claude Code references from README, CONTRIBUTING, docs/plan/ (PLAN.md, setup-prompt.md, task data and the PDFs), docs/guides/ (starter prompts and PDFs), docs/design/scaffold-spec.md, PROGRESS.md wording and the .github templates; regenerate the PDFs
+   - You hand over to: nobody directly (internal or later gating)
+19. **REL-RC** – Release candidate: code and docs frozen, full CI green, tag v1.0.0-rc.1
    - Dates: 2027-03-01 → 2027-03-08 (milestone M8)
-   - Blocked by: STABILIZE, DOC-TRACE, DOC-SONAR, DOC-UNIT-TIMER, DOC-UNIT-TEAM, DOC-DESIGN-EXAMPLE, DOC-GIT, TW-README, TW-SCHEDA
+   - Blocked by: CLEANUP, STABILIZE, DOC-TRACE, DOC-SONAR, DOC-UNIT-TIMER, DOC-UNIT-TEAM, DOC-DESIGN-EXAMPLE, DOC-GIT, TW-README, TW-SCHEDA
    - Deliverables: Release candidate: code and docs frozen, full CI green, tag v1.0.0-rc.1
    - You hand over to: nobody directly (internal or later gating)
-19. **REL-DRYRUN** – Exam dry-run: demo rehearsal and cross-module knowledge sessions (everyone explains everyone's code)
+20. **REL-DRYRUN** – Exam dry-run: demo rehearsal and cross-module knowledge sessions (everyone explains everyone's code)
    - Dates: 2027-03-09 → 2027-03-14 (milestone M8)
    - Blocked by: REL-RC
    - Deliverables: Exam dry-run: demo rehearsal and cross-module knowledge sessions (everyone explains everyone's code)
    - You hand over to: nobody directly (internal or later gating)
-20. **REL-V1** – Release v1.0.0: merge develop into main, tag, final PDFs
+21. **REL-V1** – Release v1.0.0: merge develop into main, tag, final PDFs
    - Dates: 2027-03-15 → 2027-03-15 (milestone M8)
    - Blocked by: REL-DRYRUN
    - Deliverables: Release PR `develop` → `main` with a merge commit; tag `v1.0.0`; Final PDFs generated and committed; README and summary sheet up to date
    - You hand over to: nobody directly (internal or later gating)
-21. **SUBMIT** – Submit repository URL on the Teams assignment
+22. **SUBMIT** – Submit repository URL on the Teams assignment
    - Dates: 2027-03-16 → 2027-03-25 (milestone M8)
    - Blocked by: REL-V1
    - Deliverables: Post the repository URL on the Teams assignment before 25 Mar 2027; Check the repo is public and contains no `node_modules`, secrets or course PDFs
@@ -188,6 +193,7 @@ Ordered by start date. A task may be started only when all its blockers are DONE
 | DOC-TRACE | DOC-SRS | P1 | due 2027-02-21 |
 | DOC-TRACE | DOC-TESTPLAN | P2 | due 2027-02-21 |
 | DOC-TRACE | DOC-UC01 | P2 | due 2027-02-14 |
+| CLEANUP | DOC-GIT | P1 | due 2027-02-28 |
 | REL-RC | DOC-UNIT-TIMER | P2 | due 2027-02-21 |
 | REL-RC | DOC-DESIGN-EXAMPLE | P2 | due 2027-02-28 |
 | REL-RC | DOC-GIT | P1 | due 2027-02-28 |
@@ -370,6 +376,9 @@ Start it with **Starter prompt 2** and task ID `SCAFFOLD`. Everyone else's codin
 4. Copy the organization and project key into `sonar-project.properties`.
 5. Create a token, then `gh secret set SONAR_TOKEN`.
 6. Push and check that the first analysis is green.
+
+### CLEANUP – remove the Claude Code traces (28 Feb 2027, before REL-RC)
+Do this only after DOC-GIT and DOC-TRACE are done and everyone has merged. Files: remove or move out CLAUDE.md and the references in README, CONTRIBUTING, docs/plan, docs/guides (starter prompts and PDFs), scaffold-spec, PROGRESS wording, .github templates. History: rewrite commits to drop the Co-Authored-By trailers (authors and dates stay, so the Git analysis is unaffected). Needs a temporary lift of the branch protection and a force-push, then re-enable and read it back; everyone re-clones. Full checklist in the CLEANUP issue.
 
 ### Weekly coordination
 Monday sync (30 min): merged work, `npm run deps -- --all`, contract-change requests. Check PRs older than 48 h and the milestone status. Sprint 0 kickoff call: **Monday 23 Nov 2026**.
