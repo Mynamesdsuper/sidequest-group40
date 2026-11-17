@@ -94,7 +94,7 @@ Rules:
 - Write the entries **in Italian** (the only exception to "everything in the repository is in English"), concise and concrete; explain the *why*, not only the *what*. The title always starts with date **and time** (`YYYY-MM-DD HH:MM`): the project history orders the entries by it.
 - When a task is closed, the last entry says "DONE" and links the merged PR.
 - `PROGRESS.md` is a shared file (CODEOWNERS: all three), but appending in your own section never requires the contract-change process.
-- **Project history PDF (in Italian).** `npm run history` builds `docs/history/SideQuest_Group40_History.pdf`: the hand-written `docs/history/overview.md` (Italian), then every `PROGRESS.md` entry of all sections in chronological order (by the date and time in the entry title), the commit history and the task status. The workflow `history.yml` rebuilds and publishes it after every push to `develop` (pre-release `history-latest`). Never commit the generated files. Because your entries become this document, write the **Why** so that a teammate can understand and defend the step at the exam. The coordinator updates the "Le fasi finora" section of the overview at every milestone.
+- **Project history PDF (in Italian).** `npm run history` builds `docs/history/SideQuest_Group40_History.pdf`: the hand-written `docs/history/overview.md` (Italian), then every `PROGRESS.md` entry of all sections in chronological order (by the date and time in the entry title), the commit history and the task status. The workflow `history.yml` rebuilds and publishes it after every push to `develop`, as a file on the branch `history` (one commit, force-pushed: never work on that branch) and on the pre-release `history-latest`. Never commit the generated files. Because your entries become this document, write the **Why** so that a teammate can understand and defend the step at the exam. The coordinator updates the "Le fasi finora" section of the overview at every milestone.
 
 ## 10. Where to find things
 | What | Where |
@@ -108,5 +108,5 @@ Rules:
 | E2E catalogue (TECWEB) | `docs/tecweb/e2e-catalogue.md` |
 | INGSW document structure | `docs/ingsw/README.md` |
 | Meeting notes | `docs/meetings/` |
-| Project history (everything done, in order) | `docs/history/overview.md`; PDF from `npm run history` or the `history-latest` release |
+| Project history (everything done, in order) | `docs/history/overview.md`; PDF on the branch `history`, from `npm run history` or on the `history-latest` release |
 | Setup prompt (history) | `docs/plan/setup-prompt.md` |
