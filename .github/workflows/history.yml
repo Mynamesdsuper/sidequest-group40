@@ -1,15 +1,15 @@
 name: history
 
 # Rebuilds the project history PDF, in Italian (docs/history/overview.md + PROGRESS.md in chronological
-# order + commit history + task status) after every push to develop, and publishes it as the asset of the
-# pre-release `history-latest`, so the link never changes.
+# order + commit history + task status) after every push to develop, and publishes it (1) as a file on the
+# branch `history` and (2) as the asset of the pre-release `history-latest`, so the links never change.
 on:
   push:
     branches: [develop]
   workflow_dispatch:
 
 permissions:
-  contents: write # create the pre-release and upload the asset (no push to any branch)
+  contents: write # push the branch `history` (not protected), create the pre-release, upload the asset
   issues: read # task status snapshot (npm run deps -- --all)
 
 concurrency:
@@ -38,6 +38,20 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
+      - name: Publish to the branch history
+        # One orphan commit, force-pushed: the branch never accumulates old PDFs, so clones stay small.
+        run: |
+          out="$RUNNER_TEMP/history-branch"
+          mkdir -p "$out"
+          cp docs/history/SideQuest_Group40_History.pdf "$out/"
+          cp docs/history/BRANCH-README.md "$out/README.md"
+          cd "$out"
+          git init -q -b history
+          git add -A
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -q -m "Storia del progetto aggiornata a develop@${GITHUB_SHA::7}"
+          git push -q -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" history
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: Publish to the pre-release history-latest
         run: |
           gh release view history-latest >/dev/null 2>&1 || gh release create history-latest --prerelease --target develop --title "Storia del progetto (ultima versione)" --notes "Ricostruita automaticamente a ogni push su develop da .github/workflows/history.yml."
