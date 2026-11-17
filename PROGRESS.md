@@ -5,6 +5,14 @@ Newest entries go at the TOP of your own section. Never edit other members' sect
 
 ## Setup (laptop session)
 
+### 2026-11-17 · SETUP · docs(plan): Start-here page (what each member does now) + PDF
+- **What:** Added `docs/plan/START-HERE.md` and its PDF: this week's actions for everyone (invitation, tools, Starter prompt 1, review of PR #47, kickoff), the first tasks and dates of P1, P2 and P3, the kickoff agenda (Mon 23 Nov), key dates, rules and commands. Linked from the README.
+- **Why:** Domenico asked for a short hand-over document to give to Vincenzo and Matteo so that all three can start in the right order.
+- **Files:** `docs/plan/START-HERE.md`, `docs/plan/SideQuest_Group40_Start_Here.pdf`, `README.md`.
+- **How to verify:** open the PDF (5 pages); the dates match `npm run deps -- --all`.
+- **Next / open points:** merge PR #47 after a code-owner approval.
+- **Commit/PR:** PR #47.
+
 ### 2026-11-17 · CLEANUP · chore(plan): add task CLEANUP before REL-RC
 - **What:** Added the task `CLEANUP` (P3, 2027-02-28, milestone M7, blocked by STABILIZE, DOC-TRACE, DOC-GIT) and made `REL-RC` depend on it. It removes the Claude Code traces from the final repository: files (`CLAUDE.md`, references in README, CONTRIBUTING, plan, guides, templates) and history (commit trailers). Updated `tasks.json`, `task-details.json`, `PLAN.md` (release checklist, risks, graph, Gantt, P3 plan), the P3 guide and the PDFs.
 - **Why:** Domenico wants the delivered product free of those traces, but the team needs `CLAUDE.md` and the starter prompts until the end, and a history rewrite needs a force-push (branch protection lifted) and a re-clone by everyone: so it is done once, late, after DOC-GIT (decision: option A).

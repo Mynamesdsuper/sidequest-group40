@@ -44,6 +44,7 @@ npm run deps -- --all          # whole-team view
 ```
 
 ## Documentation
+- **Start here (what to do now):** [`docs/plan/START-HERE.md`](docs/plan/START-HERE.md) · [PDF](docs/plan/SideQuest_Group40_Start_Here.pdf)
 - Master plan: [`docs/plan/PLAN.md`](docs/plan/PLAN.md) · [PDF](docs/plan/SideQuest_Group40_Master_Plan.pdf)
 - Personal guides: [`docs/guides/`](docs/guides/) (P1, P2, P3, Markdown + PDF)
 - Requirements: [`docs/reference/requirements.md`](docs/reference/requirements.md)
