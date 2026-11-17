@@ -1,0 +1,6 @@
+{
+  "P1": { "name": "Vincenzo Pio Lubrano", "studentId": "N86005417", "github": "vincenzolubrano05", "label": "owner:P1-vincenzo", "reviewer": "P2", "reviews": "P3" },
+  "P2": { "name": "Matteo Marino", "studentId": "N86005461", "github": "reverinn", "label": "owner:P2-matteo", "reviewer": "P3", "reviews": "P1" },
+  "P3": { "name": "Domenico Panaro", "studentId": "N86005622", "github": "Mynamesdsuper", "label": "owner:P3-domenico", "reviewer": "P1", "reviews": "P2" },
+  "repo": "Mynamesdsuper/sidequest-group40"
+}
