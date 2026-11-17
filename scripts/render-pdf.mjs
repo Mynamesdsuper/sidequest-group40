@@ -11,10 +11,11 @@ import { chromium } from 'playwright';
 import { ROOT } from './lib.mjs';
 
 function parseArgs(argv) {
-  const o = { title: 'Document', out: 'out.pdf', html: null, inputs: [] };
+  const o = { title: 'Document', out: 'out.pdf', html: null, lang: 'en', inputs: [] };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--title') o.title = argv[++i];
+    else if (a === '--lang') o.lang = argv[++i];
     else if (a === '--out') o.out = argv[++i];
     else if (a === '--html') o.html = argv[++i];
     else o.inputs.push(a);
@@ -98,12 +99,13 @@ async function main() {
     if (lvl === '1' || lvl === '2') toc.push({ lvl: Number(lvl), id, text: inner.replace(/<[^>]+>/g, '') });
     return `<h${lvl} id="${id}">${inner}</h${lvl}>`;
   });
-  const tocHtml = `<div class="toc"><h2>Contents</h2><ul>${toc.map((t) => `<li class="l${t.lvl}"><a href="#${t.id}">${escapeHtml(t.text)}</a></li>`).join('')}</ul></div>`;
+  const L = o.lang === 'it' ? { contents: 'Indice', group: 'Gruppo 40', generated: 'Generato il' } : { contents: 'Contents', group: 'Group 40', generated: 'Generated' };
+  const tocHtml = `<div class="toc"><h2>${L.contents}</h2><ul>${toc.map((t) => `<li class="l${t.lvl}"><a href="#${t.id}">${escapeHtml(t.text)}</a></li>`).join('')}</ul></div>`;
   const date = new Date().toISOString().slice(0, 10);
-  const cover = `<div class="cover"><h1>${escapeHtml(o.title)}</h1><p>Università degli Studi di Napoli Federico II · A.A. 2026/27 · Group 40</p><p>Generated ${date}</p></div>`;
+  const cover = `<div class="cover"><h1>${escapeHtml(o.title)}</h1><p>Università degli Studi di Napoli Federico II · A.A. 2026/27 · ${L.group}</p><p>${L.generated} ${date}</p></div>`;
 
   const mermaidJs = pathToFileURL(join(ROOT, 'node_modules/mermaid/dist/mermaid.min.js')).href;
-  const doc = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>${escapeHtml(o.title)}</title><style>${CSS}</style></head><body>${cover}${tocHtml}${html}<script src="${mermaidJs}"></script></body></html>`;
+  const doc = `<!doctype html><html lang="${o.lang === 'it' ? 'it' : 'en'}"><head><meta charset="utf-8"><title>${escapeHtml(o.title)}</title><style>${CSS}</style></head><body>${cover}${tocHtml}${html}<script src="${mermaidJs}"></script></body></html>`;
 
   const tmp = mkdtempSync(join(tmpdir(), 'sq-pdf-'));
   const htmlPath = join(tmp, 'doc.html');

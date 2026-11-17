@@ -1,6 +1,9 @@
 [
  {"id":"SETUP","title":"Repository, plan, guides and GitHub setup (no code)","owner":"P3","type":"infra","milestone":"M0","start":"2026-11-17","due":"2026-11-17","blockedBy":[],"requirements":[]},
- {"id":"SCAFFOLD","title":"Code scaffold from docs/design/scaffold-spec.md: backend, frontend, e2e, docker, ci.yml, sonar.yml","owner":"P3","type":"infra","milestone":"M1","start":"2026-11-18","due":"2026-11-24","blockedBy":["SETUP"],"requirements":[]},
+ {"id":"SCAFFOLD-BE","title":"Scaffold part 1: backend, shared core, docker-compose (db)","owner":"P3","type":"infra","milestone":"M1","start":"2026-11-18","due":"2026-11-21","blockedBy":["SETUP"],"requirements":[]},
+ {"id":"SCAFFOLD-FE","title":"Scaffold part 2: Angular frontend, layout, shared UI, stubs, lazy routes","owner":"P1","type":"infra","milestone":"M1","start":"2026-11-18","due":"2026-11-22","blockedBy":["SETUP"],"requirements":[]},
+ {"id":"SCAFFOLD-E2E","title":"Scaffold part 3: Playwright e2e, fixtures, smoke test, demo compose","owner":"P2","type":"infra","milestone":"M1","start":"2026-11-18","due":"2026-11-22","blockedBy":["SETUP"],"requirements":[]},
+ {"id":"SCAFFOLD","title":"Scaffold integration: ci.yml, sonar.yml, setup:dev, branch protection, README quick start","owner":"P3","type":"infra","milestone":"M1","start":"2026-11-23","due":"2026-11-24","blockedBy":["SCAFFOLD-BE","SCAFFOLD-FE","SCAFFOLD-E2E"],"requirements":[]},
  {"id":"S0-ASSUMPTIONS","title":"Ratify domain assumptions A-01..A-26","owner":"P1","type":"docs","milestone":"M1","start":"2026-11-23","due":"2026-11-29","blockedBy":["SETUP"],"requirements":["R01","R02","R03","R04","R05","R06","R07","R08","R09","R10","R11","R12"]},
  {"id":"S0-DATAMODEL","title":"Freeze data model and ER diagram","owner":"P3","type":"docs","milestone":"M1","start":"2026-11-23","due":"2026-11-29","blockedBy":["SETUP"],"requirements":[]},
  {"id":"S0-API","title":"Freeze REST contracts (OpenAPI fragments) and module public APIs","owner":"P3","type":"contract-change","milestone":"M1","start":"2026-11-23","due":"2026-11-29","blockedBy":["SETUP"],"requirements":[]},
