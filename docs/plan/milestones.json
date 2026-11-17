@@ -1,0 +1,11 @@
+[
+  { "id": "M0", "title": "Setup", "due": "2026-11-17" },
+  { "id": "M1", "title": "Sprint 0 – Analysis and contracts", "due": "2026-11-29" },
+  { "id": "M2", "title": "Foundations (R01)", "due": "2026-12-06" },
+  { "id": "M3", "title": "Missions, notifications, teams", "due": "2026-12-20" },
+  { "id": "M4", "title": "Holiday sprint", "due": "2027-01-03" },
+  { "id": "M5", "title": "Core gameplay", "due": "2027-01-17" },
+  { "id": "M6", "title": "Feature freeze", "due": "2027-01-31" },
+  { "id": "M7", "title": "Documentation and quality", "due": "2027-02-28" },
+  { "id": "M8", "title": "Release and submission", "due": "2027-03-25" }
+]
