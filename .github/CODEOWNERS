@@ -1,0 +1,83 @@
+# Last matching pattern wins: general rules first, file-level exceptions last.
+# P1 = @vincenzolubrano05 (Vincenzo)  P2 = @reverinn (Matteo)  P3 = @Mynamesdsuper (Domenico). Every path has an owner plus a reviewer buddy.
+
+# Default and shared paths (all three)
+*                                   @vincenzolubrano05 @reverinn @Mynamesdsuper
+/PROGRESS.md                        @vincenzolubrano05 @reverinn @Mynamesdsuper
+/backend/src/shared/                @vincenzolubrano05 @reverinn @Mynamesdsuper
+/backend/src/app.ts                 @vincenzolubrano05 @reverinn @Mynamesdsuper
+/backend/src/server.ts              @vincenzolubrano05 @reverinn @Mynamesdsuper
+/backend/src/modules/registry.ts    @vincenzolubrano05 @reverinn @Mynamesdsuper
+/frontend/src/app/core/api/         @vincenzolubrano05 @reverinn @Mynamesdsuper
+/frontend/src/app/core/layout/      @vincenzolubrano05 @reverinn @Mynamesdsuper
+/frontend/src/app/shared/ui/        @vincenzolubrano05 @reverinn @Mynamesdsuper
+/frontend/src/app/app.routes.ts     @vincenzolubrano05 @reverinn @Mynamesdsuper
+/e2e/fixtures/                      @vincenzolubrano05 @reverinn @Mynamesdsuper
+/docs/decisions/                    @vincenzolubrano05 @reverinn @Mynamesdsuper
+/docs/design/                       @vincenzolubrano05 @reverinn @Mynamesdsuper
+/.github/                           @vincenzolubrano05 @reverinn @Mynamesdsuper
+
+# P1 paths: @vincenzolubrano05 @reverinn
+/backend/src/modules/auth/               @vincenzolubrano05 @reverinn
+/backend/src/db/migrations/*-auth-*     @vincenzolubrano05 @reverinn
+/backend/src/modules/users/               @vincenzolubrano05 @reverinn
+/backend/src/db/migrations/*-users-*     @vincenzolubrano05 @reverinn
+/backend/src/modules/missions/               @vincenzolubrano05 @reverinn
+/backend/src/db/migrations/*-missions-*     @vincenzolubrano05 @reverinn
+/backend/src/db/seeds/*-users.ts         @vincenzolubrano05 @reverinn
+/backend/src/db/seeds/*-categories.ts         @vincenzolubrano05 @reverinn
+/backend/src/db/seeds/*-missions.ts         @vincenzolubrano05 @reverinn
+/frontend/src/app/core/auth/        @vincenzolubrano05 @reverinn
+/frontend/src/app/features/auth/     @vincenzolubrano05 @reverinn
+/frontend/src/app/features/profile/     @vincenzolubrano05 @reverinn
+/frontend/src/app/features/admin/     @vincenzolubrano05 @reverinn
+/frontend/src/app/features/missions/     @vincenzolubrano05 @reverinn
+/frontend/src/app/features/explore/     @vincenzolubrano05 @reverinn
+/frontend/src/app/shared/map/       @vincenzolubrano05 @reverinn
+/e2e/tests/p1-*                     @vincenzolubrano05 @reverinn
+/docs/ingsw/01-srs/                 @vincenzolubrano05 @reverinn
+/docs/tecweb/                       @vincenzolubrano05 @reverinn
+
+# P2 paths: @reverinn @Mynamesdsuper
+/backend/src/modules/participations/               @reverinn @Mynamesdsuper
+/backend/src/db/migrations/*-participations-*     @reverinn @Mynamesdsuper
+/backend/src/modules/notifications/               @reverinn @Mynamesdsuper
+/backend/src/db/migrations/*-notifications-*     @reverinn @Mynamesdsuper
+/backend/src/modules/dashboard/               @reverinn @Mynamesdsuper
+/backend/src/db/migrations/*-dashboard-*     @reverinn @Mynamesdsuper
+/backend/src/db/seeds/*-participations.ts         @reverinn @Mynamesdsuper
+/backend/src/db/seeds/*-notifications.ts         @reverinn @Mynamesdsuper
+/frontend/src/app/core/realtime/    @reverinn @Mynamesdsuper
+/frontend/src/app/features/participation/     @reverinn @Mynamesdsuper
+/frontend/src/app/features/waitlist/     @reverinn @Mynamesdsuper
+/frontend/src/app/features/notifications/     @reverinn @Mynamesdsuper
+/frontend/src/app/features/dashboard/     @reverinn @Mynamesdsuper
+/e2e/tests/p2-*                     @reverinn @Mynamesdsuper
+/docs/ingsw/04-testing/             @reverinn @Mynamesdsuper
+
+# P3 paths: @Mynamesdsuper @vincenzolubrano05
+/backend/src/modules/invitations/               @Mynamesdsuper @vincenzolubrano05
+/backend/src/db/migrations/*-invitations-*     @Mynamesdsuper @vincenzolubrano05
+/backend/src/modules/teams/               @Mynamesdsuper @vincenzolubrano05
+/backend/src/db/migrations/*-teams-*     @Mynamesdsuper @vincenzolubrano05
+/backend/src/db/seeds/*-teams.ts         @Mynamesdsuper @vincenzolubrano05
+/backend/src/db/seeds/*-invitations.ts         @Mynamesdsuper @vincenzolubrano05
+/frontend/src/app/features/invitations/     @Mynamesdsuper @vincenzolubrano05
+/frontend/src/app/features/teams/     @Mynamesdsuper @vincenzolubrano05
+/frontend/src/app/features/team-play/     @Mynamesdsuper @vincenzolubrano05
+/e2e/tests/p3-*                     @Mynamesdsuper @vincenzolubrano05
+/docs/ingsw/02-design/              @Mynamesdsuper @vincenzolubrano05
+/docs/ingsw/03-process/sonar-report.md @Mynamesdsuper @vincenzolubrano05
+/docs/uml/                          @Mynamesdsuper @vincenzolubrano05
+
+# File-level exceptions (after the folder rules)
+/docs/ingsw/01-srs/uc-01-*          @reverinn @Mynamesdsuper
+/docs/ingsw/01-srs/mockups.md       @reverinn @Mynamesdsuper
+/docs/ingsw/02-design/design-example.md @reverinn @Mynamesdsuper
+/docs/ingsw/03-process/git-analysis.md  @vincenzolubrano05 @reverinn
+/docs/ingsw/04-testing/unit-test-team-progress.md @Mynamesdsuper @vincenzolubrano05
+/docs/ingsw/05-traceability/P1.md   @vincenzolubrano05 @reverinn
+/docs/ingsw/05-traceability/P2.md   @reverinn @Mynamesdsuper
+/docs/ingsw/05-traceability/P3.md   @Mynamesdsuper @vincenzolubrano05
+/docs/uml/use-cases.puml            @vincenzolubrano05 @reverinn
+/docs/uml/participation-state.puml  @reverinn @Mynamesdsuper
