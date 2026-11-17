@@ -5,6 +5,14 @@ Newest entries go at the TOP of your own section. Never edit other members' sect
 
 ## Setup (laptop session)
 
+### 2026-11-17 · SETUP · docs(repo): CLAUDE.md, CONTRIBUTING, README, INGSW structure, E2E catalogue
+- **What:** Added the Claude Code rules (`CLAUDE.md`, incl. the progress-log rules), the git/review/DoD guide (`CONTRIBUTING.md`), a short `README.md` (status: setup only, scaffold pending: task SCAFFOLD), `docs/ingsw/README.md` (planned chapters with owners and due dates, no chapter files), the 12-test E2E catalogue and a meeting-notes template.
+- **Why:** These tell each member (and each Claude Code session) what they may touch and how to work, without any application code (scope rule §0.1).
+- **Files:** `CLAUDE.md`, `CONTRIBUTING.md`, `README.md`, `docs/ingsw/README.md`, `docs/tecweb/e2e-catalogue.md`, `docs/meetings/TEMPLATE.md`.
+- **How to verify:** open the files; `grep -c "E2E-" docs/tecweb/e2e-catalogue.md`.
+- **Next / open points:** plan data (`tasks.json`) and the planning scripts.
+- **Commit/PR:** this commit.
+
 ### 2026-11-17 · SETUP · docs(design): data model, module contracts, realtime events, scaffold spec
 - **What:** Wrote the PROPOSED drafts `data-model.md` (tables + Mermaid ER), `module-contracts.md` (ports, public APIs, domain events, planned REST surface) and `realtime-events.md`. Generated `scaffold-spec.md` as a verbatim copy of §4/§4.1, §6.1–§6.3, §6.5, §7, the ci/sonar part of §9 step 7 and the SCAFFOLD checklist of the setup prompt (by a throwaway script, so the copy is exact).
 - **Why:** Contracts are frozen in Sprint 0; the scaffold spec lets the task SCAFFOLD be done later without this laptop session writing any code (scope rule §0.1). Signatures are Markdown only: no `.ts` files.
