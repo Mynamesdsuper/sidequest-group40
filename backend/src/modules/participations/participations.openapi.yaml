@@ -1,0 +1,8 @@
+# OpenAPI fragment of the `participations` module, merged at boot into /api/docs (shared/openapi/merge.ts).
+# Every path: x-owner, x-requirement, x-status (planned -> done). Paths are filled in S0-API.
+x-module: participations
+x-owner: P2
+tags:
+  - name: Participations
+    description: Acceptance, server-authoritative timer, progress, proofs, reviews, outcome, points ledger, capacity and waitlist. Supports participantType - USER | TEAM from day one so that R11 can build on it (binds ParticipationQueryPort).
+paths: {}

@@ -1,0 +1,8 @@
+# OpenAPI fragment of the `dashboard` module, merged at boot into /api/docs (shared/openapi/merge.ts).
+# Every path: x-owner, x-requirement, x-status (planned -> done). Paths are filled in S0-API.
+x-module: dashboard
+x-owner: P2
+tags:
+  - name: Dashboard
+    description: Personal area - aggregates (read only) the public APIs of missions and participations.
+paths: {}

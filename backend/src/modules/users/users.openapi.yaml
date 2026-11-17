@@ -1,0 +1,8 @@
+# OpenAPI fragment of the `users` module, merged at boot into /api/docs (shared/openapi/merge.ts).
+# Every path: x-owner, x-requirement, x-status (planned -> done). Paths are filled in S0-API.
+x-module: users
+x-owner: P1
+tags:
+  - name: Users
+    description: Own profile, public profile (A-03) and admin user management (A-04).
+paths: {}

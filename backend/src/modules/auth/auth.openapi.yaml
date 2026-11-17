@@ -1,0 +1,8 @@
+# OpenAPI fragment of the `auth` module, merged at boot into /api/docs (shared/openapi/merge.ts).
+# Every path: x-owner, x-requirement, x-status (planned -> done). Paths are filled in S0-API.
+x-module: auth
+x-owner: P1
+tags:
+  - name: Auth
+    description: Register, login, logout with JWT (tokenVersion, A-02) and the authentication middleware exported to every module - requireAuth, optionalAuth, requireRole(role).
+paths: {}
