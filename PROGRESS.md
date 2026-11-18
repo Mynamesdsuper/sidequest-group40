@@ -114,6 +114,14 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P2 – Matteo Marino
 
+### 2026-11-18 17:30 · SCAFFOLD-E2E · test(e2e): Playwright, fixture, smoke test e stack demo
+- **Cosa:** creata la cartella `e2e/` (Playwright con i progetti `desktop-chromium` 1280×800 e `mobile-chromium` 390×844, `webServer` per backend in `NODE_ENV=test` con `db:reset` e frontend dev server, `globalSetup` che chiama `POST /api/v1/__test__/reset`), le fixture `api`, `auth` (stub `loginAs`, `TODO(R01, P1)`), `clock` (`setServerClockOffset`), `users` (account demo §7.6), `tests/smoke.spec.ts`; aggiunto `docker-compose.demo.yml` (db + backend + frontend).
+- **Perché:** è la parte E2E dello scaffold (`docs/design/scaffold-spec.md` §7.3–§7.4, issue #53). Endpoint, variabili e porte sono presi dal branch `chore/scaffold-backend` di P3, così combaciano. I test girano con un solo worker perché condividono il DB di test. Lo stack demo ha un nome di progetto e un volume propri (non tocca il DB di sviluppo) e lancia anche i seed, altrimenti gli account demo non esisterebbero.
+- **File:** `e2e/`, `docker-compose.demo.yml`.
+- **Come verificare:** `cd e2e && npm ci && npx tsc --noEmit && npx playwright test --list` (6 test). Contro il backend di `chore/scaffold-backend` in `NODE_ENV=test`: 4/6 verdi (health, reset, orologio, su desktop e mobile); i 2 test della home attendono il frontend (SCAFFOLD-FE) e `npx playwright install chromium`.
+- **Prossimi passi:** rebase dopo il merge di SCAFFOLD-BE e SCAFFOLD-FE, smoke test tutto verde, `docker compose -f docker-compose.demo.yml up --build` (da verificare: il Dockerfile del frontend deve servire nginx sulla porta 80), poi PR `chore/scaffold-e2e` → `develop` con review di Domenico.
+- **Commit/PR:** da aggiungere.
+
 ## P3 – Domenico Panaro
 
 ### 2026-11-17 20:03 · SCAFFOLD-BE · test(shared): test unitari e di integrazione dello scaffold
