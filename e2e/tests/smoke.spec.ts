@@ -17,8 +17,12 @@ test('the home page shows the backend status', async ({ page }) => {
 });
 
 test('the server clock can be moved and restored', async () => {
-  const moved = await setServerClockOffset(3600);
-  expect(moved.offsetSeconds).toBe(3600);
-  expect(Date.parse(moved.now) - Date.now()).toBeGreaterThan(3500 * 1000);
-  expect((await setServerClockOffset(0)).offsetSeconds).toBe(0);
+  try {
+    const moved = await setServerClockOffset(3600);
+    expect(moved.offsetSeconds).toBe(3600);
+    expect(Date.parse(moved.now) - Date.now()).toBeGreaterThan(3500 * 1000);
+  } finally {
+    // Restore real time even when an assertion fails, so later tests are not shifted.
+    expect((await setServerClockOffset(0)).offsetSeconds).toBe(0);
+  }
 });

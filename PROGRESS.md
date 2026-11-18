@@ -114,6 +114,14 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P2 – Matteo Marino
 
+### 2026-11-18 18:15 · SCAFFOLD-E2E · fix(e2e): orologio ripristinato anche se il test fallisce, stack demo solo in locale
+- **Cosa:** nello smoke test l'orologio del server torna a 0 in un `finally`; in `docker-compose.demo.yml` le porte di backend e frontend sono pubblicate solo su `127.0.0.1`.
+- **Perché:** emerso dalla review del commit precedente. Se un controllo falliva dopo lo spostamento a +1h, tutti i test successivi vedevano il server avanti di un'ora (fallimenti a catena, gravi quando arriveranno i test del timer di R04). Il `TOKEN_SECRET` di default della demo è nel repo pubblico: con le porte aperte su tutta la rete (es. Wi-Fi dell'università) chiunque potrebbe firmare token validi.
+- **File:** `e2e/tests/smoke.spec.ts`, `docker-compose.demo.yml`.
+- **Come verificare:** `cd e2e && npx tsc --noEmit`; `docker compose -f docker-compose.demo.yml config` mostra `host_ip: 127.0.0.1` sulle due porte.
+- **Prossimi passi:** invariati (rebase dopo SCAFFOLD-BE e SCAFFOLD-FE, smoke test verde, prova dello stack demo, PR).
+- **Commit/PR:** da aggiungere.
+
 ### 2026-11-18 17:30 · SCAFFOLD-E2E · test(e2e): Playwright, fixture, smoke test e stack demo
 - **Cosa:** creata la cartella `e2e/` (Playwright con i progetti `desktop-chromium` 1280×800 e `mobile-chromium` 390×844, `webServer` per backend in `NODE_ENV=test` con `db:reset` e frontend dev server, `globalSetup` che chiama `POST /api/v1/__test__/reset`), le fixture `api`, `auth` (stub `loginAs`, `TODO(R01, P1)`), `clock` (`setServerClockOffset`), `users` (account demo §7.6), `tests/smoke.spec.ts`; aggiunto `docker-compose.demo.yml` (db + backend + frontend).
 - **Perché:** è la parte E2E dello scaffold (`docs/design/scaffold-spec.md` §7.3–§7.4, issue #53). Endpoint, variabili e porte sono presi dal branch `chore/scaffold-backend` di P3, così combaciano. I test girano con un solo worker perché condividono il DB di test. Lo stack demo ha un nome di progetto e un volume propri (non tocca il DB di sviluppo) e lancia anche i seed, altrimenti gli account demo non esisterebbero.
