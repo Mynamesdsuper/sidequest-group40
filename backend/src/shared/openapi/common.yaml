@@ -1,0 +1,84 @@
+# Shared part of the OpenAPI document: info, servers, the error and pagination schemas, bearer auth
+# and the health endpoint. Each module adds its own paths in modules/<name>/<name>.openapi.yaml.
+openapi: 3.1.0
+info:
+  title: SideQuest API
+  version: 0.1.0
+  description: REST API of SideQuest (Group 40). JSON only. Errors use the Error schema.
+servers:
+  - url: /api/v1
+tags:
+  - name: System
+    description: Health and diagnostics
+paths:
+  /health:
+    get:
+      tags: [System]
+      summary: Health check (server time and database status)
+      x-owner: P3
+      x-status: done
+      responses:
+        '200':
+          description: The server is running
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, db, time]
+                properties:
+                  status: { type: string, enum: [ok] }
+                  db: { type: string, enum: [up, down] }
+                  time: { type: string, format: date-time, description: Server time (authoritative) }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    Page:
+      name: page
+      in: query
+      schema: { type: integer, minimum: 1, default: 1 }
+    PageSize:
+      name: pageSize
+      in: query
+      schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+  schemas:
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message, details]
+          properties:
+            code: { type: string, examples: [VALIDATION_ERROR, NOT_FOUND] }
+            message: { type: string }
+            details:
+              type: object
+              description: For VALIDATION_ERROR, `fields` maps each invalid field to its message.
+    Page:
+      type: object
+      required: [items, page, pageSize, total]
+      properties:
+        items: { type: array, items: {} }
+        page: { type: integer }
+        pageSize: { type: integer }
+        total: { type: integer }
+  responses:
+    ValidationError:
+      description: The request is not valid (400 VALIDATION_ERROR)
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Unauthorized:
+      description: Authentication is required (401)
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    NotFound:
+      description: Not found, or restricted and not visible to the caller (404)
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }

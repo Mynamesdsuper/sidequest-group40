@@ -1,0 +1,8 @@
+# OpenAPI fragment of the `invitations` module, merged at boot into /api/docs (shared/openapi/merge.ts).
+# Every path: x-owner, x-requirement, x-status (planned -> done). Paths are filled in S0-API.
+x-module: invitations
+x-owner: P3
+tags:
+  - name: Invitations
+    description: Invitations to RESTRICTED missions (A-17); accepting grants access through missions.grantAccess.
+paths: {}

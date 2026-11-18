@@ -1,0 +1,8 @@
+# OpenAPI fragment of the `teams` module, merged at boot into /api/docs (shared/openapi/merge.ts).
+# Every path: x-owner, x-requirement, x-status (planned -> done). Paths are filled in S0-API.
+x-module: teams
+x-owner: P3
+tags:
+  - name: Teams
+    description: Teams, membership and team invitations (R10), team participation wrapping the participations public API (R11), the progress event log and the live rooms (R12); binds TeamMembershipPort.
+paths: {}
