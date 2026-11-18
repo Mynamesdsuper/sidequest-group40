@@ -1,0 +1,8 @@
+# OpenAPI fragment of the `notifications` module, merged at boot into /api/docs (shared/openapi/merge.ts).
+# Every path: x-owner, x-requirement, x-status (planned -> done). Paths are filled in S0-API.
+x-module: notifications
+x-owner: P2
+tags:
+  - name: Notifications
+    description: Notification persistence and REST, the Socket.IO gateway with the JWT handshake; binds the real NotifierPort and RealtimePort.
+paths: {}

@@ -1,0 +1,8 @@
+# OpenAPI fragment of the `missions` module, merged at boot into /api/docs (shared/openapi/merge.ts).
+# Every path: x-owner, x-requirement, x-status (planned -> done). Paths are filled in S0-API.
+x-module: missions
+x-owner: P1
+tags:
+  - name: Missions
+    description: Missions, objectives, categories, publication, search and map data; the MissionAccess allow-list and the access policy (binds MissionAccessPort in R07).
+paths: {}
