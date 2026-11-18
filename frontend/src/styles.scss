@@ -1,0 +1,6 @@
+// Global styles: design tokens, base reset, layout utilities and the shared button/card classes.
+// No UI component library (ADR 0006): everything is hand-written modern CSS.
+@use 'styles/tokens';
+@use 'styles/base';
+@use 'styles/utilities';
+@use 'styles/components';

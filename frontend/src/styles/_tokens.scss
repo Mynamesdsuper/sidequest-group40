@@ -1,0 +1,62 @@
+// Design tokens as CSS custom properties. Components use only these variables, so the dark theme
+// is a single override block below.
+:root {
+  color-scheme: light dark;
+
+  --color-bg: #f7f7fb;
+  --color-surface: #ffffff;
+  --color-surface-2: #eef0f6;
+  --color-text: #1b1d26;
+  --color-text-muted: #5b6072;
+  --color-border: #d6d9e3;
+  --color-primary: #3b5bdb;
+  --color-primary-contrast: #ffffff;
+  --color-success: #2b8a3e;
+  --color-warning: #b35c00;
+  --color-danger: #c92a2a;
+  --color-focus: #f59f00;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+
+  --font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-size-sm: clamp(0.8rem, 0.78rem + 0.1vw, 0.875rem);
+  --font-size-md: clamp(0.95rem, 0.92rem + 0.15vw, 1rem);
+  --font-size-lg: clamp(1.1rem, 1rem + 0.4vw, 1.25rem);
+  --font-size-xl: clamp(1.35rem, 1.15rem + 0.9vw, 1.75rem);
+  --font-size-2xl: clamp(1.6rem, 1.3rem + 1.4vw, 2.25rem);
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.08);
+  --shadow-md: 0 4px 16px rgb(0 0 0 / 0.12);
+
+  --topbar-height: 3.5rem;
+  --sidenav-width: 15rem;
+  --breakpoint-nav: 48rem; // documentation only: media queries cannot read custom properties
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #12141b;
+    --color-surface: #1b1e28;
+    --color-surface-2: #252937;
+    --color-text: #e8eaf2;
+    --color-text-muted: #a3a8ba;
+    --color-border: #343949;
+    --color-primary: #7c96ff;
+    --color-primary-contrast: #0d1020;
+    --color-success: #69db7c;
+    --color-warning: #ffa94d;
+    --color-danger: #ff8787;
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+    --shadow-md: 0 4px 16px rgb(0 0 0 / 0.5);
+  }
+}

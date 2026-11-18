@@ -1,0 +1,55 @@
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <button
+    type="button"
+    class="nav-toggle"
+    aria-controls="side-nav"
+    [attr.aria-expanded]="navOpen()"
+    (click)="toggleNav()"
+  >
+    <span aria-hidden="true">☰</span>
+    <span class="visually-hidden">Menu</span>
+  </button>
+  <a routerLink="/" class="brand">SideQuest</a>
+  <!-- Slot for the notification bell: R06 (P2). -->
+  <div class="topbar-actions"></div>
+</header>
+
+<div class="body">
+  <nav id="side-nav" class="sidenav" aria-label="Main" [class.open]="navOpen()">
+    <ul>
+      @for (link of links; track link.path) {
+        <li>
+          <a
+            [routerLink]="link.path"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+            (click)="closeNav()"
+            >{{ link.label }}</a
+          >
+        </li>
+      }
+    </ul>
+  </nav>
+  @if (navOpen()) {
+    <div class="backdrop" aria-hidden="true" (click)="closeNav()"></div>
+  }
+
+  <main id="main" class="content" tabindex="-1">
+    <router-outlet />
+  </main>
+</div>
+
+<footer class="footer text-muted">
+  <span>SideQuest · Group 40 · Federico II</span>
+  @if (showMapCredit()) {
+    <span
+      >Map data ©
+      <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>
+      contributors</span
+    >
+  }
+</footer>
+
+<app-toast-container />
