@@ -114,6 +114,14 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P2 – Matteo Marino
 
+### 2026-11-19 12:43 · SCAFFOLD-E2E · test(e2e): smoke test tutto verde e stack demo provato con backend e frontend reali
+- **Cosa:** branch ribasato su `develop` (che contiene SCAFFOLD-BE, #57). In una copia di lavoro temporanea, unita al branch di Vincenzo `chore/scaffold-frontend` (PR #60, non ancora mergiata), ho eseguito l'intera suite: 6/6 verdi (health, home "backend ok", orologio; desktop e mobile). Lo stack demo parte con tutti e tre i container healthy: `/health` risponde `ok`/`up`, i deep link della SPA (`/missions`) danno 200 da nginx, i 7 seed vengono eseguiti, `POST /__test__/reset` dà 404 (il router di test non è esposto in demo).
+- **Perché:** erano i due controlli rimasti in sospeso nella voce precedente, in attesa del frontend. Nessun file del codice cambia: le fixture e la configurazione combaciano già con quanto fatto da P1 e P3. Il DB dei test è stato avviato sulla porta 5433, perché sulla 5432 di questo PC gira un PostgreSQL locale (lo prevede già `DB_PORT` in `.env.example`).
+- **File:** `PROGRESS.md`.
+- **Come verificare:** con il frontend di #60 presente: `docker compose up -d db`, poi `cd e2e && npx playwright test` → 6 passed; `docker compose -f docker-compose.demo.yml up -d --build --wait` → 3 container healthy, http://localhost:4200 mostra "backend ok · database up".
+- **Prossimi passi:** mergiare questa PR dopo la #60, altrimenti su `develop` i 2 test della home fallirebbero (manca il frontend); review di Domenico.
+- **Commit/PR:** #59.
+
 ### 2026-11-18 18:15 · SCAFFOLD-E2E · fix(e2e): orologio ripristinato anche se il test fallisce, stack demo solo in locale
 - **Cosa:** nello smoke test l'orologio del server torna a 0 in un `finally`; in `docker-compose.demo.yml` le porte di backend e frontend sono pubblicate solo su `127.0.0.1`.
 - **Perché:** emerso dalla review del commit precedente. Se un controllo falliva dopo lo spostamento a +1h, tutti i test successivi vedevano il server avanti di un'ora (fallimenti a catena, gravi quando arriveranno i test del timer di R04). Il `TOKEN_SECRET` di default della demo è nel repo pubblico: con le porte aperte su tutta la rete (es. Wi-Fi dell'università) chiunque potrebbe firmare token validi.
