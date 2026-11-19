@@ -116,6 +116,33 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P3 – Domenico Panaro
 
+### 2026-11-19 01:18 · S0-API · docs(design): superficie REST completa e revisione delle API pubbliche
+- **Cosa:** iniziato S0-API (#5, branch `docs/s0-api-rest-contracts`, issue a `status:in-progress`). In `docs/design/module-contracts.md` la vecchia lista di 19 rotte è sostituita da:
+  - le convenzioni REST del corso (Massé);
+  - una tabella per modulo con metodo, percorso, chi può chiamarlo, risposta e codici di errore principali: 60 operazioni in tutto, per R01–R12;
+  - il catalogo dei codici di errore;
+  - 6 modifiche proposte alle API pubbliche dei moduli.
+
+  Riempiti i frammenti OpenAPI dei miei moduli con i percorsi segnaposto (`x-owner`, `x-requirement`, `x-status: planned`): `teams` 17 operazioni, `invitations` 6.
+- **Perché:** i contratti si congelano prima che R01–R12 inizino, così i tre membri costruiscono su percorsi e codici d'errore concordati e il frontend sa cosa chiamare. Scelte principali:
+  - azioni come risorse controller (`/publish`, `/accept`, `/claim`…);
+  - `/me/...` per i dati dell'utente, così nessun ID utente arriva dal client;
+  - 404 per le risorse non visibili (A-16) e 403 solo su risorse che il chiamante vede;
+  - un `409` porta sempre un codice su cui il client può decidere;
+  - `VERSION_CONFLICT` con lo stato attuale (A-20).
+
+  Revisione delle API pubbliche:
+  1. hook `onCommit` nella transazione di `participations`, così `teams` scrive il `TeamProgressEvent` nella stessa transazione (A-21) senza che `participations` importi `teams`, e lock della riga della missione per A-18;
+  2. un solo modo di concedere l'accesso (`MissionAccessPort`);
+  3. `users.getSummaries`;
+  4. letture per la `dashboard`;
+  5. endpoint di squadra nel modulo `teams`, che avvolgono `participations`;
+  6. il `Viewer` in `res.locals`.
+- **File:** `docs/design/module-contracts.md`, `backend/src/modules/teams/teams.openapi.yaml`, `backend/src/modules/invitations/invitations.openapi.yaml`, `PROGRESS.md`.
+- **Come verificare:** in `backend/`: `npm test` → 49 test verdi (il documento unito si carica e `/api/docs.json` risponde); `npm run lint`. Documento unito controllato con `npx @redocly/cli lint` (24 operazioni con `/health`, nessun errore nei frammenti; resta solo l'avviso già esistente su `/health` senza `security` in `common.yaml`, file condiviso). Swagger UI su http://localhost:3000/api/docs mostra le rotte `Teams` e `Invitations`.
+- **Prossimi passi:** al kickoff (lun 23/11) Vincenzo e Matteo confermano le tabelle e le 6 modifiche; poi ognuno riempie il frammento OpenAPI dei propri moduli copiando la sua tabella, e il documento passa a FROZEN. Domanda aperta per P2: chi partecipa per una squadra (membri al momento dell'accettazione o membri attuali).
+- **Commit/PR:** questo commit.
+
 ### 2026-11-17 20:03 · SCAFFOLD-BE · test(shared): test unitari e di integrazione dello scaffold
 - **Cosa:** 49 test Jest in due progetti. Unit (38): tutte le regole del `Validator` (input valido, errore di ogni regola, lunghezze ai limiti, campi opzionali, oggetti e array annidati con il percorso dell'errore, chiavi sconosciute scartate), `OffsetClock`, la mappatura degli errori (anche: un errore sconosciuto non espone il messaggio), il merge OpenAPI con il rilevamento dei duplicati, il bus degli eventi (ordine, disiscrizione, un subscriber che fallisce non blocca gli altri), i default e il binding dei port, la configurazione, e la regola ESLint `module-boundaries` con `RuleTester` (dimostra che scatta sugli import profondi tra moduli). Integration (11, su `sidequest_test` con supertest): health con `db: "up"`, rotta sconosciuta → 404 JSON, JSON non valido → 400 `INVALID_JSON`, `/api/docs.json` è un OpenAPI 3.1 valido, Swagger UI risponde, `validate()` → 400 `VALIDATION_ERROR` con il dettaglio per campo, il test router sposta l'orologio e azzera il DB, e il test router è **assente** quando `NODE_ENV` non è `test`. Helper `createTestApp()`, `migrateTestDb()`, `resetDb()`.
 - **Perché:** specifica §7.1 ("working tests from setup"). Le basi condivise (validazione, errori, orologio, port) le useranno tutti: se si rompono, i test lo dicono subito. Gli integration test girano in sequenza (`--runInBand`) perché usano lo stesso database.
