@@ -114,6 +114,14 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P2 – Matteo Marino
 
+### 2026-11-19 13:56 · SCAFFOLD-E2E · DONE: scaffold e2e mergiato in develop
+- **Cosa:** SCAFFOLD-E2E chiuso. La PR #59 è stata mergiata in `develop` (squash `c233d2d`) dopo la #60 del frontend; la issue #53 è stata chiusa a mano.
+- **Perché:** nel corpo della #59 c'era `Closes #<53>` con le parentesi angolari, quindi GitHub non ha collegato la issue e non l'ha chiusa al merge (il task risultava ancora READY in `npm run deps`). Da ora nei template si scrive `Closes #53`, senza parentesi.
+- **File:** `PROGRESS.md`.
+- **Come verificare:** `gh pr view 59` → MERGED; `gh issue view 53` → CLOSED; `npm run deps -- --mine P2`.
+- **Prossimi passi:** S0-EVENTS (congelare eventi di dominio, eventi realtime e port), dal 23/11.
+- **Commit/PR:** #59 (merge `c233d2d`).
+
 ### 2026-11-19 12:43 · SCAFFOLD-E2E · test(e2e): smoke test tutto verde e stack demo provato con backend e frontend reali
 - **Cosa:** branch ribasato su `develop` (che contiene SCAFFOLD-BE, #57). In una copia di lavoro temporanea, unita al branch di Vincenzo `chore/scaffold-frontend` (PR #60, non ancora mergiata), ho eseguito l'intera suite: 6/6 verdi (health, home "backend ok", orologio; desktop e mobile). Lo stack demo parte con tutti e tre i container healthy: `/health` risponde `ok`/`up`, i deep link della SPA (`/missions`) danno 200 da nginx, i 7 seed vengono eseguiti, `POST /__test__/reset` dà 404 (il router di test non è esposto in demo).
 - **Perché:** erano i due controlli rimasti in sospeso nella voce precedente, in attesa del frontend. Nessun file del codice cambia: le fixture e la configurazione combaciano già con quanto fatto da P1 e P3. Il DB dei test è stato avviato sulla porta 5433, perché sulla 5432 di questo PC gira un PostgreSQL locale (lo prevede già `DB_PORT` in `.env.example`).
