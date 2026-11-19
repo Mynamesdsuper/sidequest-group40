@@ -1,8 +1,103 @@
 # OpenAPI fragment of the `invitations` module, merged at boot into /api/docs (shared/openapi/merge.ts).
-# Every path: x-owner, x-requirement, x-status (planned -> done). Paths are filled in S0-API.
+# Every path: x-owner, x-requirement, x-status (planned -> done). Surface frozen by S0-API
+# (docs/design/module-contracts.md); request and response schemas are added by R08.
 x-module: invitations
 x-owner: P3
 tags:
   - name: Invitations
-    description: Invitations to RESTRICTED missions (A-17); accepting grants access through missions.grantAccess.
-paths: {}
+    description: Invitations to RESTRICTED missions (A-17); accepting grants access through MissionAccessPort.
+
+# Reusable YAML anchors for this file only (the merge ignores top-level x- keys).
+x-templates:
+  id: &id { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+  status: &status { name: status, in: query, schema: { type: string, enum: [PENDING, ACCEPTED, DECLINED, REVOKED] } }
+  page: &page { $ref: '#/components/parameters/Page' }
+  pageSize: &pageSize { $ref: '#/components/parameters/PageSize' }
+  auth: &auth [{ bearerAuth: [] }]
+  error: &error { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+
+paths:
+  /missions/{id}/invitations:
+    parameters: [*id]
+    post:
+      tags: [Invitations]
+      summary: Invite a user by nickname to a RESTRICTED mission (author)
+      x-owner: P3
+      x-requirement: R08
+      x-status: planned
+      security: *auth
+      responses:
+        '201': { description: Invitation created or reopened (PENDING) }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '403': { description: Not the author of the mission, content: *error }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409':
+          description: MISSION_NOT_RESTRICTED, INVITATION_PENDING or CANNOT_INVITE_SELF
+          content: *error
+    get:
+      tags: [Invitations]
+      summary: Invitations of a mission with their status (author)
+      x-owner: P3
+      x-requirement: R08
+      x-status: planned
+      security: *auth
+      parameters: [*status, *page, *pageSize]
+      responses:
+        '200': { description: Page of invitations }
+        '403': { description: Not the author of the mission, content: *error }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /me/invitations:
+    get:
+      tags: [Invitations]
+      summary: Invitations received by the logged-in user
+      x-owner: P3
+      x-requirement: R08
+      x-status: planned
+      security: *auth
+      parameters: [*status, *page, *pageSize]
+      responses:
+        '200': { description: Page of invitations }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+  /invitations/{id}/accept:
+    parameters: [*id]
+    post:
+      tags: [Invitations]
+      summary: Accept an invitation (invitee); grants access, does not accept the mission
+      x-owner: P3
+      x-requirement: R08
+      x-status: planned
+      security: *auth
+      responses:
+        '200': { description: 'Invitation ACCEPTED, access granted' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { description: INVITATION_NOT_PENDING (e.g. revoked at the same time), content: *error }
+
+  /invitations/{id}/decline:
+    parameters: [*id]
+    post:
+      tags: [Invitations]
+      summary: Decline an invitation (invitee)
+      x-owner: P3
+      x-requirement: R08
+      x-status: planned
+      security: *auth
+      responses:
+        '200': { description: Invitation DECLINED }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { description: INVITATION_NOT_PENDING, content: *error }
+
+  /invitations/{id}/revoke:
+    parameters: [*id]
+    post:
+      tags: [Invitations]
+      summary: Revoke a PENDING or ACCEPTED invitation (author); removes the INVITE access grant
+      x-owner: P3
+      x-requirement: R08
+      x-status: planned
+      security: *auth
+      responses:
+        '200': { description: Invitation REVOKED }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { description: INVITATION_NOT_REVOCABLE, content: *error }
