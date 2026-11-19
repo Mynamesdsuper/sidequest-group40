@@ -1,8 +1,265 @@
 # OpenAPI fragment of the `teams` module, merged at boot into /api/docs (shared/openapi/merge.ts).
-# Every path: x-owner, x-requirement, x-status (planned -> done). Paths are filled in S0-API.
+# Every path: x-owner, x-requirement, x-status (planned -> done). Surface frozen by S0-API
+# (docs/design/module-contracts.md); request and response schemas are added by R10, R11, R12.
 x-module: teams
 x-owner: P3
 tags:
   - name: Teams
     description: Teams, membership and team invitations (R10), team participation wrapping the participations public API (R11), the progress event log and the live rooms (R12); binds TeamMembershipPort.
-paths: {}
+
+# Reusable YAML anchors for this file only (the merge ignores top-level x- keys).
+x-templates:
+  id: &id { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+  objectiveId: &objectiveId { name: objectiveId, in: path, required: true, schema: { type: string, format: uuid } }
+  userId: &userId { name: userId, in: path, required: true, schema: { type: string, format: uuid } }
+  status: &status { name: status, in: query, schema: { type: string, enum: [PENDING, ACCEPTED, DECLINED, REVOKED] } }
+  auth: &auth [{ bearerAuth: [] }]
+  error: &error { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+
+paths:
+  /teams:
+    post:
+      tags: [Teams]
+      summary: Create a team; the caller becomes TEAM_ADMIN
+      x-owner: P3
+      x-requirement: R10
+      x-status: planned
+      security: *auth
+      responses:
+        '201': { description: Team created }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '409': { description: TEAM_NAME_TAKEN, content: *error }
+
+  /me/teams:
+    get:
+      tags: [Teams]
+      summary: Teams of the logged-in user, with the user's role in each
+      x-owner: P3
+      x-requirement: R10
+      x-status: planned
+      security: *auth
+      responses:
+        '200': { description: List of teams }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+  /teams/{id}:
+    parameters: [*id]
+    get:
+      tags: [Teams]
+      summary: Team detail with members and roles (members only)
+      x-owner: P3
+      x-requirement: R10
+      x-status: planned
+      security: *auth
+      responses:
+        '200': { description: Team detail }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    patch:
+      tags: [Teams]
+      summary: Rename the team (team admin)
+      x-owner: P3
+      x-requirement: R10
+      x-status: planned
+      security: *auth
+      responses:
+        '200': { description: Team updated }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '403': { description: Not the team admin, content: *error }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { description: TEAM_NAME_TAKEN, content: *error }
+
+  /teams/{id}/invitations:
+    parameters: [*id]
+    post:
+      tags: [Teams]
+      summary: Invite a user to the team by nickname (team admin)
+      x-owner: P3
+      x-requirement: R10
+      x-status: planned
+      security: *auth
+      responses:
+        '201': { description: Team invitation created (PENDING) }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '403': { description: Not the team admin, content: *error }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { description: 'TEAM_FULL, ALREADY_MEMBER or INVITATION_PENDING', content: *error }
+    get:
+      tags: [Teams]
+      summary: Invitations sent by the team (team admin)
+      x-owner: P3
+      x-requirement: R10
+      x-status: planned
+      security: *auth
+      parameters: [*status]
+      responses:
+        '200': { description: List of team invitations }
+        '403': { description: Not the team admin, content: *error }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /me/team-invitations:
+    get:
+      tags: [Teams]
+      summary: Team invitations received by the logged-in user
+      x-owner: P3
+      x-requirement: R10
+      x-status: planned
+      security: *auth
+      parameters: [*status]
+      responses:
+        '200': { description: List of team invitations }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+  /team-invitations/{id}/accept:
+    parameters: [*id]
+    post:
+      tags: [Teams]
+      summary: Accept a team invitation (invitee); re-checks the 6-member cap under lock
+      x-owner: P3
+      x-requirement: R10
+      x-status: planned
+      security: *auth
+      responses:
+        '200': { description: 'Invitation accepted, the caller is a MEMBER' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { description: INVITATION_NOT_PENDING or TEAM_FULL, content: *error }
+
+  /team-invitations/{id}/decline:
+    parameters: [*id]
+    post:
+      tags: [Teams]
+      summary: Decline a team invitation (invitee)
+      x-owner: P3
+      x-requirement: R10
+      x-status: planned
+      security: *auth
+      responses:
+        '200': { description: Invitation declined }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { description: INVITATION_NOT_PENDING, content: *error }
+
+  /team-invitations/{id}/revoke:
+    parameters: [*id]
+    post:
+      tags: [Teams]
+      summary: Revoke a pending team invitation (team admin)
+      x-owner: P3
+      x-requirement: R10
+      x-status: planned
+      security: *auth
+      responses:
+        '200': { description: Invitation revoked }
+        '403': { description: Not the team admin, content: *error }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { description: INVITATION_NOT_PENDING, content: *error }
+
+  /teams/{id}/leave:
+    parameters: [*id]
+    post:
+      tags: [Teams]
+      summary: Leave the team (the last member disbands it)
+      x-owner: P3
+      x-requirement: R10
+      x-status: planned
+      security: *auth
+      responses:
+        '204': { description: Left the team }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { description: ADMIN_MUST_TRANSFER, content: *error }
+
+  /teams/{id}/members/{userId}:
+    parameters: [*id, *userId]
+    delete:
+      tags: [Teams]
+      summary: Remove a member (team admin)
+      x-owner: P3
+      x-requirement: R10
+      x-status: planned
+      security: *auth
+      responses:
+        '204': { description: Member removed }
+        '403': { description: Not the team admin, content: *error }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { description: CANNOT_REMOVE_SELF, content: *error }
+
+  /teams/{id}/transfer-admin:
+    parameters: [*id]
+    post:
+      tags: [Teams]
+      summary: Give the TEAM_ADMIN role to another member (team admin)
+      x-owner: P3
+      x-requirement: R10
+      x-status: planned
+      security: *auth
+      responses:
+        '200': { description: Role transferred }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '403': { description: Not the team admin, content: *error }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /teams/{id}/participations:
+    parameters: [*id]
+    post:
+      tags: [Teams]
+      summary: Accept a TEAM mission on behalf of the team (team admin); wraps participations.accept
+      x-owner: P3
+      x-requirement: R11
+      x-status: planned
+      security: *auth
+      responses:
+        '201': { description: Team participation created }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '403': { description: Not the team admin, content: *error }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409':
+          description: TEAM_TOO_SMALL, MISSION_FULL, MISSION_NOT_OPEN, ALREADY_PARTICIPATING or NO_ATTEMPTS_LEFT
+          content: *error
+
+  /team-participations/{id}:
+    parameters: [*id]
+    get:
+      tags: [Teams]
+      summary: Snapshot of a team participation with lastSeq and serverNow (reconnection, A-21)
+      x-owner: P3
+      x-requirement: R12
+      x-status: planned
+      security: *auth
+      responses:
+        '200': { description: 'Shared state, lastSeq and serverNow' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /team-participations/{id}/objectives/{objectiveId}/submissions:
+    parameters: [*id, *objectiveId]
+    post:
+      tags: [Teams]
+      summary: Submit an objective for the team (member); wraps participations.submitObjective
+      x-owner: P3
+      x-requirement: R11
+      x-status: planned
+      security: *auth
+      responses:
+        '200': { description: Updated snapshot and the seq of the new event }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409':
+          description: DEADLINE_PASSED, ATTEMPTS_EXHAUSTED, VERSION_CONFLICT (details.current) or INVALID_STATE
+          content: *error
+        '413': { description: Image larger than 5 MB, content: *error }
+        '415': { description: Image type not allowed, content: *error }
+
+  /team-participations/{id}/abandon:
+    parameters: [*id]
+    post:
+      tags: [Teams]
+      summary: Abandon the team participation (team admin)
+      x-owner: P3
+      x-requirement: R11
+      x-status: planned
+      security: *auth
+      responses:
+        '200': { description: Participation ABANDONED }
+        '403': { description: Not the team admin, content: *error }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { description: INVALID_STATE, content: *error }

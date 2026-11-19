@@ -178,6 +178,33 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 - **Prossimi passi:** approvazione di Vincenzo o Matteo e merge; poi la branch protection di `develop` e `main` deve richiedere `backend`, `frontend`, `e2e`, `plan` (da rileggere con `gh api`); poi SONAR-SETUP.
 - **Commit/PR:** `b237a11` + correzione, PR #63.
 
+### 2026-11-19 01:18 · S0-API · docs(design): superficie REST completa e revisione delle API pubbliche
+- **Cosa:** iniziato S0-API (#5, branch `docs/s0-api-rest-contracts`, issue a `status:in-progress`). In `docs/design/module-contracts.md` la vecchia lista di 19 rotte è sostituita da:
+  - le convenzioni REST del corso (Massé);
+  - una tabella per modulo con metodo, percorso, chi può chiamarlo, risposta e codici di errore principali: 60 operazioni in tutto, per R01–R12;
+  - il catalogo dei codici di errore;
+  - 6 modifiche proposte alle API pubbliche dei moduli.
+
+  Riempiti i frammenti OpenAPI dei miei moduli con i percorsi segnaposto (`x-owner`, `x-requirement`, `x-status: planned`): `teams` 17 operazioni, `invitations` 6.
+- **Perché:** i contratti si congelano prima che R01–R12 inizino, così i tre membri costruiscono su percorsi e codici d'errore concordati e il frontend sa cosa chiamare. Scelte principali:
+  - azioni come risorse controller (`/publish`, `/accept`, `/claim`…);
+  - `/me/...` per i dati dell'utente, così nessun ID utente arriva dal client;
+  - 404 per le risorse non visibili (A-16) e 403 solo su risorse che il chiamante vede;
+  - un `409` porta sempre un codice su cui il client può decidere;
+  - `VERSION_CONFLICT` con lo stato attuale (A-20).
+
+  Revisione delle API pubbliche:
+  1. hook `onCommit` nella transazione di `participations`, così `teams` scrive il `TeamProgressEvent` nella stessa transazione (A-21) senza che `participations` importi `teams`, e lock della riga della missione per A-18;
+  2. un solo modo di concedere l'accesso (`MissionAccessPort`);
+  3. `users.getSummaries`;
+  4. letture per la `dashboard`;
+  5. endpoint di squadra nel modulo `teams`, che avvolgono `participations`;
+  6. il `Viewer` in `res.locals`.
+- **File:** `docs/design/module-contracts.md`, `backend/src/modules/teams/teams.openapi.yaml`, `backend/src/modules/invitations/invitations.openapi.yaml`, `PROGRESS.md`.
+- **Come verificare:** in `backend/`: `npm test` → 49 test verdi (il documento unito si carica e `/api/docs.json` risponde); `npm run lint`. Documento unito controllato con `npx @redocly/cli lint` (24 operazioni con `/health`, nessun errore nei frammenti; resta solo l'avviso già esistente su `/health` senza `security` in `common.yaml`, file condiviso). Swagger UI su http://localhost:3000/api/docs mostra le rotte `Teams` e `Invitations`.
+- **Prossimi passi:** al kickoff (lun 23/11) Vincenzo e Matteo confermano le tabelle e le 6 modifiche; poi ognuno riempie il frammento OpenAPI dei propri moduli copiando la sua tabella, e il documento passa a FROZEN. Domanda aperta per P2: chi partecipa per una squadra (membri al momento dell'accettazione o membri attuali).
+- **Commit/PR:** questo commit.
+
 ### 2026-11-19 00:55 · SCAFFOLD-FE · feat(frontend): scaffold del frontend Angular (fatto da P3 al posto di P1)
 - **Cosa:** creato `frontend/` con Angular 22 (standalone, signals, SCSS, routing, senza SSR, nessuna libreria di componenti UI), solo infrastruttura:
   - `src/styles/`: token di design come custom properties (colori, spaziature, raggi, font con `clamp()`), tema chiaro/scuro con `prefers-color-scheme`, reset, utility flex/grid con `gap`, classi `.btn` e `.card` (le card usano le container query).
