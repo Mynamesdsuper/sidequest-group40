@@ -1,0 +1,21 @@
+{
+  "name": "sidequest-e2e",
+  "version": "0.0.0",
+  "private": true,
+  "description": "SideQuest – Group 40 – Playwright end-to-end tests",
+  "scripts": {
+    "test": "playwright test",
+    "test:desktop": "playwright test --project=desktop-chromium",
+    "test:mobile": "playwright test --project=mobile-chromium",
+    "report": "playwright show-report",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.0"
+  }
+}

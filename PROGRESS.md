@@ -114,6 +114,30 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P2 – Matteo Marino
 
+### 2026-11-19 12:43 · SCAFFOLD-E2E · test(e2e): smoke test tutto verde e stack demo provato con backend e frontend reali
+- **Cosa:** branch ribasato su `develop` (che contiene SCAFFOLD-BE, #57). In una copia di lavoro temporanea, unita al branch di Vincenzo `chore/scaffold-frontend` (PR #60, non ancora mergiata), ho eseguito l'intera suite: 6/6 verdi (health, home "backend ok", orologio; desktop e mobile). Lo stack demo parte con tutti e tre i container healthy: `/health` risponde `ok`/`up`, i deep link della SPA (`/missions`) danno 200 da nginx, i 7 seed vengono eseguiti, `POST /__test__/reset` dà 404 (il router di test non è esposto in demo).
+- **Perché:** erano i due controlli rimasti in sospeso nella voce precedente, in attesa del frontend. Nessun file del codice cambia: le fixture e la configurazione combaciano già con quanto fatto da P1 e P3. Il DB dei test è stato avviato sulla porta 5433, perché sulla 5432 di questo PC gira un PostgreSQL locale (lo prevede già `DB_PORT` in `.env.example`).
+- **File:** `PROGRESS.md`.
+- **Come verificare:** con il frontend di #60 presente: `docker compose up -d db`, poi `cd e2e && npx playwright test` → 6 passed; `docker compose -f docker-compose.demo.yml up -d --build --wait` → 3 container healthy, http://localhost:4200 mostra "backend ok · database up".
+- **Prossimi passi:** mergiare questa PR dopo la #60, altrimenti su `develop` i 2 test della home fallirebbero (manca il frontend); review di Domenico.
+- **Commit/PR:** #59.
+
+### 2026-11-18 18:15 · SCAFFOLD-E2E · fix(e2e): orologio ripristinato anche se il test fallisce, stack demo solo in locale
+- **Cosa:** nello smoke test l'orologio del server torna a 0 in un `finally`; in `docker-compose.demo.yml` le porte di backend e frontend sono pubblicate solo su `127.0.0.1`.
+- **Perché:** emerso dalla review del commit precedente. Se un controllo falliva dopo lo spostamento a +1h, tutti i test successivi vedevano il server avanti di un'ora (fallimenti a catena, gravi quando arriveranno i test del timer di R04). Il `TOKEN_SECRET` di default della demo è nel repo pubblico: con le porte aperte su tutta la rete (es. Wi-Fi dell'università) chiunque potrebbe firmare token validi.
+- **File:** `e2e/tests/smoke.spec.ts`, `docker-compose.demo.yml`.
+- **Come verificare:** `cd e2e && npx tsc --noEmit`; `docker compose -f docker-compose.demo.yml config` mostra `host_ip: 127.0.0.1` sulle due porte.
+- **Prossimi passi:** invariati (rebase dopo SCAFFOLD-BE e SCAFFOLD-FE, smoke test verde, prova dello stack demo, PR).
+- **Commit/PR:** da aggiungere.
+
+### 2026-11-18 17:30 · SCAFFOLD-E2E · test(e2e): Playwright, fixture, smoke test e stack demo
+- **Cosa:** creata la cartella `e2e/` (Playwright con i progetti `desktop-chromium` 1280×800 e `mobile-chromium` 390×844, `webServer` per backend in `NODE_ENV=test` con `db:reset` e frontend dev server, `globalSetup` che chiama `POST /api/v1/__test__/reset`), le fixture `api`, `auth` (stub `loginAs`, `TODO(R01, P1)`), `clock` (`setServerClockOffset`), `users` (account demo §7.6), `tests/smoke.spec.ts`; aggiunto `docker-compose.demo.yml` (db + backend + frontend).
+- **Perché:** è la parte E2E dello scaffold (`docs/design/scaffold-spec.md` §7.3–§7.4, issue #53). Endpoint, variabili e porte sono presi dal branch `chore/scaffold-backend` di P3, così combaciano. I test girano con un solo worker perché condividono il DB di test. Lo stack demo ha un nome di progetto e un volume propri (non tocca il DB di sviluppo) e lancia anche i seed, altrimenti gli account demo non esisterebbero.
+- **File:** `e2e/`, `docker-compose.demo.yml`.
+- **Come verificare:** `cd e2e && npm ci && npx tsc --noEmit && npx playwright test --list` (6 test). Contro il backend di `chore/scaffold-backend` in `NODE_ENV=test`: 4/6 verdi (health, reset, orologio, su desktop e mobile); i 2 test della home attendono il frontend (SCAFFOLD-FE) e `npx playwright install chromium`.
+- **Prossimi passi:** rebase dopo il merge di SCAFFOLD-BE e SCAFFOLD-FE, smoke test tutto verde, `docker compose -f docker-compose.demo.yml up --build` (da verificare: il Dockerfile del frontend deve servire nginx sulla porta 80), poi PR `chore/scaffold-e2e` → `develop` con review di Domenico.
+- **Commit/PR:** da aggiungere.
+
 ## P3 – Domenico Panaro
 
 ### 2026-11-19 00:55 · SCAFFOLD-FE · feat(frontend): scaffold del frontend Angular (fatto da P3 al posto di P1)
