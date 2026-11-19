@@ -141,7 +141,7 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 - **File:** `docs/design/module-contracts.md`, `backend/src/modules/teams/teams.openapi.yaml`, `backend/src/modules/invitations/invitations.openapi.yaml`, `PROGRESS.md`.
 - **Come verificare:** in `backend/`: `npm test` → 49 test verdi (il documento unito si carica e `/api/docs.json` risponde); `npm run lint`. Documento unito controllato con `npx @redocly/cli lint` (24 operazioni con `/health`, nessun errore nei frammenti; resta solo l'avviso già esistente su `/health` senza `security` in `common.yaml`, file condiviso). Swagger UI su http://localhost:3000/api/docs mostra le rotte `Teams` e `Invitations`.
 - **Prossimi passi:** al kickoff (lun 23/11) Vincenzo e Matteo confermano le tabelle e le 6 modifiche; poi ognuno riempie il frammento OpenAPI dei propri moduli copiando la sua tabella, e il documento passa a FROZEN. Domanda aperta per P2: chi partecipa per una squadra (membri al momento dell'accettazione o membri attuali).
-- **Commit/PR:** questo commit.
+- **Commit/PR:** `b0db551`, PR #61 (bozza fino al kickoff).
 
 ### 2026-11-17 20:03 · SCAFFOLD-BE · test(shared): test unitari e di integrazione dello scaffold
 - **Cosa:** 49 test Jest in due progetti. Unit (38): tutte le regole del `Validator` (input valido, errore di ogni regola, lunghezze ai limiti, campi opzionali, oggetti e array annidati con il percorso dell'errore, chiavi sconosciute scartate), `OffsetClock`, la mappatura degli errori (anche: un errore sconosciuto non espone il messaggio), il merge OpenAPI con il rilevamento dei duplicati, il bus degli eventi (ordine, disiscrizione, un subscriber che fallisce non blocca gli altri), i default e il binding dei port, la configurazione, e la regola ESLint `module-boundaries` con `RuleTester` (dimostra che scatta sugli import profondi tra moduli). Integration (11, su `sidequest_test` con supertest): health con `db: "up"`, rotta sconosciuta → 404 JSON, JSON non valido → 400 `INVALID_JSON`, `/api/docs.json` è un OpenAPI 3.1 valido, Swagger UI risponde, `validate()` → 400 `VALIDATION_ERROR` con il dettaglio per campo, il test router sposta l'orologio e azzera il DB, e il test router è **assente** quando `NODE_ENV` non è `test`. Helper `createTestApp()`, `migrateTestDb()`, `resetDb()`.
@@ -149,7 +149,7 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 - **File:** `backend/tests/`, `PROGRESS.md`.
 - **Come verificare:** in `backend/` con il DB avviato: `npm test` → 6 suite, 49 test verdi; `npm run test:coverage` → copertura ~95% e `coverage/lcov.info` per Sonar.
 - **Prossimi passi:** PR `chore/scaffold-backend` → `develop`, con l'approvazione di Vincenzo e Matteo (i moduli hanno owner diversi).
-- **Commit/PR:** questo commit.
+- **Commit/PR:** `b0db551`, PR #61 (bozza fino al kickoff).
 
 ### 2026-11-17 20:00 · SCAFFOLD-BE · feat(shared): scheletro del backend, nucleo condiviso e 8 moduli vuoti
 - **Cosa:** creato `backend/` (Node 22, TypeScript strict, Express 5, Sequelize 6, Umzug, Socket.IO), solo infrastruttura:
