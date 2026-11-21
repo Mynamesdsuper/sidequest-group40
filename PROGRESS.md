@@ -161,7 +161,7 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 - **File:** `docs/meetings/2026-11-23.md`, `PROGRESS.md`.
 - **Come verificare:** aprire il file; i riferimenti puntano a #4, #61 e #63.
 - **Prossimi passi:** condurre la call, compilare "Decisions" e lo slot settimanale, poi aggiornare `data-model.md` (S0-DATAMODEL) e la #61 (S0-API).
-- **Commit/PR:** questo commit.
+- **Commit/PR:** PR #64.
 
 ### 2026-11-21 01:07 · SCAFFOLD · ci: integrazione dello scaffold (CI, Sonar, setup:dev, README)
 - **Cosa:** iniziato SCAFFOLD (#2, branch `chore/scaffold`), sbloccato dal merge di #60 e #59 il 19/11.
