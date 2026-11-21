@@ -148,6 +148,21 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P3 – Domenico Panaro
 
+### 2026-11-21 01:22 · S0-DATAMODEL · docs(meetings): agenda del kickoff dello Sprint 0 (lun 23/11)
+- **Cosa:** scritto `docs/meetings/2026-11-23.md` (45 minuti, 5 punti):
+  - lo stato dello scaffold;
+  - le assunzioni da discutere: A-11, A-20, A-12, A-17, A-19; tutte le altre si ratificano come sono;
+  - le 8 decisioni principali sul modello dei dati di #4: `onDelete`, `CHECK` al posto degli enum, unicità su `lower()`, chiave di `MissionAccess`, `maxTeamSize`, rientro in squadra, regola A-20, `seq`;
+  - le tabelle REST e le 6 modifiche alle API pubbliche della #61, più S0-EVENTS;
+  - le date fino al 6/12 e le azioni con responsabile e scadenza.
+
+  Le sezioni "Decisions" e lo slot della riunione settimanale si compilano durante la call.
+- **Perché:** il kickoff deve solo chiudere i punti aperti: chi legge prima #4 e #61 commenta lì, e in call si decide il resto. Così entro il 29/11 S0-ASSUMPTIONS, S0-DATAMODEL, S0-API e S0-EVENTS possono essere congelati e R01 parte il 25/11.
+- **File:** `docs/meetings/2026-11-23.md`, `PROGRESS.md`.
+- **Come verificare:** aprire il file; i riferimenti puntano a #4, #61 e #63.
+- **Prossimi passi:** condurre la call, compilare "Decisions" e lo slot settimanale, poi aggiornare `data-model.md` (S0-DATAMODEL) e la #61 (S0-API).
+- **Commit/PR:** PR #64.
+
 ### 2026-11-19 00:55 · SCAFFOLD-FE · feat(frontend): scaffold del frontend Angular (fatto da P3 al posto di P1)
 - **Cosa:** creato `frontend/` con Angular 22 (standalone, signals, SCSS, routing, senza SSR, nessuna libreria di componenti UI), solo infrastruttura:
   - `src/styles/`: token di design come custom properties (colori, spaziature, raggi, font con `clamp()`), tema chiaro/scuro con `prefers-color-scheme`, reset, utility flex/grid con `gap`, classi `.btn` e `.card` (le card usano le container query).
