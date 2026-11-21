@@ -164,7 +164,8 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
   - un nuovo push annulla l'esecuzione vecchia (`concurrency`);
   - lo script di setup è in Node e non in bash, così funziona anche su Windows;
   - `setup:dev` è un piccolo file nuovo in `scripts/`, perché il comando in linea nel `package.json` sarebbe stato illeggibile.
-- **File:** `.github/workflows/ci.yml`, `.github/workflows/sonar.yml`, `.github/workflows/plan.yml` (cancellato), `scripts/setup-dev.mjs`, `package.json`, `README.md`, `CLAUDE.md`, `PROGRESS.md`.
+- **Correzione dopo la prima esecuzione in CI:** il job `e2e` falliva con "Port 3000 is already in use": `ng serve` prende la porta dalla variabile `PORT` (che in CI vale 3000 per il backend) anche se si passa `--port`. In `e2e/playwright.config.ts` il server del frontend ora riceve `PORT=4200`. Riprodotto e verificato in locale con `PORT=3000 CI=1 npx playwright test` (6 test verdi).
+- **File:** `.github/workflows/ci.yml`, `.github/workflows/sonar.yml`, `.github/workflows/plan.yml` (cancellato), `scripts/setup-dev.mjs`, `package.json`, `README.md`, `CLAUDE.md`, `e2e/playwright.config.ts`, `PROGRESS.md`.
 - **Come verificare:** tutta la catena in locale, verde:
   1. `npm run setup:dev`;
   2. `docker compose up -d db`, poi `db:migrate` e `db:seed`;
@@ -175,7 +176,7 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
   Sulla PR: i job `backend`, `frontend`, `e2e`, `plan` verdi.
 - **Prossimi passi:** approvazione di Vincenzo o Matteo e merge; poi la branch protection di `develop` e `main` deve richiedere `backend`, `frontend`, `e2e`, `plan` (da rileggere con `gh api`); poi SONAR-SETUP.
-- **Commit/PR:** questo commit.
+- **Commit/PR:** `b237a11` + correzione, PR #63.
 
 ### 2026-11-19 00:55 · SCAFFOLD-FE · feat(frontend): scaffold del frontend Angular (fatto da P3 al posto di P1)
 - **Cosa:** creato `frontend/` con Angular 22 (standalone, signals, SCSS, routing, senza SSR, nessuna libreria di componenti UI), solo infrastruttura:
