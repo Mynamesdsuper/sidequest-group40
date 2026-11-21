@@ -161,7 +161,7 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 - **File:** `docs/meetings/2026-11-23.md`, `PROGRESS.md`.
 - **Come verificare:** aprire il file; i riferimenti puntano a #4, #61 e #63.
 - **Prossimi passi:** condurre la call, compilare "Decisions" e lo slot settimanale, poi aggiornare `data-model.md` (S0-DATAMODEL) e la #61 (S0-API).
-- **Commit/PR:** questo commit.
+- **Commit/PR:** PR #64.
 
 ### 2026-11-19 00:55 · SCAFFOLD-FE · feat(frontend): scaffold del frontend Angular (fatto da P3 al posto di P1)
 - **Cosa:** creato `frontend/` con Angular 22 (standalone, signals, SCSS, routing, senza SSR, nessuna libreria di componenti UI), solo infrastruttura:
