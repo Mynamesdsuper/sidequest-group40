@@ -148,6 +148,35 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P3 – Domenico Panaro
 
+### 2026-11-21 01:07 · SCAFFOLD · ci: integrazione dello scaffold (CI, Sonar, setup:dev, README)
+- **Cosa:** iniziato SCAFFOLD (#2, branch `chore/scaffold`), sbloccato dal merge di #60 e #59 il 19/11.
+  - `.github/workflows/ci.yml` con i quattro job dai nomi fissi:
+    - `backend`: Postgres 17 come servizio, lint, typecheck, migrazioni, Jest con copertura (artefatto), build;
+    - `frontend`: lint, typecheck, unit test, test della regola `feature-boundaries`, build di produzione;
+    - `e2e`: parte dopo i due precedenti; Postgres, Chromium, Playwright, report come artefatto;
+    - `plan`.
+  - Cancellato `plan.yml`: il job `plan` ora vive in `ci.yml`, con lo stesso nome, quindi il controllo obbligatorio `plan` della branch protection continua a funzionare.
+  - `sonar.yml`: test del backend con copertura, poi la scansione SonarCloud. Senza il secret `SONAR_TOKEN` stampa "SonarCloud not configured yet (task SONAR-SETUP)" e termina con successo.
+  - `npm run setup:dev` (`scripts/setup-dev.mjs`, multipiattaforma): installa backend, frontend ed e2e, scarica Chromium e crea i `.env` dai modelli senza mai sovrascriverli. Aggiunto anche `npm run test:all`.
+  - README riscritto secondo §7.7: quick start, configurazione, account demo, test, stack demo, API, struttura. Riga di stato "scaffold ready" anche in `CLAUDE.md`.
+- **Perché:** checklist di SCAFFOLD (§8.3 e §9 passo 7 della specifica). È l'ultimo blocco prima dei requisiti: con il merge R01 di Vincenzo diventa READY. Scelte da saper spiegare:
+  - CI su ogni PR verso `develop`/`main`, con un database usa-e-getta nel container di servizio;
+  - un nuovo push annulla l'esecuzione vecchia (`concurrency`);
+  - lo script di setup è in Node e non in bash, così funziona anche su Windows;
+  - `setup:dev` è un piccolo file nuovo in `scripts/`, perché il comando in linea nel `package.json` sarebbe stato illeggibile.
+- **File:** `.github/workflows/ci.yml`, `.github/workflows/sonar.yml`, `.github/workflows/plan.yml` (cancellato), `scripts/setup-dev.mjs`, `package.json`, `README.md`, `CLAUDE.md`, `PROGRESS.md`.
+- **Come verificare:** tutta la catena in locale, verde:
+  1. `npm run setup:dev`;
+  2. `docker compose up -d db`, poi `db:migrate` e `db:seed`;
+  3. backend: lint, typecheck, `npm test` (49 test);
+  4. frontend: lint, `npm test` (12 test), build;
+  5. `cd e2e && npx playwright test` (6 test, desktop e mobile);
+  6. `docker compose -f docker-compose.demo.yml up --build`: health `db: up`, frontend 200.
+
+  Sulla PR: i job `backend`, `frontend`, `e2e`, `plan` verdi.
+- **Prossimi passi:** approvazione di Vincenzo o Matteo e merge; poi la branch protection di `develop` e `main` deve richiedere `backend`, `frontend`, `e2e`, `plan` (da rileggere con `gh api`); poi SONAR-SETUP.
+- **Commit/PR:** questo commit.
+
 ### 2026-11-19 00:55 · SCAFFOLD-FE · feat(frontend): scaffold del frontend Angular (fatto da P3 al posto di P1)
 - **Cosa:** creato `frontend/` con Angular 22 (standalone, signals, SCSS, routing, senza SSR, nessuna libreria di componenti UI), solo infrastruttura:
   - `src/styles/`: token di design come custom properties (colori, spaziature, raggi, font con `clamp()`), tema chiaro/scuro con `prefers-color-scheme`, reset, utility flex/grid con `gap`, classi `.btn` e `.card` (le card usano le container query).

@@ -1,0 +1,146 @@
+# Continuous integration. The job names are the required status checks of develop and main
+# (branch protection): backend, frontend, e2e, plan. Do not rename them.
+name: ci
+
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: [develop]
+
+permissions:
+  contents: read
+
+# A new push to the same branch cancels the run still in progress.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# Backend environment for CI only: throwaway database in the service container, test secret.
+env:
+  NODE_ENV: test
+  PORT: 3000
+  DATABASE_URL: postgres://sidequest:sidequest@localhost:5432/sidequest_test
+  TEST_DATABASE_URL: postgres://sidequest:sidequest@localhost:5432/sidequest_test
+  TOKEN_SECRET: ci-only-secret-not-used-anywhere-else
+  TOKEN_EXPIRES_IN: 2h
+  FRONTEND_ORIGIN: http://localhost:4200
+  UPLOAD_DIR: uploads
+  MAX_UPLOAD_MB: 5
+  NG_CLI_ANALYTICS: 'false' # no interactive prompt from the Angular CLI
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: sidequest
+          POSTGRES_PASSWORD: sidequest
+          POSTGRES_DB: sidequest_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U sidequest -d sidequest_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - name: Migrate the test database
+        run: npm run db:migrate
+      - name: Unit and integration tests with coverage
+        run: npm run test:coverage
+      - run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage
+          path: backend/coverage/
+          retention-days: 7
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - name: Unit tests
+        run: npm test
+      - name: The feature-boundaries lint rule triggers
+        run: npm run test:lint-rules
+      - name: Production build
+        run: npm run build
+
+  e2e:
+    needs: [backend, frontend]
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: sidequest
+          POSTGRES_PASSWORD: sidequest
+          POSTGRES_DB: sidequest_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U sidequest -d sidequest_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            backend/package-lock.json
+            frontend/package-lock.json
+            e2e/package-lock.json
+      - run: npm ci
+        working-directory: backend
+      - run: npm ci
+        working-directory: frontend
+      - run: npm ci
+        working-directory: e2e
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+        working-directory: e2e
+      - run: npm run typecheck
+        working-directory: e2e
+      # playwright.config.ts starts the backend (db:reset + server, NODE_ENV=test) and the frontend dev server.
+      - name: Playwright
+        run: npx playwright test
+        working-directory: e2e
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: e2e/playwright-report/
+          retention-days: 7
+
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate docs/plan/tasks.json
+        run: node scripts/validate-plan.mjs
