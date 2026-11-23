@@ -1,59 +1,50 @@
 # SideQuest – Group 40 – Start here (what each member does now)
 
-Written on Tue 17 Nov 2026, right after the setup. Repository: https://github.com/Mynamesdsuper/sidequest-group40. Details for each person are in the personal guide (`docs/guides/`); the full plan is `docs/plan/PLAN.md`.
+Updated on Mon 23 Nov 2026, after the code scaffold (first written on Tue 17 Nov, after the setup). Repository: https://github.com/Mynamesdsuper/sidequest-group40. Details for each person are in the personal guide (`docs/guides/`); the full plan is `docs/plan/PLAN.md`; everything done so far, in order, is in `PROGRESS.md` and in the project history PDF.
 
-## 1. Everyone, this week
+**Where we are.** The setup (17 Nov) and the code scaffold (18–23 Nov) are done: backend, frontend, E2E tests, Docker and CI are on `develop` (SCAFFOLD-BE #57, SCAFFOLD-FE #60, SCAFFOLD-E2E #59, SCAFFOLD #63). Every PR to `develop` or `main` now needs the CI checks `backend`, `frontend`, `e2e` and `plan` green and one approval. No requirement is implemented yet: Sprint 0 freezes the contracts by Sun 29 Nov, and R01 starts on Wed 25 Nov.
 
-1. **Accept the collaborator invitation** (email, or https://github.com/notifications). Without it you cannot push branches or be assigned issues.
-2. **Install the tools** (Git ≥ 2.40, GitHub CLI logged in, Node.js 22 LTS, Docker Desktop, VS Code, Claude Code, Visual Paradigm) and set your git identity with **the email linked to your GitHub account**, so your commits count in the Git analysis.
-3. **Run Starter prompt 1** from your guide (section 10) in Claude Code: it checks the tools, clones the repo, reads the docs and gives you a summary of your scope. Say yes to self-assigning your issues.
-4. **Read your guide**, then `docs/reference/requirements.md` and `docs/decisions/assumptions.md` (the 26 assumptions you will ratify in Sprint 0).
-5. **Review PR #47** ("add task CLEANUP"): **Vincenzo or Matteo** reads it and approves it, so it can be merged. This is the first PR and a good test of the review flow.
-6. **Block time on Monday 23 Nov** for the Sprint 0 kickoff call (30–45 minutes).
+## 1. Everyone, this week (23–29 Nov)
+
+1. **Prepare your computer for the code:** pull `develop`, run `npm run setup:dev` (installs backend, frontend and e2e, downloads Chromium, creates the `.env` files), then follow the README quick start (database in Docker, `npm run db:migrate`, `npm run dev`, `npm start`). The home page must show "backend ok · database up".
+2. **Read the kickoff notes** in `docs/meetings/2026-11-23.md` and the open points on #4 (data model) and #61 (REST contracts and public APIs).
+3. **Review the PRs assigned to you within 48 hours**, and agree or object on the contract-change issues (#67 and #69 this week).
+4. **Agree the weekly sync slot** (Monday) and keep logging every step in your section of `PROGRESS.md`.
 
 ## 2. Who does what now
 
 ### P3 – Domenico Panaro (coordinator)
 | When | What | Task |
 |---|---|---|
-| Wed 18 → Sat 21 Nov | Build the **backend part of the code scaffold** (backend, shared core, `docker-compose.yml`) from `docs/design/scaffold-spec.md`. Merge it first: it sets the conventions the other two parts follow. **Starter prompt 2** with task ID `SCAFFOLD-BE`; PR `chore/scaffold-backend` → `develop`, approved by Vincenzo and Matteo. | SCAFFOLD-BE |
-| Mon 23 → Tue 24 Nov | **Integrate the three scaffold parts**: `ci.yml`, `sonar.yml`, `setup:dev`, branch protection, README quick start. Everyone else's coding depends on it. PR `chore/scaffold` → `develop`. | SCAFFOLD |
-| Mon 23 Nov | Run the kickoff call (agenda in section 3). | – |
-| Mon 23 → Sun 29 Nov | Lead the data model and REST contracts freeze with the others. | S0-DATAMODEL, S0-API |
+| Mon 23 Nov | Run the kickoff call and record the decisions. | – |
+| Mon 23 → Sun 29 Nov | Apply the kickoff decisions: update `data-model.md` and the ER diagram; freeze the REST contracts and public APIs (#61); contract-change on A-20 if `maxTeamSize` is kept. | S0-DATAMODEL, S0-API |
 | Mon 30 Nov → Sun 6 Dec | SonarCloud setup (exact steps in your guide, section 11) and the architecture draft. | SONAR-SETUP, DOC-ARCH-DRAFT |
-| Always | Check open PRs older than 48 h and the milestones. | – |
+| Always | Check open PRs older than 48 h, the directives and the milestones. | – |
 
 ### P1 – Vincenzo Pio Lubrano
 | When | What | Task |
 |---|---|---|
-| Now → Tue 17 Nov | Starter prompt 1; read the guide. | – |
-| Wed 18 → Sun 22 Nov | Build the **frontend part of the code scaffold** (Angular, layout, shared UI, `core/auth` and `core/realtime` stubs, lazy routes, home page calling `/health`). **Starter prompt 2** with task ID `SCAFFOLD-FE`; PR `chore/scaffold-frontend` → `develop`, approved by Matteo and Domenico. In spare moments read the requirements and prepare comments on A-01..A-26. | SCAFFOLD-FE |
-| Mon 23 → Sun 29 Nov | **Lead the ratification of the 26 assumptions** (turn each into ACCEPTED, or change it with a PR). Review the REST contracts with P3. | S0-ASSUMPTIONS (lead), S0-API (your part) |
-| From Wed 25 Nov | **R01** (accounts, login, profile, admin), as soon as SCAFFOLD is merged. Check with `npm run deps -- R01`. Due Sun 6 Dec. | R01 |
+| Mon 23 → Sun 29 Nov | **Lead the ratification of the 26 assumptions** (turn each into ACCEPTED, or change it with a PR). Confirm your REST tables (`auth`, `users`, `missions`) in #61. | S0-ASSUMPTIONS (lead), S0-API (your part) |
+| From Wed 25 Nov | **R01** (accounts, login, profile, admin): SCAFFOLD is merged, check with `npm run deps -- R01`. Due Sun 6 Dec. | R01 |
+
+SCAFFOLD-FE, first planned for P1, was taken over by P3 on 19 Nov; your folders already contain placeholders marked `TODO(R01, P1)`.
 
 ### P2 – Matteo Marino
 | When | What | Task |
 |---|---|---|
-| Now → Tue 17 Nov | Starter prompt 1; read the guide. | – |
-| Wed 18 → Sun 22 Nov | Build the **E2E part of the code scaffold** (Playwright desktop + mobile, fixtures, smoke test, `docker-compose.demo.yml`). Write config and fixtures right away; make the smoke test green once the backend and frontend parts are merged. **Starter prompt 2** with task ID `SCAFFOLD-E2E`; PR `chore/scaffold-e2e` → `develop`, approved by Domenico. In spare moments read the requirements, assumptions and `docs/api/realtime-events.md`. | SCAFFOLD-E2E |
-| Mon 23 → Sun 29 Nov | **Lead the freeze of the domain events, realtime events and ports.** Review the REST contracts with P3. | S0-EVENTS (lead), S0-API (your part) |
+| Mon 23 → Sun 29 Nov | **Lead the freeze of the domain events, realtime events and ports.** Confirm your REST tables (`participations`, `notifications`, `dashboard`) in #61. | S0-EVENTS (lead), S0-API (your part) |
 | From Mon 30 Nov | State diagrams and the UC-01 use case draft (they unlock when the assumptions are ratified). | DOC-STATE, DOC-UC01-DRAFT |
 | From Mon 7 Dec | Notification infrastructure (after R01). | R06A |
 
-## 3. Sprint 0 kickoff, Monday 23 Nov (agenda)
+## 3. Sprint 0 kickoff, Monday 23 Nov
 
-1. 5 min – walk through the plan: who owns what, the gating rule (`npm run deps -- <ID>`), the review rotation P1 ← P2, P2 ← P3, P3 ← P1.
-2. 10 min – the assumptions: which ones need discussion before ratifying.
-3. 10 min – data model and module contracts: open questions for S0-DATAMODEL, S0-API, S0-EVENTS.
-4. 5 min – status of the three scaffold parts and of the integration (SCAFFOLD); when R01 can start.
-5. 5 min – agree the weekly Monday sync time. Notes go in `docs/meetings/YYYY-MM-DD.md` (template included).
+Agenda, decisions and actions are in `docs/meetings/2026-11-23.md`. The coordinator's proposals on the open points are posted on #4 (data model) and #61 (REST contracts and public APIs).
 
 ## 4. Dates to remember
 
 | Date | What |
 |---|---|
-| Sat 21 – Sun 22 Nov | Scaffold parts merged: SCAFFOLD-BE, SCAFFOLD-FE, SCAFFOLD-E2E |
-| Tue 24 Nov | SCAFFOLD (integration, CI) merged |
+| Wed 18 – Mon 23 Nov | Code scaffold done: SCAFFOLD-BE, SCAFFOLD-FE, SCAFFOLD-E2E, SCAFFOLD (CI, branch protection) |
 | Sun 29 Nov | Sprint 0 done: assumptions, data model, API and event contracts frozen |
 | Sun 6 Dec | R01 done; SonarCloud ready |
 | Sun 31 Jan 2027 | Feature freeze (all of R01–R12 merged) |

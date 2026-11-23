@@ -4,6 +4,8 @@ SideQuest · Group 40 · Federico II · A.A. 2026/27. Repository: https://github
 
 This guide is for **you**. Read it once fully, then use the starter prompts (section 10) with Claude Code. The master plan is `docs/plan/PLAN.md` (PDF next to it).
 
+> **Status on Mon 23 Nov 2026: the code scaffold is done.** Backend, frontend, E2E tests, Docker and CI are on `develop` (SCAFFOLD-BE #57, SCAFFOLD-FE #60, SCAFFOLD-E2E #59, SCAFFOLD #63), and every PR needs the CI checks `backend`, `frontend`, `e2e` and `plan` green. Prepare your computer with `npm run setup:dev` and the README quick start. Your SCAFFOLD-BE, SCAFFOLD-FE (taken over from P1 on 19 Nov) and SCAFFOLD are done. Next: **S0-DATAMODEL** and **S0-API** (by 29 Nov, after the kickoff decisions), then SONAR-SETUP and DOC-ARCH-DRAFT.
+
 ## 1. You and your scope
 
 | Item | Detail |
@@ -11,7 +13,7 @@ This guide is for **you**. Read it once fully, then use the starter prompts (sec
 | **Requirements** | R08 (invitations, package A), R10 (teams), R11 (team participation), R12 (live cooperative updates) – package B |
 | **Backend modules** | `invitations`, `teams` (team participation wraps the `participations` public API; progress event log; live rooms; `TeamMembershipPort`) |
 | **Frontend features** | `features/invitations`, `teams`, `team-play` |
-| **Repo admin / coordinator** | SCAFFOLD-BE, SCAFFOLD (integration of the three scaffold parts), SONAR-SETUP, FREEZE, STABILIZE, REL-RC, REL-DRYRUN, REL-V1, SUBMIT; open PRs older than 48 h; milestone status |
+| **Repo admin / coordinator** | SCAFFOLD-BE, SCAFFOLD-FE (taken over from P1 on 19 Nov), SCAFFOLD (integration of the three scaffold parts), SONAR-SETUP, FREEZE, STABILIZE, REL-RC, REL-DRYRUN, REL-V1, SUBMIT; open PRs older than 48 h; milestone status |
 | **INGSW** | Architecture and design chapter (components, technologies, persistence, class diagram, sequence diagram, ER), Sonar report, `TeamProgressReducer` documented unit tests, traceability and PDF assembly |
 | **TECWEB** | Docker and CI setup (SCAFFOLD-BE, SCAFFOLD), E2E specs of your requirements |
 | **E2E specs** | E2E-09, E2E-10, E2E-11, E2E-12 |
@@ -39,117 +41,123 @@ Accept the collaborator invitation (email, or https://github.com/notifications) 
 
 Ordered by start date. A task may be started only when all its blockers are DONE (`npm run deps -- <ID>`).
 
-1. **SETUP** – Repository, plan, guides and GitHub setup (no code)
+1. **SETUP** – Repository, plan, guides and GitHub setup (no code) — **DONE** (17 Nov)
    - Dates: 2026-11-17 → 2026-11-17 (milestone M0)
    - Blocked by: none
    - Deliverables: Repository, branches, labels, milestones and issues created; Documentation, plan, guides and PDFs committed (no application code)
    - You hand over to: S0-ASSUMPTIONS (P1), S0-EVENTS (P2), R01 (P1)
-2. **SCAFFOLD-BE** – Scaffold part 1: backend, shared core, docker-compose (db)
+2. **SCAFFOLD-BE** – Scaffold part 1: backend, shared core, docker-compose (db) — **DONE** (PR #57, merged 18 Nov)
    - Dates: 2026-11-18 → 2026-11-21 (milestone M1)
    - Blocked by: SETUP
    - Deliverables: Backend part of `docs/design/scaffold-spec.md` (§6.1, §6.2, §6.5, §7.1, `docker-compose.yml` of §7.4): 8 empty modules, all of `shared/`, Jest unit + integration, Dockerfile; sets the TypeScript/ESLint/Prettier conventions the other two parts follow. Merge it first: SCAFFOLD-FE and SCAFFOLD-E2E rebase on it
    - You hand over to: SCAFFOLD (P3)
-3. **SCAFFOLD** – Scaffold integration: ci.yml, sonar.yml, setup:dev, branch protection, README quick start
+3. **SCAFFOLD-FE** – Scaffold part 2: Angular frontend, layout, shared UI, stubs, lazy routes — **DONE** (PR #60, merged 19 Nov; taken over by P3 from P1 on 19 Nov) — **DONE** (PR #60, merged 19 Nov; taken over by P3 from P1 on 19 Nov)
+   - Dates: 2026-11-18 → 2026-11-22 (milestone M1)
+   - Blocked by: SETUP
+   - Deliverables: Frontend part of `docs/design/scaffold-spec.md` (§6.3, §7.2, ESLint boundary for `features/`): Angular CLI without UI library, `core/api`, `core/layout`, `shared/ui`, design tokens, `core/auth` and `core/realtime` stubs, lazy routes with placeholder pages, home page calling `/health`, nginx Dockerfile
+   - You hand over to: SCAFFOLD (P3)
+   - Note: planned for P1; taken over by P3 on 19 Nov so that the smoke test and SCAFFOLD were not blocked.
+4. **SCAFFOLD** – Scaffold integration: ci.yml, sonar.yml, setup:dev, branch protection, README quick start — **DONE** (PR #63, merged 23 Nov)
    - Dates: 2026-11-23 → 2026-11-24 (milestone M1)
    - Blocked by: SCAFFOLD-BE, SCAFFOLD-FE, SCAFFOLD-E2E
    - Deliverables: Create `ci.yml` (jobs `backend`, `frontend`, `e2e`, `plan`) and `sonar.yml`, then delete `plan.yml`; root `setup:dev` and `test:all`; end-to-end local checks; branch protection requires the four checks
    - You hand over to: R01 (P1)
-4. **S0-DATAMODEL** – Freeze data model and ER diagram
+5. **S0-DATAMODEL** – Freeze data model and ER diagram
    - Dates: 2026-11-23 → 2026-11-29 (milestone M1)
    - Blocked by: SETUP
    - Deliverables: Review `docs/design/data-model.md` against assumptions A-05..A-21 (every field, constraint and index); Resolve open points with the module owners; update the Mermaid ER diagram
    - You hand over to: R02 (P1)
-5. **S0-API** – Freeze REST contracts (OpenAPI fragments) and module public APIs
+6. **S0-API** – Freeze REST contracts (OpenAPI fragments) and module public APIs
    - Dates: 2026-11-23 → 2026-11-29 (milestone M1)
    - Blocked by: SETUP
    - Deliverables: Review the REST surface in `docs/design/module-contracts.md` and the public API signatures of every module; Once SCAFFOLD is merged: each owner fills the OpenAPI fragment of their module with placeholder paths (method, path, summary, `x-owner`, `x-requirement`, `x-status: planned`)
    - You hand over to: R02 (P1), R06A (P2)
-6. **SONAR-SETUP** – SonarCloud project, token secret and first green analysis
+7. **SONAR-SETUP** – SonarCloud project, token secret and first green analysis
    - Dates: 2026-11-30 → 2026-12-06 (milestone M2)
    - Blocked by: SCAFFOLD
    - Deliverables: Log in at sonarcloud.io with GitHub; Import the repo under the owner's organization
    - You hand over to: nobody directly (internal or later gating)
-7. **DOC-ARCH-DRAFT** – Architecture draft: components, technologies, communication, ER
+8. **DOC-ARCH-DRAFT** – Architecture draft: components, technologies, communication, ER
    - Dates: 2026-11-30 → 2026-12-06 (milestone M2)
    - Blocked by: S0-DATAMODEL, S0-API
    - Deliverables: Architecture draft: components, technologies, communication, ER
    - You hand over to: nobody directly (internal or later gating)
-8. **R10** – R10 Exploration teams
+9. **R10** – R10 Exploration teams
    - Dates: 2026-12-07 → 2026-12-20 (milestone M3)
    - Blocked by: R01, S0-DATAMODEL, S0-API, S0-EVENTS
    - Deliverables: Create team (unique name 3–30, max 6 members), TEAM_ADMIN and MEMBER roles; Invite by nickname, accept/decline; leave; admin removes members; admin transfers role before leaving; last member disbands
    - You hand over to: nobody directly (internal or later gating)
-9. **DOC-DESIGN-DRAFT** – Design drafts: domain class diagram, persistence chapter, components diagram
+10. **DOC-DESIGN-DRAFT** – Design drafts: domain class diagram, persistence chapter, components diagram
    - Dates: 2026-12-21 → 2027-01-03 (milestone M4)
    - Blocked by: DOC-ARCH-DRAFT
    - Deliverables: Design drafts: domain class diagram, persistence chapter, components diagram
    - You hand over to: nobody directly (internal or later gating)
-10. **R08** – R08 Invitations to restricted missions
+11. **R08** – R08 Invitations to restricted missions
    - Dates: 2027-01-04 → 2027-01-17 (milestone M5)
    - Blocked by: R07, R06A
    - Deliverables: Invitations by nickname to RESTRICTED missions; one record per (mission, invitee); re-invite reopens as PENDING; duplicate PENDING → 409; Accept grants access through `missions.grantAccess` (does not accept the mission nor reserve a slot); decline; revoke removes access, started participation continues
    - You hand over to: nobody directly (internal or later gating)
-11. **R11** – R11 Team participation with shared, consistent progress
+12. **R11** – R11 Team participation with shared, consistent progress
    - Dates: 2027-01-18 → 2027-01-26 (milestone M6)
    - Blocked by: R10, R04, R05A, R05B
    - Deliverables: TEAM missions: only TEAM_ADMIN accepts on behalf of the team; team needs at least `minTeamSize` members; Wraps the `participations` public API; 409 `ALREADY_PARTICIPATING` for individual + team or two teams
    - You hand over to: nobody directly (internal or later gating)
-12. **R12** – R12 Live cooperative updates with ordering and reconnection
+13. **R12** – R12 Live cooperative updates with ordering and reconnection
    - Dates: 2027-01-27 → 2027-01-31 (milestone M6)
    - Blocked by: R11, R06A
    - Deliverables: One Socket.IO room per team participation; `team-progress:join/leave` with ack `{ ok, lastSeq }` authorized through `TeamMembershipPort`; `TeamProgressEvent` appended with strictly increasing `seq` in the same transaction; emit only after commit
    - You hand over to: nobody directly (internal or later gating)
-13. **FREEZE** – Feature freeze: R01-R12 merged into develop
+14. **FREEZE** – Feature freeze: R01-R12 merged into develop
    - Dates: 2027-01-31 → 2027-01-31 (milestone M6)
    - Blocked by: R01, R02, R03, R04, R05A, R05B, R06A, R06B, R07, R08, R09, R10, R11, R12
    - Deliverables: Every R task issue is closed and merged into `develop`; CI green on `develop`; announce the freeze to the team (bug fixes only from now)
    - You hand over to: TW-README (P1), TW-SCHEDA (P1), DOC-GIT (P1)
-14. **STABILIZE** – Stabilization week: bug fixes only
+15. **STABILIZE** – Stabilization week: bug fixes only
    - Dates: 2027-02-01 → 2027-02-07 (milestone M7)
    - Blocked by: FREEZE
    - Deliverables: Stabilization week: bug fixes only
    - You hand over to: nobody directly (internal or later gating)
-15. **DOC-ARCH** – Architecture and design chapter final (VP class, sequence, ER diagrams)
+16. **DOC-ARCH** – Architecture and design chapter final (VP class, sequence, ER diagrams)
    - Dates: 2027-02-01 → 2027-02-21 (milestone M7)
    - Blocked by: FREEZE, DOC-DESIGN-DRAFT, DOC-STATE
    - Deliverables: Architecture and design chapter final (VP class, sequence, ER diagrams)
    - You hand over to: nobody directly (internal or later gating)
-16. **DOC-SONAR** – SonarCloud report, commentary and fixes
+17. **DOC-SONAR** – SonarCloud report, commentary and fixes
    - Dates: 2027-02-01 → 2027-02-21 (milestone M7)
    - Blocked by: FREEZE, SONAR-SETUP
    - Deliverables: SonarCloud report, commentary and fixes
    - You hand over to: nobody directly (internal or later gating)
-17. **DOC-UNIT-TEAM** – Documented unit tests: TeamProgressReducer.apply(state, update)
+18. **DOC-UNIT-TEAM** – Documented unit tests: TeamProgressReducer.apply(state, update)
    - Dates: 2027-02-08 → 2027-02-21 (milestone M7)
    - Blocked by: R11
    - Deliverables: Documented unit tests: TeamProgressReducer.apply(state, update)
    - You hand over to: nobody directly (internal or later gating)
-18. **DOC-TRACE** – Traceability table and INGSW PDF assembly
+19. **DOC-TRACE** – Traceability table and INGSW PDF assembly
    - Dates: 2027-02-22 → 2027-02-28 (milestone M7)
    - Blocked by: DOC-SRS, DOC-ARCH, DOC-TESTPLAN, DOC-UC01
    - Deliverables: Traceability table and INGSW PDF assembly
    - You hand over to: nobody directly (internal or later gating)
-19. **CLEANUP** – Remove Claude Code traces from the final repository (files and history)
+20. **CLEANUP** – Remove Claude Code traces from the final repository (files and history)
    - Dates: 2027-02-28 → 2027-02-28 (milestone M7)
    - Blocked by: STABILIZE, DOC-TRACE, DOC-GIT
    - Deliverables: Agree the final list of what to remove at the Monday sync; everyone has merged their work, no open PRs, all member branches pushed; Files: remove or move out of the repository `CLAUDE.md`; remove the Claude Code references from README, CONTRIBUTING, docs/plan/ (PLAN.md, setup-prompt.md, task data and the PDFs), docs/guides/ (starter prompts and PDFs), docs/design/scaffold-spec.md, PROGRESS.md wording and the .github templates; regenerate the PDFs
    - You hand over to: nobody directly (internal or later gating)
-20. **REL-RC** – Release candidate: code and docs frozen, full CI green, tag v1.0.0-rc.1
+21. **REL-RC** – Release candidate: code and docs frozen, full CI green, tag v1.0.0-rc.1
    - Dates: 2027-03-01 → 2027-03-08 (milestone M8)
    - Blocked by: CLEANUP, STABILIZE, DOC-TRACE, DOC-SONAR, DOC-UNIT-TIMER, DOC-UNIT-TEAM, DOC-DESIGN-EXAMPLE, DOC-GIT, TW-README, TW-SCHEDA
    - Deliverables: Release candidate: code and docs frozen, full CI green, tag v1.0.0-rc.1
    - You hand over to: nobody directly (internal or later gating)
-21. **REL-DRYRUN** – Exam dry-run: demo rehearsal and cross-module knowledge sessions (everyone explains everyone's code)
+22. **REL-DRYRUN** – Exam dry-run: demo rehearsal and cross-module knowledge sessions (everyone explains everyone's code)
    - Dates: 2027-03-09 → 2027-03-14 (milestone M8)
    - Blocked by: REL-RC
    - Deliverables: Exam dry-run: demo rehearsal and cross-module knowledge sessions (everyone explains everyone's code)
    - You hand over to: nobody directly (internal or later gating)
-22. **REL-V1** – Release v1.0.0: merge develop into main, tag, final PDFs
+23. **REL-V1** – Release v1.0.0: merge develop into main, tag, final PDFs
    - Dates: 2027-03-15 → 2027-03-15 (milestone M8)
    - Blocked by: REL-DRYRUN
    - Deliverables: Release PR `develop` → `main` with a merge commit; tag `v1.0.0`; Final PDFs generated and committed; README and summary sheet up to date
    - You hand over to: nobody directly (internal or later gating)
-23. **SUBMIT** – Submit repository URL on the Teams assignment
+24. **SUBMIT** – Submit repository URL on the Teams assignment
    - Dates: 2027-03-16 → 2027-03-25 (milestone M8)
    - Blocked by: REL-V1
    - Deliverables: Post the repository URL on the Teams assignment before 25 Mar 2027; Check the repo is public and contains no `node_modules`, secrets or course PDFs
@@ -164,8 +172,8 @@ Ordered by start date. A task may be started only when all its blockers are DONE
 | SETUP (due 2026-11-17) | S0-ASSUMPTIONS | P1 | starts 2026-11-23 |
 | SETUP (due 2026-11-17) | S0-EVENTS | P2 | starts 2026-11-23 |
 | SETUP (due 2026-11-17) | R01 | P1 | starts 2026-11-25 |
-| SCAFFOLD-BE (due 2026-11-21) | SCAFFOLD-FE, SCAFFOLD-E2E rebase on it (not a formal blocker) | P1, P2 | already started 2026-11-18 |
-| SCAFFOLD (due 2026-11-24) | R01 | P1 | starts 2026-11-25 |
+| SCAFFOLD-BE (done 2026-11-18) | SCAFFOLD-FE, SCAFFOLD-E2E rebase on it (not a formal blocker) | P3, P2 | done |
+| SCAFFOLD (done 2026-11-23) | R01 | P1 | starts 2026-11-25 |
 | S0-DATAMODEL (due 2026-11-29) | R02 | P1 | starts 2026-12-07 |
 | S0-API (due 2026-11-29) | R02 | P1 | starts 2026-12-07 |
 | S0-API (due 2026-11-29) | R06A | P2 | starts 2026-12-07 |
@@ -177,8 +185,8 @@ Ordered by start date. A task may be started only when all its blockers are DONE
 
 | Your task | Blocked by | Whose | Their due date |
 |---|---|---|---|
-| SCAFFOLD | SCAFFOLD-FE | P1 | due 2026-11-22 |
-| SCAFFOLD | SCAFFOLD-E2E | P2 | due 2026-11-22 |
+| SCAFFOLD | SCAFFOLD-FE | P3 (taken over from P1) | done 2026-11-19 |
+| SCAFFOLD | SCAFFOLD-E2E | P2 | done 2026-11-19 |
 | R10 | R01 | P1 | due 2026-12-06 |
 | R10 | S0-EVENTS | P2 | due 2026-11-29 |
 | R08 | R07 | P1 | due 2027-01-03 |
@@ -338,7 +346,7 @@ This is my first session on this computer. Do the following, in order, and stop 
 4. Read, in this order: CLAUDE.md, PROGRESS.md (to know what has been done so far), docs/plan/PLAN.md, docs/guides/P3-domenico-panaro.md, docs/reference/requirements.md, docs/decisions/assumptions.md, docs/design/data-model.md, docs/design/module-contracts.md, CONTRIBUTING.md. Then summarise for me in Italian, in at most 15 lines: my scope, my files, my first tasks, my blockers.
 5. Check whether the SCAFFOLD issue is closed (npm run deps -- SCAFFOLD). If it is NOT closed yet, the code does not exist: skip this step, tell me, and remind me to run it again later. If it is closed, prepare the local environment: install Docker Desktop if missing, npm run setup:dev, create the .env files from .env.example (generate a random TOKEN_SECRET), docker compose up -d db, run migrations and seeds on the dev DB, start backend and frontend, open the health page, run the backend tests and the E2E smoke test. Report what works and fix only problems that are inside my ownership or local configuration; for anything else, draft an issue for the owner.
 6. Self-assign all my issues: gh issue list --label owner:P3-domenico --state open, then gh issue edit <n> --add-assignee @me for each.
-7. Run npm run deps -- --mine P3 and show me the result. My first tasks are: SCAFFOLD-BE first (by 21 Nov), then SCAFFOLD, the integration of the three scaffold parts (by 24 Nov, everyone else's coding depends on it), then S0-DATAMODEL and S0-API (lead), then SONAR-SETUP and DOC-ARCH-DRAFT. Propose which READY task to start and why. Do NOT start coding until I confirm.
+7. Run npm run deps -- --mine P3 and show me the result. The code scaffold is done (SCAFFOLD-BE, SCAFFOLD-FE, SCAFFOLD). My first tasks are: S0-DATAMODEL and S0-API (lead), then SONAR-SETUP and DOC-ARCH-DRAFT. Propose which READY task to start and why. Do NOT start coding until I confirm.
 Rules for this and every session: follow CLAUDE.md; prefer what was taught in the lectures and never add a dependency without asking me; only edit files I own; never push to develop or main; never start a task whose blockers are not merged; explain what you do so that I can defend it at the exam. "I am also the repo admin and coordinator: also check open PRs older than 48 h and the milestone status."
 ```
 
@@ -378,8 +386,8 @@ I am Domenico Panaro (P3), Group 40, SideQuest. Speak Italian with me; documents
 
 ## 11. Coordinator notes (P3 only)
 
-### SCAFFOLD-BE and SCAFFOLD (your first tasks, due 21 and 24 Nov 2026)
-The scaffold is split in three parts that run in parallel from 18 Nov, so every member is active from day one: **SCAFFOLD-BE** (you: backend, shared core, `docker-compose.yml`), **SCAFFOLD-FE** (Vincenzo: Angular frontend) and **SCAFFOLD-E2E** (Matteo: Playwright and the demo stack). Merge SCAFFOLD-BE first, because it sets the TypeScript/ESLint/Prettier conventions and the other two rebase on it. Reviews: SCAFFOLD-BE needs Vincenzo **and** Matteo (module folders have different code owners); SCAFFOLD-FE needs Matteo and you (P3 feature folders); SCAFFOLD-E2E needs you. Then **SCAFFOLD** (integration) adds `ci.yml`, `sonar.yml`, `setup:dev` and the branch protection. Start each with **Starter prompt 2** and its task ID. Everyone else's coding depends on SCAFFOLD. The specification is `docs/design/scaffold-spec.md` (a verbatim copy of §4, §6.1–§6.3, §6.5, §7, the ci/sonar workflows and the SCAFFOLD checklist). Infrastructure only, no requirement logic. After the merge, update the branch protection of `develop` and `main` to require `["backend","frontend","e2e","plan"]` and read it back.
+### SCAFFOLD-BE, SCAFFOLD-FE and SCAFFOLD (done 18–23 Nov 2026)
+The scaffold was split in three parts that ran in parallel from 18 Nov: **SCAFFOLD-BE** (you, PR #57: backend, shared core, `docker-compose.yml`), **SCAFFOLD-FE** (planned for Vincenzo, taken over by you on 19 Nov because it blocked the smoke test and SCAFFOLD; PR #60) and **SCAFFOLD-E2E** (Matteo, PR #59: Playwright and the demo stack). **SCAFFOLD** (PR #63, merged 23 Nov) added `ci.yml`, `sonar.yml` and `setup:dev`; then the branch protection of `develop` and `main` was set to require `backend`, `frontend`, `e2e` and `plan` and read back with `gh api`. A review of the whole scaffold led to four fixes in the shared base (PR #68, contract-change #67) and a first removal of setup documents no longer needed (PR #70, #69). The specification is `docs/design/scaffold-spec.md`.
 
 ### SONAR-SETUP – exact steps (30 Nov – 6 Dec 2026)
 1. Log in at https://sonarcloud.io with GitHub.

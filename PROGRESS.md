@@ -148,6 +148,19 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P3 – Domenico Panaro
 
+### 2026-11-23 13:20 · SCAFFOLD · docs(plan): piano, Start here e guide personali aggiornati alla fine dello scaffold
+- **Cosa:** tutti i documenti globali e personali raccontano ora lo stato reale dopo lo scaffold:
+  - `tasks.json`: SCAFFOLD-FE passa a owner P3 (preso in carico il 19/11); label della issue #52 aggiornata (`owner:P3-domenico`); `npm run deps -- --mine P1/P3` lo mostrano al posto giusto.
+  - `PLAN.md`: riga di stato, scadenze dello scaffold segnate come fatte, tabella del team, Gantt (SCAFFOLD-FE nella sezione P3, i task finiti segnati `done`), piano per persona (SCAFFOLD-FE spostato da P1 a P3 con la nota, i task finiti marcati DONE con la PR), struttura del repository senza i segni "[SCAFFOLD] non esiste ancora", "How to get started".
+  - `START-HERE.md`: riscritte le sezioni 1–4 sulla settimana 23–29 novembre (preparare il computer con `setup:dev`, verbale del kickoff, review, chi fa cosa fino al 6/12, date).
+  - Le tre guide: un riquadro "Status on 23 Nov" in cima con i prossimi task di ognuno; riga "Scaffold part" della tabella iniziale, piano passo per passo (P1 senza SCAFFOLD-FE, P3 con SCAFFOLD-FE), tabelle delle dipendenze con "done", lo starter prompt 1 con i primi task giusti; nella guida P3 la nota da coordinatore sullo scaffold racconta com'è andata.
+  - Rigenerati i 5 PDF (Master Plan, Start here, tre guide).
+- **Perché:** lo scaffold è chiuso e stasera parte la fase successiva: chi apre il piano, la guida o il PDF deve trovare lo stato vero e i propri prossimi task, non il piano del 17/11. Registrare SCAFFOLD-FE sotto P3 rende corretti `npm run deps`, la storia del progetto e l'analisi Git (DOC-GIT).
+- **File:** `docs/plan/tasks.json`, `docs/plan/PLAN.md`, `docs/plan/START-HERE.md`, `docs/guides/P1-vincenzo-lubrano.md`, `docs/guides/P2-matteo-marino.md`, `docs/guides/P3-domenico-panaro.md`, i 5 PDF, `PROGRESS.md`.
+- **Come verificare:** `npm run plan:validate` → "Plan OK"; `npm run deps -- --mine P3` → DONE: SETUP, SCAFFOLD-BE, SCAFFOLD-FE, SCAFFOLD; `npm run deps -- --mine P1` → nessun task DONE, NEXT S0-ASSUMPTIONS; aprire i PDF.
+- **Prossimi passi:** approvazione di Vincenzo e Matteo (piano e guide sono di tutti); la fase successiva (Sprint 0) parte stasera.
+- **Commit/PR:** PR #71.
+
 ### 2026-11-23 12:40 · SCAFFOLD · docs(history): chiusura dello scaffold nel registro e nella storia del progetto
 - **Cosa:** aggiunte le voci DONE mancanti di SCAFFOLD-FE (#60) e SCAFFOLD (#63), con l'ora del merge; recuperate 4 voci del 18/11 (DONE di SCAFFOLD-BE, revisione del modello dei dati, osservazioni sulla #4, direttiva #58) rimaste su un branch locale mai pushato; in `docs/history/overview.md` la Fase 1 è segnata conclusa ed è stata aggiunta la "Fase 3 – Scaffold del codice". Eliminati i branch locali già mergiati (`chore/scaffold`, `chore/scaffold-frontend`, `docs/kickoff-2026-11-23`) e quello vecchio (`docs/s0-datamodel-review`, dopo averne recuperato le voci); i branch remoti erano già stati cancellati al merge.
 - **Perché:** la regola §9b vuole che l'ultima voce di ogni task dica DONE con la PR mergiata, e il coordinatore aggiorna "Le fasi finora" a ogni traguardo: senza questo passo la storia del progetto (PDF) non racconterebbe la chiusura dello scaffold. Le voci recuperate sono storia vera del 18/11 e mancavano dal registro.

@@ -4,6 +4,8 @@ SideQuest · Group 40 · Federico II · A.A. 2026/27. Repository: https://github
 
 This guide is for **you**. Read it once fully, then use the starter prompts (section 10) with Claude Code. The master plan is `docs/plan/PLAN.md` (PDF next to it).
 
+> **Status on Mon 23 Nov 2026: the code scaffold is done.** Backend, frontend, E2E tests, Docker and CI are on `develop` (SCAFFOLD-BE #57, SCAFFOLD-FE #60, SCAFFOLD-E2E #59, SCAFFOLD #63), and every PR needs the CI checks `backend`, `frontend`, `e2e` and `plan` green. Prepare your computer with `npm run setup:dev` and the README quick start. SCAFFOLD-FE was taken over by Domenico (P3) on 19 Nov, so your plan starts from **S0-ASSUMPTIONS** (lead, by 29 Nov), your part of S0-API, and **R01** from Wed 25 Nov.
+
 ## 1. You and your scope
 
 | Item | Detail |
@@ -12,7 +14,7 @@ This guide is for **you**. Read it once fully, then use the starter prompts (sec
 | **Backend modules** | `auth`, `users`, `missions` (plus the `MissionAccess` allow-list and the access policy, and `MissionAccessPort`) |
 | **Frontend features** | `core/auth`, `features/auth`, `profile`, `admin`, `missions`, `explore`, `shared/map` (reusable Leaflet component) |
 | **INGSW** | SRS chapter (glossary, actors + use case diagram, personas, NFR and domain requirements, assumptions rationale; `use-cases.puml`), Git analysis |
-| **Scaffold part** | SCAFFOLD-FE (18–22 Nov 2026): the Angular frontend skeleton from `docs/design/scaffold-spec.md` |
+| **Scaffold part** | none: SCAFFOLD-FE was taken over by P3 on 19 Nov (PR #60); your folders (`core/auth`, `features/auth`, `profile`, `admin`, `missions`, `explore`) contain placeholders with `TODO(R01, P1)` |
 | **TECWEB** | Final README (TW-README), one-page summary sheet (TW-SCHEDA), E2E catalogue verification (E2E-CATALOGUE), responsive audit (QA-RESPONSIVE), demo dataset (QA-SEED) |
 | **E2E specs** | E2E-01, E2E-02, E2E-03, E2E-04 |
 | **Unit-test method** | none (UT-1 is P2, UT-2 is P3) |
@@ -39,67 +41,62 @@ Accept the collaborator invitation (email, or https://github.com/notifications) 
 
 Ordered by start date. A task may be started only when all its blockers are DONE (`npm run deps -- <ID>`).
 
-1. **SCAFFOLD-FE** – Scaffold part 2: Angular frontend, layout, shared UI, stubs, lazy routes
-   - Dates: 2026-11-18 → 2026-11-22 (milestone M1)
-   - Blocked by: SETUP
-   - Deliverables: Frontend part of `docs/design/scaffold-spec.md` (§6.3, §7.2, ESLint boundary for `features/`): Angular CLI without UI library, `core/api`, `core/layout`, `shared/ui`, design tokens, `core/auth` and `core/realtime` stubs, lazy routes with placeholder pages, home page calling `/health`, nginx Dockerfile. Follow the TypeScript/ESLint/Prettier conventions set by SCAFFOLD-BE (P3). Full checklist in the issue. Start it with Starter prompt 2 and task ID `SCAFFOLD-FE`
-   - You hand over to: SCAFFOLD (P3)
-2. **S0-ASSUMPTIONS** – Ratify domain assumptions A-01..A-26
+1. **S0-ASSUMPTIONS** – Ratify domain assumptions A-01..A-26
    - Dates: 2026-11-23 → 2026-11-29 (milestone M1)
    - Blocked by: SETUP
    - Deliverables: Review every row A-01..A-26 with the team (Sprint 0 call); Turn each row into ACCEPTED, or change it through a PR with the reason
    - You hand over to: DOC-STATE (P2), DOC-UC01-DRAFT (P2)
-3. **R01** – R01 Accounts, authentication, profile, admin
+2. **R01** – R01 Accounts, authentication, profile, admin
    - Dates: 2026-11-25 → 2026-12-06 (milestone M2)
    - Blocked by: SETUP, SCAFFOLD
    - Deliverables: Register, login, logout with email + password (bcrypt); JWT HS256 with `tokenVersion`; logout/suspension/password change increment it (A-02); Rate limiting on login and register
    - You hand over to: R06A (P2), R10 (P3), FREEZE (P3)
-4. **R02** – R02 Mission creation, editing, publication, map picker
+3. **R02** – R02 Mission creation, editing, publication, map picker
    - Dates: 2026-12-07 → 2026-12-20 (milestone M3)
    - Blocked by: R01, S0-ASSUMPTIONS, S0-DATAMODEL, S0-API
    - Deliverables: Create/edit missions with title, teaser, description, category, objectives, optional place, ORDINARY or SECRET_TIMED mode, conditions; Lifecycle DRAFT → PUBLISHED → CLOSED → ARCHIVED; only DRAFT can be deleted (A-05)
    - You hand over to: R04 (P2), FREEZE (P3)
-5. **R07** – R07 Restricted visibility and access enforcement
+4. **R07** – R07 Restricted visibility and access enforcement
    - Dates: 2026-12-21 → 2027-01-03 (milestone M4)
    - Blocked by: R02
    - Deliverables: PUBLIC/RESTRICTED visibility; `MissionAccess` allow-list; bind `MissionAccessPort`; Unauthorized users get **404** from detail, objectives, proofs and every related endpoint; mission absent from list, map and search (A-16)
    - You hand over to: R08 (P3), FREEZE (P3)
-6. **R03** – R03 Exploration and search: list, map, filters, secret preview
+5. **R03** – R03 Exploration and search: list, map, filters, secret preview
    - Dates: 2027-01-04 → 2027-01-17 (milestone M5)
    - Blocked by: R02, R07
    - Deliverables: List and interactive map for guests and users; search by keyword, category, availability, mode, participation type, bounding box (A-24); Availability read through `ParticipationQueryPort` (AVAILABLE until R09 binds it)
    - You hand over to: FREEZE (P3)
-7. **QA-SEED** – Consolidated demo dataset covering every feature
+6. **QA-SEED** – Consolidated demo dataset covering every feature
    - Dates: 2027-01-18 → 2027-01-24 (milestone M6)
    - Blocked by: R03
    - Deliverables: Consolidated demo dataset covering every feature
    - You hand over to: nobody directly (internal or later gating)
-8. **QA-RESPONSIVE** – Responsive and error-handling audit of all screens (issues filed to owners)
+7. **QA-RESPONSIVE** – Responsive and error-handling audit of all screens (issues filed to owners)
    - Dates: 2027-01-25 → 2027-01-31 (milestone M6)
    - Blocked by: R03
    - Deliverables: Responsive and error-handling audit of all screens (issues filed to owners)
    - You hand over to: nobody directly (internal or later gating)
-9. **E2E-CATALOGUE** – Verify the >=10 E2E catalogue is complete, non-duplicate and green in CI
+8. **E2E-CATALOGUE** – Verify the >=10 E2E catalogue is complete, non-duplicate and green in CI
    - Dates: 2027-01-25 → 2027-01-31 (milestone M6)
    - Blocked by: R03
    - Deliverables: All 12 scenarios of `docs/tecweb/e2e-catalogue.md` exist, are non-duplicate and green in CI; At least one negative/authorization case present (E2E-04 and E2E-12)
    - You hand over to: nobody directly (internal or later gating)
-10. **DOC-SRS** – SRS: glossary, actors, use case diagram (VP), personas, NFR and domain requirements, assumptions rationale
+9. **DOC-SRS** – SRS: glossary, actors, use case diagram (VP), personas, NFR and domain requirements, assumptions rationale
    - Dates: 2027-02-01 → 2027-02-21 (milestone M7)
    - Blocked by: S0-ASSUMPTIONS
    - Deliverables: SRS: glossary, actors, use case diagram (VP), personas, NFR and domain requirements, assumptions rationale
    - You hand over to: DOC-TRACE (P3)
-11. **TW-README** – Final README (TECWEB B.3)
+10. **TW-README** – Final README (TECWEB B.3)
    - Dates: 2027-02-01 → 2027-02-21 (milestone M7)
    - Blocked by: FREEZE
    - Deliverables: Final README (TECWEB B.3)
    - You hand over to: REL-RC (P3)
-12. **TW-SCHEDA** – One-page summary sheet (TECWEB B.3)
+11. **TW-SCHEDA** – One-page summary sheet (TECWEB B.3)
    - Dates: 2027-02-15 → 2027-02-21 (milestone M7)
    - Blocked by: FREEZE
    - Deliverables: One-page summary sheet (TECWEB B.3)
    - You hand over to: REL-RC (P3)
-13. **DOC-GIT** – Git repository analysis (commits, contributors, trend)
+12. **DOC-GIT** – Git repository analysis (commits, contributors, trend)
    - Dates: 2027-02-15 → 2027-02-28 (milestone M7)
    - Blocked by: FREEZE
    - Deliverables: Git repository analysis (commits, contributors, trend)
@@ -111,7 +108,6 @@ Ordered by start date. A task may be started only when all its blockers are DONE
 
 | Your task | Unblocks | Whose | When they want to start |
 |---|---|---|---|
-| SCAFFOLD-FE (due 2026-11-22) | SCAFFOLD | P3 | starts 2026-11-23 |
 | S0-ASSUMPTIONS (due 2026-11-29) | DOC-STATE | P2 | starts 2026-11-30 |
 | S0-ASSUMPTIONS (due 2026-11-29) | DOC-UC01-DRAFT | P2 | starts 2026-11-30 |
 | R01 (due 2026-12-06) | R06A | P2 | starts 2026-12-07 |
@@ -132,10 +128,9 @@ Ordered by start date. A task may be started only when all its blockers are DONE
 
 | Your task | Blocked by | Whose | Their due date |
 |---|---|---|---|
-| SCAFFOLD-FE | SETUP | P3 | due 2026-11-17 |
 | S0-ASSUMPTIONS | SETUP | P3 | due 2026-11-17 |
 | R01 | SETUP | P3 | due 2026-11-17 |
-| R01 | SCAFFOLD | P3 | due 2026-11-24 |
+| R01 | SCAFFOLD | P3 | done 2026-11-23 |
 | R02 | S0-DATAMODEL | P3 | due 2026-11-29 |
 | R02 | S0-API | P3 | due 2026-11-29 |
 | TW-README | FREEZE | P3 | due 2027-01-31 |
@@ -272,7 +267,7 @@ This is my first session on this computer. Do the following, in order, and stop 
 4. Read, in this order: CLAUDE.md, PROGRESS.md (to know what has been done so far), docs/plan/PLAN.md, docs/guides/P1-vincenzo-lubrano.md, docs/reference/requirements.md, docs/decisions/assumptions.md, docs/design/data-model.md, docs/design/module-contracts.md, CONTRIBUTING.md. Then summarise for me in Italian, in at most 15 lines: my scope, my files, my first tasks, my blockers.
 5. Check whether the SCAFFOLD issue is closed (npm run deps -- SCAFFOLD). If it is NOT closed yet, the code does not exist: skip this step, tell me, and remind me to run it again later. If it is closed, prepare the local environment: install Docker Desktop if missing, npm run setup:dev, create the .env files from .env.example (generate a random TOKEN_SECRET), docker compose up -d db, run migrations and seeds on the dev DB, start backend and frontend, open the health page, run the backend tests and the E2E smoke test. Report what works and fix only problems that are inside my ownership or local configuration; for anything else, draft an issue for the owner.
 6. Self-assign all my issues: gh issue list --label owner:P1-vincenzo --state open, then gh issue edit <n> --add-assignee @me for each.
-7. Run npm run deps -- --mine P1 and show me the result. My first tasks are: SCAFFOLD-FE first (18–22 Nov, the frontend part of the code scaffold), then S0-ASSUMPTIONS (lead) and your part of S0-API, then R01 as soon as SCAFFOLD is merged. Propose which READY task to start and why. Do NOT start coding until I confirm.
+7. Run npm run deps -- --mine P1 and show me the result. The code scaffold is done (SCAFFOLD-FE was taken over by P3). My first tasks are: S0-ASSUMPTIONS (lead) and my part of S0-API, then R01 (from 25 Nov; SCAFFOLD is merged). Propose which READY task to start and why. Do NOT start coding until I confirm.
 Rules for this and every session: follow CLAUDE.md; prefer what was taught in the lectures and never add a dependency without asking me; only edit files I own; never push to develop or main; never start a task whose blockers are not merged; explain what you do so that I can defend it at the exam.
 ```
 
