@@ -159,7 +159,7 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 - **File:** `docs/plan/setup-prompt.md` (eliminato), `CLAUDE.md`, `CONTRIBUTING.md`, `docs/design/scaffold-spec.md`, `docs/plan/PLAN.md`, `docs/plan/SideQuest_Group40_Master_Plan.pdf`, `docs/plan/task-details.json`, `PROGRESS.md`.
 - **Come verificare:** `git grep -i -c claude` → 84 menzioni (erano 104); `git grep -i setup-prompt` trova solo le liste del task CLEANUP; `npm run plan:validate` → "Plan OK".
 - **Prossimi passi:** accordo di Vincenzo e Matteo (file condivisi, contract-change) e merge; il resto al CLEANUP (#48).
-- **Commit/PR:** questo commit.
+- **Commit/PR:** `49ca239`, PR #70 (contract-change #69).
 
 ### 2026-11-21 01:22 · S0-DATAMODEL · docs(meetings): agenda del kickoff dello Sprint 0 (lun 23/11)
 - **Cosa:** scritto `docs/meetings/2026-11-23.md` (45 minuti, 5 punti):
