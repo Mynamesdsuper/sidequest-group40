@@ -1,10 +1,13 @@
 #!/usr/bin/env node
 // Coordinator directives: the coordinator (P3) assigns work or instructions to members through
 // GitHub issues labelled `type:directive`. Members' Claude Code sessions list them at start-up.
-//   npm run directive -- --to P1|P2|P3|all --title "..." [--body "..."] [--due YYYY-MM-DD]
+//   npm run directive -- --to P1|P2|P3|all --title "..." [--body "..." | --body-file path] [--due YYYY-MM-DD]
 //                        [--task ID] [--priority high] [--dry-run]
+// Multi-line bodies: use --body-file. On Windows npm passes the arguments through cmd.exe, which cuts the
+// command at the first newline inside --body (every later flag, --dry-run included, is lost).
 //   npm run directive -- --list [P1|P2|P3]
 // Only issues authored by the coordinator's GitHub login count as directives (the repo is public).
+import { readFileSync } from 'node:fs';
 import { loadPlan, repoName, gh, ghJson } from './lib.mjs';
 
 const { team } = loadPlan();
@@ -17,7 +20,7 @@ function parse(argv) {
     const a = argv[i];
     if (a === '--dry-run' || a === '--list') o.flags.add(a);
     if (a === '--list' && argv[i + 1] && !argv[i + 1].startsWith('--')) o.listFor = argv[++i];
-    else if (['--to', '--title', '--body', '--due', '--task', '--priority'].includes(a)) o[a.slice(2)] = argv[++i];
+    else if (['--to', '--title', '--body', '--body-file', '--due', '--task', '--priority'].includes(a)) o[a.slice(2)] = argv[++i];
   }
   return o;
 }
@@ -45,7 +48,9 @@ function die(msg) {
 }
 
 function create(o) {
-  if (!o.to || !o.title) die('Usage: npm run directive -- --to P1|P2|P3|all --title "..." [--body "..."] [--due YYYY-MM-DD] [--task ID] [--priority high]');
+  if (!o.to || !o.title) die('Usage: npm run directive -- --to P1|P2|P3|all --title "..." [--body "..." | --body-file path] [--due YYYY-MM-DD] [--task ID] [--priority high]');
+  if (o.body && o['body-file']) die('Use either --body or --body-file, not both');
+  if (o['body-file']) o.body = readFileSync(o['body-file'], 'utf8').trim();
   const targets = o.to === 'all' ? ['P1', 'P2', 'P3'] : o.to.split(',').map((s) => s.trim().toUpperCase());
   for (const t of targets) if (!team[t]) die(`Unknown target ${t}`);
   if (o.due && !/^\d{4}-\d{2}-\d{2}$/.test(o.due)) die('--due must be YYYY-MM-DD');
