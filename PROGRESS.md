@@ -148,6 +148,19 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P3 – Domenico Panaro
 
+### 2026-11-23 12:40 · CLEANUP · chore(repo): prima pulizia delle tracce di Claude (dopo lo scaffold)
+- **Cosa:** inventario di tutte le menzioni di Claude nel repository (104 in 15 file) e rimozione di quelle che non servono più al lavoro quotidiano:
+  - eliminato `docs/plan/setup-prompt.md`, il prompt con cui è stato creato il repository, e tolti i suoi rimandi (`CLAUDE.md` §10, `PLAN.md`, `scaffold-spec.md`, `task-details.json`);
+  - tolta da `scaffold-spec.md` la nota residua del prompt ("SPECIFICATION ONLY in this session") e riscritta l'intestazione: ora dice che è la specifica del task SCAFFOLD, implementata dalle PR #57, #60, #59, #63;
+  - riformulate senza Claude due frasi di `CONTRIBUTING.md` (direttive) e `PLAN.md` (rischi);
+  - rigenerato il PDF del Master Plan (`npm run pdf:plan`).
+  Restano 84 menzioni (una, il commento di `scripts/directive.mjs`, va nella PR #68 per non creare conflitti), tutte necessarie fino al CLEANUP di febbraio.
+- **Perché:** decisione del coordinatore: alla fine dello scaffold si tolgono le tracce di Claude che non servono, senza aspettare il CLEANUP (#48). Restano di proposito: `CLAUDE.md`, le guide e i loro PDF (le sessioni li usano ogni giorno), i rimandi al file `CLAUDE.md` (altrimenti link rotti), l'onboarding di `START-HERE.md`, i dati del task CLEANUP, le voci passate di `PROGRESS.md` (riscriverle falserebbe il registro), i messaggi di commit e i testi su GitHub (si sistemano con la riscrittura della history al CLEANUP).
+- **File:** `docs/plan/setup-prompt.md` (eliminato), `CLAUDE.md`, `CONTRIBUTING.md`, `docs/design/scaffold-spec.md`, `docs/plan/PLAN.md`, `docs/plan/SideQuest_Group40_Master_Plan.pdf`, `docs/plan/task-details.json`, `PROGRESS.md`.
+- **Come verificare:** `git grep -i -c claude` → 84 menzioni (erano 104); `git grep -i setup-prompt` trova solo le liste del task CLEANUP; `npm run plan:validate` → "Plan OK".
+- **Prossimi passi:** accordo di Vincenzo e Matteo (file condivisi, contract-change) e merge; il resto al CLEANUP (#48).
+- **Commit/PR:** questo commit.
+
 ### 2026-11-21 01:22 · S0-DATAMODEL · docs(meetings): agenda del kickoff dello Sprint 0 (lun 23/11)
 - **Cosa:** scritto `docs/meetings/2026-11-23.md` (45 minuti, 5 punti):
   - lo stato dello scaffold;
