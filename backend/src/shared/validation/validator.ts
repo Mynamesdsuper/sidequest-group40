@@ -118,7 +118,11 @@ export const v = {
     return new Validator<Date>((value, path) => {
       if (typeof value !== 'string' || !ISO_DATE.test(value)) return fail(path, 'must be an ISO 8601 date');
       const d = new Date(value);
-      return Number.isNaN(d.getTime()) ? fail(path, 'must be an ISO 8601 date') : ok(d);
+      // new Date() rolls impossible days over (2026-02-31 becomes 3 March): check the calendar date as written.
+      const [y, m, day] = value.slice(0, 10).split('-').map(Number);
+      const cal = new Date(Date.UTC(y, m - 1, day));
+      const real = cal.getUTCMonth() === m - 1 && cal.getUTCDate() === day;
+      return Number.isNaN(d.getTime()) || !real ? fail(path, 'must be an ISO 8601 date') : ok(d);
     });
   },
   latitude: () => number({ min: -90, max: 90 }),
