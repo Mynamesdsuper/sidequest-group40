@@ -14,15 +14,15 @@ Generated from `docs/plan/tasks.json`. Task IDs, dates and dependencies are auth
 | Delivery type | **Early delivery** (by 31/03/2027): requirements **R01–R12** |
 | Project type | **Integrated**: one single product evaluated by both exams |
 | Repository | `https://github.com/Mynamesdsuper/sidequest-group40` (public); the URL is posted in the Teams assignment |
-| Status | Setup done (no code). Next: the code scaffold, split in three parallel parts: **SCAFFOLD-BE** (P3), **SCAFFOLD-FE** (P1), **SCAFFOLD-E2E** (P2), integrated by **SCAFFOLD** (P3, due 24 Nov 2026) |
+| Status | **Code scaffold done (23 Nov 2026):** backend, frontend, E2E tests, Docker and CI are on `develop` (SCAFFOLD-BE #57, SCAFFOLD-FE #60, SCAFFOLD-E2E #59, SCAFFOLD #63); every PR needs the CI checks `backend`, `frontend`, `e2e`, `plan`. Now: Sprint 0 (assumptions, data model, REST and event contracts frozen by 29 Nov), R01 from 25 Nov |
 
 ## Internal and official deadlines
 
 | Date | Event |
 |---|---|
 | Tue 17 Nov 2026 | Setup done (repo, plan, guides, issues; no code) |
-| Sat 21 – Sun 22 Nov 2026 | Scaffold parts merged: SCAFFOLD-BE (P3), SCAFFOLD-FE (P1), SCAFFOLD-E2E (P2) |
-| Tue 24 Nov 2026 | Code scaffold integrated: CI, Sonar workflow, branch protection (task SCAFFOLD, P3) |
+| Sat 21 – Sun 22 Nov 2026 | Scaffold parts merged: SCAFFOLD-BE (P3), SCAFFOLD-FE (P1, taken over by P3), SCAFFOLD-E2E (P2) — **done** 18–19 Nov |
+| Tue 24 Nov 2026 | Code scaffold integrated: CI, Sonar workflow, branch protection (task SCAFFOLD, P3) — **done** 23 Nov |
 | Sun 29 Nov 2026 | Sprint 0 done: assumptions, data model, API and event contracts frozen |
 | **Sun 31 Jan 2027** | **Feature freeze: all of R01–R12 merged into `develop`** |
 | 1–7 Feb 2027 | Stabilization buffer (bug fixes only; R12 may close here at the latest) |
@@ -34,9 +34,9 @@ Generated from `docs/plan/tasks.json`. Task IDs, dates and dependencies are auth
 
 | Role | Name | Student ID | GitHub | Requirements | Backend modules | Frontend features | Reviewed by | Reviews |
 |---|---|---|---|---|---|---|---|---|
-| **P1** | Vincenzo Pio Lubrano | N86005417 | `vincenzolubrano05` | R01, R02, R03, R07, SCAFFOLD-FE | `auth`, `users`, `missions` | `auth`, `profile`, `admin`, `missions`, `explore`, `shared/map` | P2 | P3 |
+| **P1** | Vincenzo Pio Lubrano | N86005417 | `vincenzolubrano05` | R01, R02, R03, R07 | `auth`, `users`, `missions` | `auth`, `profile`, `admin`, `missions`, `explore`, `shared/map` | P2 | P3 |
 | **P2** | Matteo Marino | N86005461 | `reverinn` | R04, R05, R06, R09, SCAFFOLD-E2E | `participations`, `notifications`, `dashboard` | `participation`, `waitlist`, `notifications`, `dashboard`, `core/realtime` | P3 | P1 |
-| **P3** | Domenico Panaro (admin, coordinator) | N86005622 | `Mynamesdsuper` | R08, R10, R11, R12, SCAFFOLD-BE, SCAFFOLD | `invitations`, `teams` | `invitations`, `teams`, `team-play` | P1 | P2 |
+| **P3** | Domenico Panaro (admin, coordinator) | N86005622 | `Mynamesdsuper` | R08, R10, R11, R12, SCAFFOLD-BE, SCAFFOLD-FE (taken over from P1 on 19 Nov), SCAFFOLD | `invitations`, `teams` | `invitations`, `teams`, `team-play` | P1 | P2 |
 
 **INGSW chapters:** P1 = SRS (glossary, actors and use case diagram, personas, NFR) and Git analysis; P2 = UC-01 and mockups, test plan, `TimerPolicy` unit tests, design example, state diagram; P3 = architecture and design, class/ER/sequence diagrams, Sonar report, `TeamProgressReducer` unit tests, traceability and PDF assembly.
 **TECWEB:** P1 = README, one-page summary sheet, E2E catalogue verification; every member writes the E2E specs of their own requirements.
@@ -147,7 +147,7 @@ flowchart TB
 
 **Ownership map:** see section 2 and `.github/CODEOWNERS` (every path has an owner and a reviewer buddy). Modules from `docs/design/module-contracts.md`; data model in `docs/design/data-model.md`.
 
-# 6. Repository structure (target, after SCAFFOLD)
+# 6. Repository structure
 
 ```text
 sidequest-group40/
@@ -155,16 +155,16 @@ sidequest-group40/
 ├── CLAUDE.md                rules for Claude Code sessions
 ├── CONTRIBUTING.md          git workflow, reviews, DoD
 ├── README.md
-├── package.json             planning/PDF scripts (+ setup:dev after SCAFFOLD)
-├── backend/                 [SCAFFOLD] Express 5 + TypeScript
+├── package.json             planning/PDF scripts, setup:dev
+├── backend/                 Express 5 + TypeScript
 │   └── src/ modules/{auth,users,missions,participations,notifications,dashboard,invitations,teams}/
 │        shared/{config,validation,db,errors,http,clock,events,ports,realtime,openapi,testing}/
 │        db/{migrations,seeds}/
-├── frontend/                [SCAFFOLD] Angular
+├── frontend/                Angular
 │   └── src/app/ core/{api,auth,realtime,layout}/  shared/{ui,map}/  features/<feature>/
-├── e2e/                     [SCAFFOLD] Playwright (tests/, fixtures/)
-├── docker/ + docker-compose*.yml   [SCAFFOLD]
-├── scripts/                 deps.mjs, create-issues.mjs, validate-plan.mjs, render-pdf.mjs
+├── e2e/                     Playwright (tests/, fixtures/)
+├── docker/ + docker-compose*.yml
+├── scripts/                 deps, directive, create-issues, validate-plan, render-pdf, history, setup-dev
 ├── docs/
 │   ├── plan/                PLAN.md, tasks.json, team.json, PDFs
 │   ├── guides/              P1/P2/P3 personal guides (+ PDFs)
@@ -179,7 +179,7 @@ sidequest-group40/
 └── .github/                 CODEOWNERS, templates, workflows
 ```
 
-Folders marked **[SCAFFOLD]** do not exist yet: they are created from `docs/design/scaffold-spec.md` by SCAFFOLD-BE (`backend/`, `docker/`, `docker-compose.yml`), SCAFFOLD-FE (`frontend/`) and SCAFFOLD-E2E (`e2e/`, `docker-compose.demo.yml`); SCAFFOLD adds the CI workflows and `setup:dev`.
+`backend/`, `docker/` and `docker-compose.yml` were created by SCAFFOLD-BE (#57), `frontend/` by SCAFFOLD-FE (#60), `e2e/` and `docker-compose.demo.yml` by SCAFFOLD-E2E (#59); SCAFFOLD (#63) added the CI workflows and `setup:dev`. The specification they followed is `docs/design/scaffold-spec.md`.
 
 # 7. Collaboration rules
 
@@ -350,7 +350,6 @@ gantt
   axisFormat %d %b
   tickInterval 2week
   section P1 Vincenzo
-  SCAFFOLD-FE :scaffold_fe, 2026-11-18, 5d
   S0-ASSUMPTIONS :s0_assumptions, 2026-11-23, 7d
   R01 :r01, 2026-11-25, 12d
   R02 :r02, 2026-12-07, 14d
@@ -364,7 +363,7 @@ gantt
   TW-SCHEDA :tw_scheda, 2027-02-15, 7d
   DOC-GIT :doc_git, 2027-02-15, 14d
   section P2 Matteo
-  SCAFFOLD-E2E :scaffold_e2e, 2026-11-18, 5d
+  SCAFFOLD-E2E :done, scaffold_e2e, 2026-11-18, 5d
   S0-EVENTS :s0_events, 2026-11-23, 7d
   DOC-STATE :doc_state, 2026-11-30, 14d
   DOC-UC01-DRAFT :doc_uc01_draft, 2026-11-30, 21d
@@ -379,9 +378,10 @@ gantt
   DOC-UNIT-TIMER :doc_unit_timer, 2027-02-08, 14d
   DOC-DESIGN-EXAMPLE :doc_design_example, 2027-02-15, 14d
   section P3 Domenico
-  SETUP :setup, 2026-11-17, 1d
-  SCAFFOLD-BE :scaffold_be, 2026-11-18, 4d
-  SCAFFOLD :scaffold, 2026-11-23, 2d
+  SETUP :done, setup, 2026-11-17, 1d
+  SCAFFOLD-BE :done, scaffold_be, 2026-11-18, 4d
+  SCAFFOLD-FE :done, scaffold_fe, 2026-11-18, 5d
+  SCAFFOLD :done, scaffold, 2026-11-23, 2d
   S0-DATAMODEL :s0_datamodel, 2026-11-23, 7d
   S0-API :s0_api, 2026-11-23, 7d
   SONAR-SETUP :sonar_setup, 2026-11-30, 7d
@@ -422,67 +422,62 @@ gantt
 
 ## P1 – Vincenzo Pio Lubrano
 
-1. **SCAFFOLD-FE** – Scaffold part 2: Angular frontend, layout, shared UI, stubs, lazy routes
-   - Dates: 2026-11-18 → 2026-11-22 (milestone M1)
-   - Blocked by: SETUP
-   - Deliverables: Frontend part of `docs/design/scaffold-spec.md` (§6.3, §7.2, ESLint boundary for `features/`): Angular CLI without UI library, `core/api`, `core/layout`, `shared/ui`, design tokens, `core/auth` and `core/realtime` stubs, lazy routes with placeholder pages, home page calling `/health`, nginx Dockerfile
-   - You hand over to: SCAFFOLD (P3)
-2. **S0-ASSUMPTIONS** – Ratify domain assumptions A-01..A-26
+1. **S0-ASSUMPTIONS** – Ratify domain assumptions A-01..A-26
    - Dates: 2026-11-23 → 2026-11-29 (milestone M1)
    - Blocked by: SETUP
    - Deliverables: Review every row A-01..A-26 with the team (Sprint 0 call); Turn each row into ACCEPTED, or change it through a PR with the reason
    - You hand over to: DOC-STATE (P2), DOC-UC01-DRAFT (P2)
-3. **R01** – R01 Accounts, authentication, profile, admin
+2. **R01** – R01 Accounts, authentication, profile, admin
    - Dates: 2026-11-25 → 2026-12-06 (milestone M2)
    - Blocked by: SETUP, SCAFFOLD
    - Deliverables: Register, login, logout with email + password (bcrypt); JWT HS256 with `tokenVersion`; logout/suspension/password change increment it (A-02); Rate limiting on login and register
    - You hand over to: R06A (P2), R10 (P3), FREEZE (P3)
-4. **R02** – R02 Mission creation, editing, publication, map picker
+3. **R02** – R02 Mission creation, editing, publication, map picker
    - Dates: 2026-12-07 → 2026-12-20 (milestone M3)
    - Blocked by: R01, S0-ASSUMPTIONS, S0-DATAMODEL, S0-API
    - Deliverables: Create/edit missions with title, teaser, description, category, objectives, optional place, ORDINARY or SECRET_TIMED mode, conditions; Lifecycle DRAFT → PUBLISHED → CLOSED → ARCHIVED; only DRAFT can be deleted (A-05)
    - You hand over to: R04 (P2), FREEZE (P3)
-5. **R07** – R07 Restricted visibility and access enforcement
+4. **R07** – R07 Restricted visibility and access enforcement
    - Dates: 2026-12-21 → 2027-01-03 (milestone M4)
    - Blocked by: R02
    - Deliverables: PUBLIC/RESTRICTED visibility; `MissionAccess` allow-list; bind `MissionAccessPort`; Unauthorized users get **404** from detail, objectives, proofs and every related endpoint; mission absent from list, map and search (A-16)
    - You hand over to: R08 (P3), FREEZE (P3)
-6. **R03** – R03 Exploration and search: list, map, filters, secret preview
+5. **R03** – R03 Exploration and search: list, map, filters, secret preview
    - Dates: 2027-01-04 → 2027-01-17 (milestone M5)
    - Blocked by: R02, R07
    - Deliverables: List and interactive map for guests and users; search by keyword, category, availability, mode, participation type, bounding box (A-24); Availability read through `ParticipationQueryPort` (AVAILABLE until R09 binds it)
    - You hand over to: FREEZE (P3)
-7. **QA-SEED** – Consolidated demo dataset covering every feature
+6. **QA-SEED** – Consolidated demo dataset covering every feature
    - Dates: 2027-01-18 → 2027-01-24 (milestone M6)
    - Blocked by: R03
    - Deliverables: Consolidated demo dataset covering every feature
    - You hand over to: nobody directly (internal or later gating)
-8. **QA-RESPONSIVE** – Responsive and error-handling audit of all screens (issues filed to owners)
+7. **QA-RESPONSIVE** – Responsive and error-handling audit of all screens (issues filed to owners)
    - Dates: 2027-01-25 → 2027-01-31 (milestone M6)
    - Blocked by: R03
    - Deliverables: Responsive and error-handling audit of all screens (issues filed to owners)
    - You hand over to: nobody directly (internal or later gating)
-9. **E2E-CATALOGUE** – Verify the >=10 E2E catalogue is complete, non-duplicate and green in CI
+8. **E2E-CATALOGUE** – Verify the >=10 E2E catalogue is complete, non-duplicate and green in CI
    - Dates: 2027-01-25 → 2027-01-31 (milestone M6)
    - Blocked by: R03
    - Deliverables: All 12 scenarios of `docs/tecweb/e2e-catalogue.md` exist, are non-duplicate and green in CI; At least one negative/authorization case present (E2E-04 and E2E-12)
    - You hand over to: nobody directly (internal or later gating)
-10. **DOC-SRS** – SRS: glossary, actors, use case diagram (VP), personas, NFR and domain requirements, assumptions rationale
+9. **DOC-SRS** – SRS: glossary, actors, use case diagram (VP), personas, NFR and domain requirements, assumptions rationale
    - Dates: 2027-02-01 → 2027-02-21 (milestone M7)
    - Blocked by: S0-ASSUMPTIONS
    - Deliverables: SRS: glossary, actors, use case diagram (VP), personas, NFR and domain requirements, assumptions rationale
    - You hand over to: DOC-TRACE (P3)
-11. **TW-README** – Final README (TECWEB B.3)
+10. **TW-README** – Final README (TECWEB B.3)
    - Dates: 2027-02-01 → 2027-02-21 (milestone M7)
    - Blocked by: FREEZE
    - Deliverables: Final README (TECWEB B.3)
    - You hand over to: REL-RC (P3)
-12. **TW-SCHEDA** – One-page summary sheet (TECWEB B.3)
+11. **TW-SCHEDA** – One-page summary sheet (TECWEB B.3)
    - Dates: 2027-02-15 → 2027-02-21 (milestone M7)
    - Blocked by: FREEZE
    - Deliverables: One-page summary sheet (TECWEB B.3)
    - You hand over to: REL-RC (P3)
-13. **DOC-GIT** – Git repository analysis (commits, contributors, trend)
+12. **DOC-GIT** – Git repository analysis (commits, contributors, trend)
    - Dates: 2027-02-15 → 2027-02-28 (milestone M7)
    - Blocked by: FREEZE
    - Deliverables: Git repository analysis (commits, contributors, trend)
@@ -490,7 +485,7 @@ gantt
 
 ## P2 – Matteo Marino
 
-1. **SCAFFOLD-E2E** – Scaffold part 3: Playwright e2e, fixtures, smoke test, demo compose
+1. **SCAFFOLD-E2E** – Scaffold part 3: Playwright e2e, fixtures, smoke test, demo compose — **DONE** (PR #59, merged 19 Nov)
    - Dates: 2026-11-18 → 2026-11-22 (milestone M1)
    - Blocked by: SETUP
    - Deliverables: E2E part of `docs/design/scaffold-spec.md` (§7.3): Playwright with desktop and mobile projects, `webServer`, `globalSetup` reset, fixtures (`api`, `auth` stub, `clock`, `users`), `smoke.spec.ts`; `docker-compose.demo.yml`. Config and fixtures from day one; the smoke test goes green once SCAFFOLD-BE and SCAFFOLD-FE are merged
@@ -563,117 +558,123 @@ gantt
 
 ## P3 – Domenico Panaro
 
-1. **SETUP** – Repository, plan, guides and GitHub setup (no code)
+1. **SETUP** – Repository, plan, guides and GitHub setup (no code) — **DONE** (17 Nov)
    - Dates: 2026-11-17 → 2026-11-17 (milestone M0)
    - Blocked by: none
    - Deliverables: Repository, branches, labels, milestones and issues created; Documentation, plan, guides and PDFs committed (no application code)
    - You hand over to: S0-ASSUMPTIONS (P1), S0-EVENTS (P2), R01 (P1)
-2. **SCAFFOLD-BE** – Scaffold part 1: backend, shared core, docker-compose (db)
+2. **SCAFFOLD-BE** – Scaffold part 1: backend, shared core, docker-compose (db) — **DONE** (PR #57, merged 18 Nov)
    - Dates: 2026-11-18 → 2026-11-21 (milestone M1)
    - Blocked by: SETUP
    - Deliverables: Backend part of `docs/design/scaffold-spec.md` (§6.1, §6.2, §6.5, §7.1, `docker-compose.yml` of §7.4): 8 empty modules, all of `shared/`, Jest unit + integration, Dockerfile; sets the TypeScript/ESLint/Prettier conventions the other two parts follow
    - You hand over to: SCAFFOLD (P3)
-3. **SCAFFOLD** – Scaffold integration: ci.yml, sonar.yml, setup:dev, branch protection, README quick start
+3. **SCAFFOLD-FE** – Scaffold part 2: Angular frontend, layout, shared UI, stubs, lazy routes — **DONE** (PR #60, merged 19 Nov; taken over by P3 from P1 on 19 Nov)
+   - Dates: 2026-11-18 → 2026-11-22 (milestone M1)
+   - Blocked by: SETUP
+   - Deliverables: Frontend part of `docs/design/scaffold-spec.md` (§6.3, §7.2, ESLint boundary for `features/`): Angular CLI without UI library, `core/api`, `core/layout`, `shared/ui`, design tokens, `core/auth` and `core/realtime` stubs, lazy routes with placeholder pages, home page calling `/health`, nginx Dockerfile
+   - You hand over to: SCAFFOLD (P3)
+   - Note: planned for P1; taken over by P3 on 19 Nov so that the smoke test and SCAFFOLD were not blocked.
+4. **SCAFFOLD** – Scaffold integration: ci.yml, sonar.yml, setup:dev, branch protection, README quick start — **DONE** (PR #63, merged 23 Nov)
    - Dates: 2026-11-23 → 2026-11-24 (milestone M1)
    - Blocked by: SCAFFOLD-BE, SCAFFOLD-FE, SCAFFOLD-E2E
    - Deliverables: Create `ci.yml` (jobs `backend`, `frontend`, `e2e`, `plan`) and `sonar.yml`, then delete `plan.yml`; root `setup:dev` and `test:all`; end-to-end local checks; branch protection requires the four checks
    - You hand over to: R01 (P1)
-4. **S0-DATAMODEL** – Freeze data model and ER diagram
+5. **S0-DATAMODEL** – Freeze data model and ER diagram
    - Dates: 2026-11-23 → 2026-11-29 (milestone M1)
    - Blocked by: SETUP
    - Deliverables: Review `docs/design/data-model.md` against assumptions A-05..A-21 (every field, constraint and index); Resolve open points with the module owners; update the Mermaid ER diagram
    - You hand over to: R02 (P1)
-5. **S0-API** – Freeze REST contracts (OpenAPI fragments) and module public APIs
+6. **S0-API** – Freeze REST contracts (OpenAPI fragments) and module public APIs
    - Dates: 2026-11-23 → 2026-11-29 (milestone M1)
    - Blocked by: SETUP
    - Deliverables: Review the REST surface in `docs/design/module-contracts.md` and the public API signatures of every module; Once SCAFFOLD is merged: each owner fills the OpenAPI fragment of their module with placeholder paths (method, path, summary, `x-owner`, `x-requirement`, `x-status: planned`)
    - You hand over to: R02 (P1), R06A (P2)
-6. **SONAR-SETUP** – SonarCloud project, token secret and first green analysis
+7. **SONAR-SETUP** – SonarCloud project, token secret and first green analysis
    - Dates: 2026-11-30 → 2026-12-06 (milestone M2)
    - Blocked by: SCAFFOLD
    - Deliverables: Log in at sonarcloud.io with GitHub; Import the repo under the owner's organization
    - You hand over to: nobody directly (internal or later gating)
-7. **DOC-ARCH-DRAFT** – Architecture draft: components, technologies, communication, ER
+8. **DOC-ARCH-DRAFT** – Architecture draft: components, technologies, communication, ER
    - Dates: 2026-11-30 → 2026-12-06 (milestone M2)
    - Blocked by: S0-DATAMODEL, S0-API
    - Deliverables: Architecture draft: components, technologies, communication, ER
    - You hand over to: nobody directly (internal or later gating)
-8. **R10** – R10 Exploration teams
+9. **R10** – R10 Exploration teams
    - Dates: 2026-12-07 → 2026-12-20 (milestone M3)
    - Blocked by: R01, S0-DATAMODEL, S0-API, S0-EVENTS
    - Deliverables: Create team (unique name 3–30, max 6 members), TEAM_ADMIN and MEMBER roles; Invite by nickname, accept/decline; leave; admin removes members; admin transfers role before leaving; last member disbands
    - You hand over to: nobody directly (internal or later gating)
-9. **DOC-DESIGN-DRAFT** – Design drafts: domain class diagram, persistence chapter, components diagram
+10. **DOC-DESIGN-DRAFT** – Design drafts: domain class diagram, persistence chapter, components diagram
    - Dates: 2026-12-21 → 2027-01-03 (milestone M4)
    - Blocked by: DOC-ARCH-DRAFT
    - Deliverables: Design drafts: domain class diagram, persistence chapter, components diagram
    - You hand over to: nobody directly (internal or later gating)
-10. **R08** – R08 Invitations to restricted missions
+11. **R08** – R08 Invitations to restricted missions
    - Dates: 2027-01-04 → 2027-01-17 (milestone M5)
    - Blocked by: R07, R06A
    - Deliverables: Invitations by nickname to RESTRICTED missions; one record per (mission, invitee); re-invite reopens as PENDING; duplicate PENDING → 409; Accept grants access through `missions.grantAccess` (does not accept the mission nor reserve a slot); decline; revoke removes access, started participation continues
    - You hand over to: nobody directly (internal or later gating)
-11. **R11** – R11 Team participation with shared, consistent progress
+12. **R11** – R11 Team participation with shared, consistent progress
    - Dates: 2027-01-18 → 2027-01-26 (milestone M6)
    - Blocked by: R10, R04, R05A, R05B
    - Deliverables: TEAM missions: only TEAM_ADMIN accepts on behalf of the team; team needs at least `minTeamSize` members; Wraps the `participations` public API; 409 `ALREADY_PARTICIPATING` for individual + team or two teams
    - You hand over to: nobody directly (internal or later gating)
-12. **R12** – R12 Live cooperative updates with ordering and reconnection
+13. **R12** – R12 Live cooperative updates with ordering and reconnection
    - Dates: 2027-01-27 → 2027-01-31 (milestone M6)
    - Blocked by: R11, R06A
    - Deliverables: One Socket.IO room per team participation; `team-progress:join/leave` with ack `{ ok, lastSeq }` authorized through `TeamMembershipPort`; `TeamProgressEvent` appended with strictly increasing `seq` in the same transaction; emit only after commit
    - You hand over to: nobody directly (internal or later gating)
-13. **FREEZE** – Feature freeze: R01-R12 merged into develop
+14. **FREEZE** – Feature freeze: R01-R12 merged into develop
    - Dates: 2027-01-31 → 2027-01-31 (milestone M6)
    - Blocked by: R01, R02, R03, R04, R05A, R05B, R06A, R06B, R07, R08, R09, R10, R11, R12
    - Deliverables: Every R task issue is closed and merged into `develop`; CI green on `develop`; announce the freeze to the team (bug fixes only from now)
    - You hand over to: TW-README (P1), TW-SCHEDA (P1), DOC-GIT (P1)
-14. **STABILIZE** – Stabilization week: bug fixes only
+15. **STABILIZE** – Stabilization week: bug fixes only
    - Dates: 2027-02-01 → 2027-02-07 (milestone M7)
    - Blocked by: FREEZE
    - Deliverables: Stabilization week: bug fixes only
    - You hand over to: nobody directly (internal or later gating)
-15. **DOC-ARCH** – Architecture and design chapter final (VP class, sequence, ER diagrams)
+16. **DOC-ARCH** – Architecture and design chapter final (VP class, sequence, ER diagrams)
    - Dates: 2027-02-01 → 2027-02-21 (milestone M7)
    - Blocked by: FREEZE, DOC-DESIGN-DRAFT, DOC-STATE
    - Deliverables: Architecture and design chapter final (VP class, sequence, ER diagrams)
    - You hand over to: nobody directly (internal or later gating)
-16. **DOC-SONAR** – SonarCloud report, commentary and fixes
+17. **DOC-SONAR** – SonarCloud report, commentary and fixes
    - Dates: 2027-02-01 → 2027-02-21 (milestone M7)
    - Blocked by: FREEZE, SONAR-SETUP
    - Deliverables: SonarCloud report, commentary and fixes
    - You hand over to: nobody directly (internal or later gating)
-17. **DOC-UNIT-TEAM** – Documented unit tests: TeamProgressReducer.apply(state, update)
+18. **DOC-UNIT-TEAM** – Documented unit tests: TeamProgressReducer.apply(state, update)
    - Dates: 2027-02-08 → 2027-02-21 (milestone M7)
    - Blocked by: R11
    - Deliverables: Documented unit tests: TeamProgressReducer.apply(state, update)
    - You hand over to: nobody directly (internal or later gating)
-18. **DOC-TRACE** – Traceability table and INGSW PDF assembly
+19. **DOC-TRACE** – Traceability table and INGSW PDF assembly
    - Dates: 2027-02-22 → 2027-02-28 (milestone M7)
    - Blocked by: DOC-SRS, DOC-ARCH, DOC-TESTPLAN, DOC-UC01
    - Deliverables: Traceability table and INGSW PDF assembly
    - You hand over to: nobody directly (internal or later gating)
-19. **CLEANUP** – Remove Claude Code traces from the final repository (files and history)
+20. **CLEANUP** – Remove Claude Code traces from the final repository (files and history)
    - Dates: 2027-02-28 → 2027-02-28 (milestone M7)
    - Blocked by: STABILIZE, DOC-TRACE, DOC-GIT
    - Deliverables: Agree the final list of what to remove at the Monday sync; everyone has merged their work, no open PRs, all member branches pushed; Files: remove or move out of the repository `CLAUDE.md`; remove the Claude Code references from README, CONTRIBUTING, docs/plan/ (PLAN.md, setup-prompt.md, task data and the PDFs), docs/guides/ (starter prompts and PDFs), docs/design/scaffold-spec.md, PROGRESS.md wording and the .github templates; regenerate the PDFs
    - You hand over to: nobody directly (internal or later gating)
-20. **REL-RC** – Release candidate: code and docs frozen, full CI green, tag v1.0.0-rc.1
+21. **REL-RC** – Release candidate: code and docs frozen, full CI green, tag v1.0.0-rc.1
    - Dates: 2027-03-01 → 2027-03-08 (milestone M8)
    - Blocked by: CLEANUP, STABILIZE, DOC-TRACE, DOC-SONAR, DOC-UNIT-TIMER, DOC-UNIT-TEAM, DOC-DESIGN-EXAMPLE, DOC-GIT, TW-README, TW-SCHEDA
    - Deliverables: Release candidate: code and docs frozen, full CI green, tag v1.0.0-rc.1
    - You hand over to: nobody directly (internal or later gating)
-21. **REL-DRYRUN** – Exam dry-run: demo rehearsal and cross-module knowledge sessions (everyone explains everyone's code)
+22. **REL-DRYRUN** – Exam dry-run: demo rehearsal and cross-module knowledge sessions (everyone explains everyone's code)
    - Dates: 2027-03-09 → 2027-03-14 (milestone M8)
    - Blocked by: REL-RC
    - Deliverables: Exam dry-run: demo rehearsal and cross-module knowledge sessions (everyone explains everyone's code)
    - You hand over to: nobody directly (internal or later gating)
-22. **REL-V1** – Release v1.0.0: merge develop into main, tag, final PDFs
+23. **REL-V1** – Release v1.0.0: merge develop into main, tag, final PDFs
    - Dates: 2027-03-15 → 2027-03-15 (milestone M8)
    - Blocked by: REL-DRYRUN
    - Deliverables: Release PR `develop` → `main` with a merge commit; tag `v1.0.0`; Final PDFs generated and committed; README and summary sheet up to date
    - You hand over to: nobody directly (internal or later gating)
-23. **SUBMIT** – Submit repository URL on the Teams assignment
+24. **SUBMIT** – Submit repository URL on the Teams assignment
    - Dates: 2027-03-16 → 2027-03-25 (milestone M8)
    - Blocked by: REL-V1
    - Deliverables: Post the repository URL on the Teams assignment before 25 Mar 2027; Check the repo is public and contains no `node_modules`, secrets or course PDFs
@@ -803,4 +804,4 @@ Roles GUEST/USER/ADMIN (A-01); JWT 2 h with `tokenVersion` for real logout (A-02
 1. Read your personal guide: `docs/guides/P1-vincenzo-lubrano.md`, `P2-matteo-marino.md` or `P3-domenico-panaro.md` (PDFs next to them).
 2. Run **Starter prompt 1** (inside the guide) in Claude Code on your computer: it installs and checks everything and summarizes your scope.
 3. Accept the GitHub collaborator invitation (email or github.com/notifications).
-4. Sprint 0 kickoff call: Monday 23 Nov 2026. Before it, from Wed 18 Nov, the three scaffold parts run in parallel: P1 = SCAFFOLD-FE, P2 = SCAFFOLD-E2E, P3 = SCAFFOLD-BE. First tasks after it: P1 = S0-ASSUMPTIONS then R01; P2 = S0-EVENTS then DOC-STATE and DOC-UC01-DRAFT; P3 = SCAFFOLD (integration), then S0-DATAMODEL, S0-API, SONAR-SETUP, DOC-ARCH-DRAFT.
+4. Sprint 0 kickoff call: Monday 23 Nov 2026 (notes in `docs/meetings/2026-11-23.md`). The code scaffold was finished before it (18–23 Nov). First tasks after it: P1 = S0-ASSUMPTIONS then R01; P2 = S0-EVENTS then DOC-STATE and DOC-UC01-DRAFT; P3 = S0-DATAMODEL, S0-API, SONAR-SETUP, DOC-ARCH-DRAFT.

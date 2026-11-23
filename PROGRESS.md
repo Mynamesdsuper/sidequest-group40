@@ -148,6 +148,27 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P3 – Domenico Panaro
 
+### 2026-11-23 13:20 · SCAFFOLD · docs(plan): piano, Start here e guide personali aggiornati alla fine dello scaffold
+- **Cosa:** tutti i documenti globali e personali raccontano ora lo stato reale dopo lo scaffold:
+  - `tasks.json`: SCAFFOLD-FE passa a owner P3 (preso in carico il 19/11); label della issue #52 aggiornata (`owner:P3-domenico`); `npm run deps -- --mine P1/P3` lo mostrano al posto giusto.
+  - `PLAN.md`: riga di stato, scadenze dello scaffold segnate come fatte, tabella del team, Gantt (SCAFFOLD-FE nella sezione P3, i task finiti segnati `done`), piano per persona (SCAFFOLD-FE spostato da P1 a P3 con la nota, i task finiti marcati DONE con la PR), struttura del repository senza i segni "[SCAFFOLD] non esiste ancora", "How to get started".
+  - `START-HERE.md`: riscritte le sezioni 1–4 sulla settimana 23–29 novembre (preparare il computer con `setup:dev`, verbale del kickoff, review, chi fa cosa fino al 6/12, date).
+  - Le tre guide: un riquadro "Status on 23 Nov" in cima con i prossimi task di ognuno; riga "Scaffold part" della tabella iniziale, piano passo per passo (P1 senza SCAFFOLD-FE, P3 con SCAFFOLD-FE), tabelle delle dipendenze con "done", lo starter prompt 1 con i primi task giusti; nella guida P3 la nota da coordinatore sullo scaffold racconta com'è andata.
+  - Rigenerati i 5 PDF (Master Plan, Start here, tre guide).
+- **Perché:** lo scaffold è chiuso e stasera parte la fase successiva: chi apre il piano, la guida o il PDF deve trovare lo stato vero e i propri prossimi task, non il piano del 17/11. Registrare SCAFFOLD-FE sotto P3 rende corretti `npm run deps`, la storia del progetto e l'analisi Git (DOC-GIT).
+- **File:** `docs/plan/tasks.json`, `docs/plan/PLAN.md`, `docs/plan/START-HERE.md`, `docs/guides/P1-vincenzo-lubrano.md`, `docs/guides/P2-matteo-marino.md`, `docs/guides/P3-domenico-panaro.md`, i 5 PDF, `PROGRESS.md`.
+- **Come verificare:** `npm run plan:validate` → "Plan OK"; `npm run deps -- --mine P3` → DONE: SETUP, SCAFFOLD-BE, SCAFFOLD-FE, SCAFFOLD; `npm run deps -- --mine P1` → nessun task DONE, NEXT S0-ASSUMPTIONS; aprire i PDF.
+- **Prossimi passi:** approvazione di Vincenzo e Matteo (piano e guide sono di tutti); la fase successiva (Sprint 0) parte stasera.
+- **Commit/PR:** PR #71.
+
+### 2026-11-23 12:40 · SCAFFOLD · docs(history): chiusura dello scaffold nel registro e nella storia del progetto
+- **Cosa:** aggiunte le voci DONE mancanti di SCAFFOLD-FE (#60) e SCAFFOLD (#63), con l'ora del merge; recuperate 4 voci del 18/11 (DONE di SCAFFOLD-BE, revisione del modello dei dati, osservazioni sulla #4, direttiva #58) rimaste su un branch locale mai pushato; in `docs/history/overview.md` la Fase 1 è segnata conclusa ed è stata aggiunta la "Fase 3 – Scaffold del codice". Eliminati i branch locali già mergiati (`chore/scaffold`, `chore/scaffold-frontend`, `docs/kickoff-2026-11-23`) e quello vecchio (`docs/s0-datamodel-review`, dopo averne recuperato le voci); i branch remoti erano già stati cancellati al merge.
+- **Perché:** la regola §9b vuole che l'ultima voce di ogni task dica DONE con la PR mergiata, e il coordinatore aggiorna "Le fasi finora" a ogni traguardo: senza questo passo la storia del progetto (PDF) non racconterebbe la chiusura dello scaffold. Le voci recuperate sono storia vera del 18/11 e mancavano dal registro.
+- **File:** `PROGRESS.md`, `docs/history/overview.md`.
+- **Come verificare:** `node --test scripts/history.test.mjs` → 2 test verdi; nella sezione P3 di `PROGRESS.md` le voci sono in ordine di data e ora; `npm run history` mette le nuove voci al loro posto nel registro cronologico.
+- **Prossimi passi:** merge di #68 e #70; poi le decisioni del kickoff (S0-DATAMODEL, S0-API) e SONAR-SETUP.
+- **Commit/PR:** `722e9ec`, PR #71.
+
 ### 2026-11-23 12:40 · CLEANUP · chore(repo): prima pulizia delle tracce di Claude (dopo lo scaffold)
 - **Cosa:** inventario di tutte le menzioni di Claude nel repository (104 in 15 file) e rimozione di quelle che non servono più al lavoro quotidiano:
   - eliminato `docs/plan/setup-prompt.md`, il prompt con cui è stato creato il repository, e tolti i suoi rimandi (`CLAUDE.md` §10, `PLAN.md`, `scaffold-spec.md`, `task-details.json`);
@@ -161,6 +182,7 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 - **Prossimi passi:** accordo di Vincenzo e Matteo (file condivisi, contract-change) e merge; il resto al CLEANUP (#48).
 - **Commit/PR:** `49ca239`, PR #70 (contract-change #69).
 
+
 ### 2026-11-23 12:04 · SCAFFOLD · fix(shared): quattro correzioni dopo la revisione dello scaffold
 - **Cosa:** revisione completa dello scaffold su `develop` (backend, frontend, e2e, CI, script) e correzione dei 4 problemi concreti trovati:
   1. **Nomi delle migrazioni** (`shared/db/migrator.ts`): Umzug registrava in `SequelizeMeta` il nome del file *con l'estensione*, quindi `npm run db:migrate` (tsx, `.ts`) e l'immagine Docker (`node dist`, `.js`) vedevano due migrazioni diverse e la stessa migrazione poteva ripartire. Ora il nome è registrato senza estensione (`resolve` di Umzug).
@@ -172,6 +194,14 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 - **Come verificare:** in `backend/`: `npm run lint`, `npm run typecheck`, `npm test` (38 unit + 13 integration verdi, con i nuovi casi: `2026-02-31` rifiutata, 415 sul charset, migrazione registrata senza estensione), `npm run build`. Poi `npm run db:migrate` e `node dist/db/cli.js migrate` rispondono entrambi "none (up to date)". Nota: su un database già migrato la baseline riparte una volta sola (è `CREATE EXTENSION IF NOT EXISTS`, innocua) e la vecchia riga `…baseline.ts` resta in `SequelizeMeta` senza effetti. Direttive: `npm run directive -- --to P2 --title t --body-file file.md --dry-run` stampa il body intero.
 - **Prossimi passi:** approvazione di Vincenzo e Matteo (file condivisi); poi la pulizia delle tracce di Claude nei file che non servono più alle sessioni.
 - **Commit/PR:** `0ec375c`, PR #68 (contract-change #67).
+
+### 2026-11-23 11:15 · SCAFFOLD · DONE: integrazione dello scaffold mergiata su `develop`
+- **Cosa:** la PR #63 (`chore/scaffold`) è stata approvata da Matteo (P2) e mergiata con squash su `develop` (`dacfcbd`); la issue #2 è chiusa. Subito dopo la branch protection di `develop` e `main` è stata portata a richiedere i check `plan`, `backend`, `frontend` ed `e2e` (letta di nuovo con `gh api`), e le PR #64 e #61, aperte prima della CI, sono state ribasate su `develop`. Con questo lo scaffold è completo: SCAFFOLD-BE (#57), SCAFFOLD-FE (#60), SCAFFOLD-E2E (#59), SCAFFOLD (#63).
+- **Perché:** la CI esisteva solo dopo il merge della #63: prima la branch protection poteva richiedere soltanto `plan`. Da ora nessuna PR entra in `develop` o `main` senza backend, frontend ed e2e verdi.
+- **File:** nessuno in questo passo (registro del merge e della configurazione di GitHub).
+- **Come verificare:** `gh api repos/Mynamesdsuper/sidequest-group40/branches/develop/protection -q .required_status_checks.contexts` → `plan`, `backend`, `frontend`, `e2e` (uguale per `main`); `npm run deps -- SCAFFOLD` → DONE.
+- **Prossimi passi:** SONAR-SETUP (ora READY); le correzioni della revisione (#68) e la prima pulizia (#70) aspettano l'approvazione.
+- **Commit/PR:** #63 (`dacfcbd`).
 
 
 ### 2026-11-21 01:22 · S0-DATAMODEL · docs(meetings): agenda del kickoff dello Sprint 0 (lun 23/11)
@@ -219,6 +249,14 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 - **Prossimi passi:** approvazione di Vincenzo o Matteo e merge; poi la branch protection di `develop` e `main` deve richiedere `backend`, `frontend`, `e2e`, `plan` (da rileggere con `gh api`); poi SONAR-SETUP.
 - **Commit/PR:** `b237a11` + correzione, PR #63.
 
+### 2026-11-19 13:47 · SCAFFOLD-FE · DONE: scaffold del frontend mergiato su `develop`
+- **Cosa:** la PR #60 (`chore/scaffold-frontend`) è stata approvata da Vincenzo (P1) e Matteo (P2) e mergiata con squash su `develop` (`bbfaefe`); la issue #52 è chiusa. Voce scritta il 23/11, alla chiusura dello scaffold, con l'ora del merge.
+- **Perché:** con il frontend su `develop`, Matteo ha potuto ribasare la #59 (SCAFFOLD-E2E) e far passare lo smoke test "backend ok · database up", e l'integrazione SCAFFOLD è diventata possibile.
+- **File:** nessuno in questo passo (registro del merge).
+- **Come verificare:** `git log --oneline -1 bbfaefe` su `develop`; `npm run deps -- SCAFFOLD-FE` → DONE.
+- **Prossimi passi:** SCAFFOLD (integrazione).
+- **Commit/PR:** #60 (`bbfaefe`).
+
 ### 2026-11-19 00:55 · SCAFFOLD-FE · feat(frontend): scaffold del frontend Angular (fatto da P3 al posto di P1)
 - **Cosa:** creato `frontend/` con Angular 22 (standalone, signals, SCSS, routing, senza SSR, nessuna libreria di componenti UI), solo infrastruttura:
   - `src/styles/`: token di design come custom properties (colori, spaziature, raggi, font con `clamp()`), tema chiaro/scuro con `prefers-color-scheme`, reset, utility flex/grid con `gap`, classi `.btn` e `.card` (le card usano le container query).
@@ -234,6 +272,38 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 - **Come verificare:** in `frontend/`: `npm ci`, `npm run lint` (tutto passa), `npm run typecheck`, `npm test` (4 file, 12 test verdi), `npm run test:lint-rules` (10 casi verdi), `npm run build` (nessun avviso di budget). Con DB e backend avviati, `npm start` e http://localhost:4200 mostra "backend ok · database up"; verificato con Chrome a 1280 px e 360 px (nessuno scroll orizzontale, drawer funzionante, 404, credito OSM su `/explore`, nessun errore in console). `docker build frontend` produce l'immagine; nginx risponde con `index.html` anche su `/teams/42`.
 - **Prossimi passi:** approvazione della PR #60 (Matteo) e merge; poi Matteo ribasa la #59 e lo smoke test può passare; poi SCAFFOLD (integrazione: `ci.yml`, `sonar.yml`, `setup:dev`). Fatto su GitHub: #52 assegnata a P3 e messa in `status:in-progress`; direttiva #58 chiusa con un commento a Vincenzo (prossimi passi: S0-ASSUMPTIONS, S0-API, poi R01).
 - **Commit/PR:** `dab3382`, PR #60.
+
+### 2026-11-18 17:28 · S0-DATAMODEL · docs(design): osservazioni pubblicate nella issue #4
+- **Cosa:** pubblicate come commento nella #4 le osservazioni della revisione del modello dei dati, in inglese e raggruppate per owner: trasversali G1–G6, P1 U1–MA1, P2 P1–W1, P3 I1–TPE1. Vincenzo e Matteo sono menzionati sulle loro sezioni.
+- **Perché:** così tutti le leggono prima del kickoff dello Sprint 0 (lun 23 nov) e possono rispondere per iscritto; la discussione resta tracciata nella issue del task. `data-model.md` non si modifica finché non c'è l'accordo, perché è un file condiviso.
+- **File:** nessuno (commento su GitHub).
+- **Come verificare:** https://github.com/Mynamesdsuper/sidequest-group40/issues/4#issuecomment-6984694767
+- **Prossimi passi:** raccogliere le risposte, decidere al kickoff, poi aggiornare `data-model.md` e il diagramma ER e marcarlo FROZEN.
+- **Commit/PR:** nessuno (voce scritta il 18/11 su un branch locale mai pushato, recuperata il 23/11 nella PR di chiusura dello scaffold).
+
+### 2026-11-18 17:26 · SCAFFOLD · chore(github): direttiva a Vincenzo per SCAFFOLD-FE
+- **Cosa:** creata la direttiva #58 (`type:directive`, `priority:high`, scadenza 2026-11-22) a Vincenzo (P1): assegnarsi la #52, metterla in `status:in-progress`, lavorare su `chore/scaffold-frontend` e aprire la PR verso `develop` entro domenica 22 novembre (approvazione di Matteo e Domenico).
+- **Perché:** il 18/11 SCAFFOLD-FE non aveva né branch né PR né assegnatario, ed è il percorso critico: lo smoke test di SCAFFOLD-E2E e l'integrazione SCAFFOLD (23–24 nov) lo aspettano. A Matteo nessuna direttiva, perché sta già lavorando a SCAFFOLD-E2E.
+- **File:** nessuno (issue su GitHub).
+- **Come verificare:** `npm run directive -- --list P1`, oppure la issue #58.
+- **Prossimi passi:** controllare la conferma di Vincenzo nella #58 alla prossima sessione.
+- **Commit/PR:** nessuno (voce scritta il 18/11 su un branch locale mai pushato, recuperata il 23/11 nella PR di chiusura dello scaffold).
+
+### 2026-11-18 17:20 · S0-DATAMODEL · docs(design): revisione del modello dei dati rispetto alle assunzioni
+- **Cosa:** iniziato S0-DATAMODEL (#4, branch `docs/s0-datamodel-review`, issue a `status:in-progress`). Confrontato `docs/design/data-model.md` campo per campo con A-05..A-21, `module-contracts.md`, ADR 0005 e i requisiti: vincoli, indici, enum, nullabilità, relazioni. Prodotta una lista di osservazioni raggruppate per owner (trasversali, P1, P2, P3), ognuna con una modifica proposta.
+- **Perché:** il modello va congelato prima che R01–R12 scrivano le migrazioni; un errore trovato ora costa una riga di Markdown, dopo costa una contract-change e una migrazione. Punti principali: `MissionAccess` con PK senza `source` non regge `revoke(…, source)`; `TeamMembership` con PK `(teamId, userId)` impedisce di rientrare in una squadra; `timeLimitSec` per le missioni ORDINARY è ambiguo tra A-11 e il modello; mancano i vincoli CHECK "esattamente uno tra userId e teamId", gli indici sulle FK e quelli per i sweeper (A-08, A-18); la regola "non partecipare due volte, da solo e in squadra" (A-20) non è esprimibile con un indice e va fatta nel servizio sotto il lock della missione.
+- **File:** nessuno ancora: `data-model.md` è condiviso e si modifica solo dopo l'accordo al kickoff dello Sprint 0 (lun 23 nov).
+- **Come verificare:** la lista delle osservazioni nella sessione; verrà riportata come commento nella issue #4 per la discussione.
+- **Prossimi passi:** OK di Domenico sulle osservazioni, discussione con Vincenzo e Matteo al kickoff, poi modifica di `data-model.md` e diagramma ER aggiornato.
+- **Commit/PR:** nessuno (voce scritta il 18/11 su un branch locale mai pushato, recuperata il 23/11 nella PR di chiusura dello scaffold).
+
+### 2026-11-18 17:02 · SCAFFOLD-BE · DONE: scaffold del backend mergiato su `develop`
+- **Cosa:** la PR #57 (`chore/scaffold-backend`) è stata approvata da Vincenzo (P1) e Matteo (P2) e mergiata con squash su `develop` (`b7c6ad8`); la issue #51 è chiusa. Il backend ha il nucleo condiviso, gli 8 moduli vuoti, il database in Docker e 49 test verdi.
+- **Perché:** SCAFFOLD-BE è la prima delle tre parti dello scaffold; servivano le approvazioni di entrambi perché lo scaffold crea cartelle di moduli di tutti e tre. Ora SCAFFOLD-FE (#52, P1) e SCAFFOLD-E2E (#53, P2) possono partire su una base comune, e SCAFFOLD (integrazione, P3) aspetta solo loro.
+- **File:** nessuno in questo passo (registro del merge).
+- **Come verificare:** `git log --oneline -1 b7c6ad8` su `develop`; `npm run deps -- SCAFFOLD-BE` → DONE; in `backend/` `npm test` → 49 test verdi.
+- **Prossimi passi:** S0-DATAMODEL (#4) e S0-API (#5); SCAFFOLD (integrazione) dopo SCAFFOLD-FE e SCAFFOLD-E2E.
+- **Commit/PR:** #57 (`b7c6ad8`).
 
 ### 2026-11-17 20:03 · SCAFFOLD-BE · test(shared): test unitari e di integrazione dello scaffold
 - **Cosa:** 49 test Jest in due progetti. Unit (38): tutte le regole del `Validator` (input valido, errore di ogni regola, lunghezze ai limiti, campi opzionali, oggetti e array annidati con il percorso dell'errore, chiavi sconosciute scartate), `OffsetClock`, la mappatura degli errori (anche: un errore sconosciuto non espone il messaggio), il merge OpenAPI con il rilevamento dei duplicati, il bus degli eventi (ordine, disiscrizione, un subscriber che fallisce non blocca gli altri), i default e il binding dei port, la configurazione, e la regola ESLint `module-boundaries` con `RuleTester` (dimostra che scatta sugli import profondi tra moduli). Integration (11, su `sidequest_test` con supertest): health con `db: "up"`, rotta sconosciuta → 404 JSON, JSON non valido → 400 `INVALID_JSON`, `/api/docs.json` è un OpenAPI 3.1 valido, Swagger UI risponde, `validate()` → 400 `VALIDATION_ERROR` con il dettaglio per campo, il test router sposta l'orologio e azzera il DB, e il test router è **assente** quando `NODE_ENV` non è `test`. Helper `createTestApp()`, `migrateTestDb()`, `resetDb()`.
