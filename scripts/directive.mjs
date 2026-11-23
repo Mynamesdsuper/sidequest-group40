@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Coordinator directives: the coordinator (P3) assigns work or instructions to members through
-// GitHub issues labelled `type:directive`. Members' Claude Code sessions list them at start-up.
+// GitHub issues labelled `type:directive`. Members see them at the end of `npm run deps -- --mine Px`.
 //   npm run directive -- --to P1|P2|P3|all --title "..." [--body "..." | --body-file path] [--due YYYY-MM-DD]
 //                        [--task ID] [--priority high] [--dry-run]
 // Multi-line bodies: use --body-file. On Windows npm passes the arguments through cmd.exe, which cuts the
