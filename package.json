@@ -2,8 +2,10 @@
   "name": "sidequest-group40",
   "version": "0.0.0",
   "private": true,
-  "description": "SideQuest – Group 40 – planning tools only (the code scaffold is the task SCAFFOLD)",
+  "description": "SideQuest – Group 40 – root helper scripts (setup, tests, plan, PDFs)",
   "scripts": {
+    "setup:dev": "node scripts/setup-dev.mjs",
+    "test:all": "npm --prefix backend test && npm --prefix frontend test && npm --prefix e2e test",
     "deps": "node scripts/deps.mjs",
     "issues:sync": "node scripts/create-issues.mjs",
     "plan:validate": "node scripts/validate-plan.mjs",
