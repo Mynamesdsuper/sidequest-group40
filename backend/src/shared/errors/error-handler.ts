@@ -27,6 +27,13 @@ export function toErrorResponse(err: unknown): { status: number; body: ErrorBody
       body: { error: { code: 'PAYLOAD_TOO_LARGE', message: 'The request body is too large', details: {} } },
     };
   }
+  // Other client errors raised by Express middleware (e.g. 415 unsupported charset) keep their 4xx status;
+  // `expose` marks messages that are safe to show (http-errors convention).
+  const { status, expose, message } = (err ?? {}) as { status?: unknown; expose?: unknown; message?: unknown };
+  if (typeof status === 'number' && status >= 400 && status < 500 && expose === true) {
+    const text = typeof message === 'string' ? message : 'The request could not be processed';
+    return { status, body: { error: { code: 'BAD_REQUEST', message: text, details: {} } } };
+  }
   return {
     status: 500,
     body: { error: { code: 'INTERNAL_ERROR', message: 'Unexpected server error', details: {} } },
