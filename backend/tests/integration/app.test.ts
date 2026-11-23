@@ -1,4 +1,5 @@
 import request from 'supertest';
+import { createMigrator } from '../../src/shared/db';
 import { closeDb, createTestApp, migrateTestDb, resetDb } from '../helpers/test-app';
 
 const app = createTestApp();
@@ -29,6 +30,23 @@ describe('unknown routes', () => {
       .send('{"offsetSeconds":')
       .expect(400);
     expect(res.body.error.code).toBe('INVALID_JSON');
+  });
+
+  test('other client errors of express.json() keep their 4xx status', async () => {
+    const res = await request(app)
+      .post('/api/v1/__test__/clock')
+      .set('Content-Type', 'application/json; charset=latin1')
+      .send('{"offsetSeconds":0}')
+      .expect(415);
+    expect(res.body.error.code).toBe('BAD_REQUEST');
+  });
+});
+
+describe('migrations', () => {
+  test('are recorded without the file extension, so tsx and the built image agree', async () => {
+    const migrator = createMigrator();
+    expect((await migrator.executed()).map((m) => m.name)).toContain('000000000000-shared-baseline');
+    expect(await migrator.pending()).toEqual([]);
   });
 });
 
