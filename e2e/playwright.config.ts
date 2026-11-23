@@ -38,6 +38,8 @@ export default defineConfig({
     {
       command: 'npm start',
       cwd: '../frontend',
+      // `ng serve` takes its port from PORT when set (e.g. PORT=3000 for the backend in CI): force the web port.
+      env: { PORT: new URL(WEB_URL).port || '4200' },
       url: WEB_URL,
       reuseExistingServer: !process.env.CI,
       timeout: 180_000,
