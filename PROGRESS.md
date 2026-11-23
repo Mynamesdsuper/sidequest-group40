@@ -44,7 +44,7 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 - **File:** solo `PROGRESS.md`.
 - **Come verificare:** ripetere i comandi sopra su un clone pulito.
 - **Prossimi passi:** (a) Matteo (`reverinn`) e Vincenzo (`vincenzolubrano05`) devono accettare gli inviti da collaboratore; (b) mandare loro i PDF delle guide; (c) call di kickoff dello Sprint 0 lunedì 23 novembre; (d) P3 inizia SCAFFOLD con lo Starter prompt 1 e poi il 2; (e) SonarCloud più avanti (SONAR-SETUP). Scostamenti: aggiunti `task-details.json` e `scripts/lib.mjs`; PLAN e guide generati da uno script usa-e-getta non versionato; `git push` ha richiesto un credential helper locale perché in cache c'era un secondo account GitHub; l'elemento della board per la issue #24 è collegato ma non compare in `gh project item-list` (un difetto di elencazione, non bloccante).
-- **Commit/PR:** questo commit.
+- **Commit/PR:** `722e9ec`, PR #71.
 
 ### 2026-11-17 17:59 · SETUP · chore(github): label, milestone, issue, collaboratori, board
 - **Cosa:** push di `main`, creato `develop` (branch di default), impostazioni del repo (wiki disattivata, squash e merge commit attivi, rebase disattivato, cancellazione automatica dei branch, suggerimento di aggiornare i branch). `create-issues.mjs` ha creato 77 label, 9 milestone e 46 issue (idempotente: una seconda esecuzione non ha creato nulla), invitato i 2 collaboratori, creato la board pubblica del progetto con i campi Owner e Window end, chiuso la issue SETUP e sincronizzato le label di stato.
