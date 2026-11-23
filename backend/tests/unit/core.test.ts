@@ -50,6 +50,9 @@ describe('error mapping', () => {
   test('JSON parse errors and oversized bodies from express.json()', () => {
     expect(toErrorResponse({ type: 'entity.parse.failed' }).body.error.code).toBe('INVALID_JSON');
     expect(toErrorResponse({ type: 'entity.too.large' }).status).toBe(413);
+    expect(toErrorResponse({ status: 415, expose: true, message: 'unsupported charset' }).status).toBe(415);
+    // Without `expose` the status is not trusted: generic 500.
+    expect(toErrorResponse({ status: 404, message: 'x' }).status).toBe(500);
   });
 
   test('unknown errors become a generic 500 without leaking the message', () => {

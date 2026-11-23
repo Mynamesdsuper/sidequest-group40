@@ -169,6 +169,18 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 - **Prossimi passi:** merge di #68 e #70; poi le decisioni del kickoff (S0-DATAMODEL, S0-API) e SONAR-SETUP.
 - **Commit/PR:** `722e9ec`, PR #71.
 
+### 2026-11-23 12:04 · SCAFFOLD · fix(shared): quattro correzioni dopo la revisione dello scaffold
+- **Cosa:** revisione completa dello scaffold su `develop` (backend, frontend, e2e, CI, script) e correzione dei 4 problemi concreti trovati:
+  1. **Nomi delle migrazioni** (`shared/db/migrator.ts`): Umzug registrava in `SequelizeMeta` il nome del file *con l'estensione*, quindi `npm run db:migrate` (tsx, `.ts`) e l'immagine Docker (`node dist`, `.js`) vedevano due migrazioni diverse e la stessa migrazione poteva ripartire. Ora il nome è registrato senza estensione (`resolve` di Umzug).
+  2. **Date impossibili** (`v.isoDate()`): `new Date('2026-02-31')` in Node diventa il 3 marzo senza errore; ora la data scritta viene controllata sul calendario e una data impossibile dà 400 `VALIDATION_ERROR`.
+  3. **Direttive su Windows** (`scripts/directive.mjs`, `CLAUDE.md` §3b): npm passa gli argomenti attraverso `cmd.exe`, che tronca il comando al primo a capo dentro `--body` (così il 21/11 la #65 è stata creata troncata e senza `--dry-run`). Nuova opzione `--body-file`, da usare per i testi su più righe.
+  4. **Errori del client** (`shared/errors/error-handler.ts`): gli errori 4xx di `express.json()` diversi da JSON non valido e body troppo grande (per esempio 415 charset non supportato) diventavano 500 `INTERNAL_ERROR`; ora mantengono il loro status con il codice `BAD_REQUEST`, solo se marcati `expose` (messaggio sicuro da mostrare).
+- **Perché:** sono difetti della base condivisa che tutti useranno da R01 in poi; il primo costa sempre di più col tempo, perché i nomi registrati nei database andrebbero poi corretti a mano. Le altre 4 osservazioni minori della revisione (es. `v.number()` accetta `"Infinity"`, environment Angular duplicati) sono rimandate. File condivisi: contract-change.
+- **File:** `backend/src/shared/db/migrator.ts`, `backend/src/shared/validation/validator.ts`, `backend/src/shared/errors/error-handler.ts`, `backend/tests/`, `scripts/directive.mjs`, `CLAUDE.md`, `PROGRESS.md`.
+- **Come verificare:** in `backend/`: `npm run lint`, `npm run typecheck`, `npm test` (38 unit + 13 integration verdi, con i nuovi casi: `2026-02-31` rifiutata, 415 sul charset, migrazione registrata senza estensione), `npm run build`. Poi `npm run db:migrate` e `node dist/db/cli.js migrate` rispondono entrambi "none (up to date)". Nota: su un database già migrato la baseline riparte una volta sola (è `CREATE EXTENSION IF NOT EXISTS`, innocua) e la vecchia riga `…baseline.ts` resta in `SequelizeMeta` senza effetti. Direttive: `npm run directive -- --to P2 --title t --body-file file.md --dry-run` stampa il body intero.
+- **Prossimi passi:** approvazione di Vincenzo e Matteo (file condivisi); poi la pulizia delle tracce di Claude nei file che non servono più alle sessioni.
+- **Commit/PR:** `0ec375c`, PR #68 (contract-change #67).
+
 ### 2026-11-23 11:15 · SCAFFOLD · DONE: integrazione dello scaffold mergiata su `develop`
 - **Cosa:** la PR #63 (`chore/scaffold`) è stata approvata da Matteo (P2) e mergiata con squash su `develop` (`dacfcbd`); la issue #2 è chiusa. Subito dopo la branch protection di `develop` e `main` è stata portata a richiedere i check `plan`, `backend`, `frontend` ed `e2e` (letta di nuovo con `gh api`), e le PR #64 e #61, aperte prima della CI, sono state ribasate su `develop`. Con questo lo scaffold è completo: SCAFFOLD-BE (#57), SCAFFOLD-FE (#60), SCAFFOLD-E2E (#59), SCAFFOLD (#63).
 - **Perché:** la CI esisteva solo dopo il merge della #63: prima la branch protection poteva richiedere soltanto `plan`. Da ora nessuna PR entra in `develop` o `main` senza backend, frontend ed e2e verdi.
@@ -176,6 +188,7 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 - **Come verificare:** `gh api repos/Mynamesdsuper/sidequest-group40/branches/develop/protection -q .required_status_checks.contexts` → `plan`, `backend`, `frontend`, `e2e` (uguale per `main`); `npm run deps -- SCAFFOLD` → DONE.
 - **Prossimi passi:** SONAR-SETUP (ora READY); le correzioni della revisione (#68) e la prima pulizia (#70) aspettano l'approvazione.
 - **Commit/PR:** #63 (`dacfcbd`).
+
 
 ### 2026-11-21 01:22 · S0-DATAMODEL · docs(meetings): agenda del kickoff dello Sprint 0 (lun 23/11)
 - **Cosa:** scritto `docs/meetings/2026-11-23.md` (45 minuti, 5 punti):

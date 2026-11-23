@@ -19,7 +19,14 @@ const files = (dir: string): [string, { cwd: string; ignore: string[] }] => [
 export function createMigrator() {
   const sequelize = getSequelize();
   return new Umzug({
-    migrations: { glob: files('migrations') },
+    migrations: {
+      glob: files('migrations'),
+      // Recorded without the extension, so tsx (.ts) and the built image (.js) see the same migration.
+      resolve: (params) => ({
+        ...Umzug.defaultResolver(params),
+        name: params.name.replace(/\.(ts|js)$/, ''),
+      }),
+    },
     context: sequelize.getQueryInterface(),
     storage: new SequelizeStorage({ sequelize, tableName: 'SequelizeMeta' }),
     logger: undefined,
