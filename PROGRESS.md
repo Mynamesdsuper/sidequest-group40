@@ -158,7 +158,7 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 - **File:** `backend/src/shared/db/migrator.ts`, `backend/src/shared/validation/validator.ts`, `backend/src/shared/errors/error-handler.ts`, `backend/tests/`, `scripts/directive.mjs`, `CLAUDE.md`, `PROGRESS.md`.
 - **Come verificare:** in `backend/`: `npm run lint`, `npm run typecheck`, `npm test` (38 unit + 13 integration verdi, con i nuovi casi: `2026-02-31` rifiutata, 415 sul charset, migrazione registrata senza estensione), `npm run build`. Poi `npm run db:migrate` e `node dist/db/cli.js migrate` rispondono entrambi "none (up to date)". Nota: su un database già migrato la baseline riparte una volta sola (è `CREATE EXTENSION IF NOT EXISTS`, innocua) e la vecchia riga `…baseline.ts` resta in `SequelizeMeta` senza effetti. Direttive: `npm run directive -- --to P2 --title t --body-file file.md --dry-run` stampa il body intero.
 - **Prossimi passi:** approvazione di Vincenzo e Matteo (file condivisi); poi la pulizia delle tracce di Claude nei file che non servono più alle sessioni.
-- **Commit/PR:** questo commit.
+- **Commit/PR:** `0ec375c`, PR #68 (contract-change #67).
 
 ### 2026-11-21 01:22 · S0-DATAMODEL · docs(meetings): agenda del kickoff dello Sprint 0 (lun 23/11)
 - **Cosa:** scritto `docs/meetings/2026-11-23.md` (45 minuti, 5 punti):
