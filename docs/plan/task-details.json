@@ -14,7 +14,6 @@
       ".github/"
     ],
     "docs": [
-      "docs/plan/setup-prompt.md",
       "PROGRESS.md"
     ]
   },

@@ -109,4 +109,3 @@ Rules:
 | INGSW document structure | `docs/ingsw/README.md` |
 | Meeting notes | `docs/meetings/` |
 | Project history (everything done, in order) | `docs/history/overview.md`; PDF on the branch `history`, from `npm run history` or on the `history-latest` release |
-| Setup prompt (history) | `docs/plan/setup-prompt.md` |
