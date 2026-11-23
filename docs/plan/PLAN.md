@@ -2,7 +2,7 @@
 
 Integrated project INGSW + TECWEB · Università degli Studi di Napoli Federico II · A.A. 2026/27
 
-Generated from `docs/plan/tasks.json` and the setup prompt (`docs/plan/setup-prompt.md`). Task IDs, dates and dependencies are authoritative in `tasks.json`; the live status of each task is on GitHub (`npm run deps -- --all`).
+Generated from `docs/plan/tasks.json`. Task IDs, dates and dependencies are authoritative in `tasks.json`; the live status of each task is on GitHub (`npm run deps -- --all`).
 
 # 1. Project at a glance
 
@@ -166,7 +166,7 @@ sidequest-group40/
 ├── docker/ + docker-compose*.yml
 ├── scripts/                 deps, directive, create-issues, validate-plan, render-pdf, history, setup-dev
 ├── docs/
-│   ├── plan/                PLAN.md, tasks.json, team.json, PDFs, setup-prompt.md
+│   ├── plan/                PLAN.md, tasks.json, team.json, PDFs
 │   ├── guides/              P1/P2/P3 personal guides (+ PDFs)
 │   ├── reference/           requirements.md
 │   ├── decisions/           assumptions.md, adr/0001..0006
@@ -788,7 +788,7 @@ Both are pure domain classes (no DB); dependencies (Clock, membership) are injec
 | **Realtime ordering** (R12) | Per-participation `seq` appended in the same transaction, emit after commit, snapshot on gap/reconnect; UT-2 and E2E-11 |
 | **Holiday availability** (M4 Holiday sprint 21 Dec – 3 Jan) | Lighter tasks in M4; stabilization buffer 1–7 Feb; R12 may close there at the latest |
 | **Sonar setup** | Task SONAR-SETUP early (30 Nov – 6 Dec) with exact steps in P3's guide; `sonar.yml` skips gracefully without token |
-| **"Everyone must know everything"** | Review rotation, explanations required in every Claude Code session, REL-DRYRUN cross-module sessions |
+| **"Everyone must know everything"** | Review rotation, every member explains their own code, REL-DRYRUN cross-module sessions |
 | **Non-taught technologies challenged at the exam** | ADR 0006 rationale in every guide; re-check Angular and test tools when the course covers them |
 | **Traces of the AI assistant in the delivered repo** | Task CLEANUP (28 Feb 2027, P3) before REL-RC: remove files, rewrite commit trailers, everyone re-clones; do it only after DOC-GIT |
 | **Secret leak** (objectives before acceptance) | DTO mappers + tests; E2E-03; security invariants in CLAUDE.md |
