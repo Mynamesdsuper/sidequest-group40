@@ -112,6 +112,14 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P1 – Vincenzo Pio Lubrano
 
+### 2026-11-24 16:54 · S0-ASSUMPTIONS · docs(decisions): assunzioni A-01..A-26 ratificate (ACCEPTED)
+- **Cosa:** tutte le 26 assunzioni passano da PROPOSED ad ACCEPTED. Sei righe sono state aggiornate con le decisioni del kickoff: A-11 (limite di tempo facoltativo anche per le ORDINARY, da 1 minuto a 7 giorni), A-12 (punti solo dal `PointsLedger`), A-15 (niente promemoria "5 minuti"), A-19 (squadra sciolta conservata con `disbandedAt`, nome unico solo tra le squadre attive), A-20 (significato di `maxTeamSize` dalla contract-change #72; giocano i membri attuali), A-26 (limiti di lunghezza nel data model). In testa al file c'è una tabella con le modifiche e le loro fonti.
+- **Perché:** al kickoff del 23/11 (`docs/meetings/2026-11-23.md`) il team ha approvato tutte le proposte. Le assunzioni devono dire la stessa cosa del data model congelato (#73), altrimenti ogni modulo le interpreterebbe a modo suo. Da ora ogni modifica passa da una contract-change.
+- **File:** `docs/decisions/assumptions.md`.
+- **Come verificare:** `grep -c "| ACCEPTED |" docs/decisions/assumptions.md` dà 26; confronta A-11, A-12, A-19 e A-20 con `docs/design/data-model.md` (M1, U1/P4, T1, M3, P2).
+- **Prossimi passi:** review di P2; dopo il merge chiudere #3 e #72. Il coordinatore deve aggiornare "PROPOSED" in `docs/plan/PLAN.md`, che è un suo file. Poi i frammenti OpenAPI di `auth`, `users`, `missions` e R01 (da mer 25/11).
+- **Commit/PR:** 0e71237 · #75
+
 ## P2 – Matteo Marino
 
 ### 2026-11-24 16:25 · S0-EVENTS · docs: congelati eventi di dominio, eventi realtime e porte
@@ -163,6 +171,22 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 - **Commit/PR:** da aggiungere.
 
 ## P3 – Domenico Panaro
+
+### 2026-11-24 11:45 · S0-DATAMODEL · docs(design): data model congelato e verbale del kickoff
+- **Cosa:** `data-model.md` riscritto con tutte le decisioni del kickoff del 23/11 (8 punti principali e 12 della "parte 2" di #4, più gli altri punti della review accettati così come proposti): convenzioni (nomi delle tabelle, `varchar` + `CHECK`, unicità su `lower()`, `onDelete`, indici per ogni tabella), ER completo con una linea per ogni FK, nuova sezione con le transizioni di stato di Mission, Participation, ObjectiveProgress, WaitlistEntry e degli inviti; documento segnato FROZEN. Compilate le decisioni e gli action item nel verbale `docs/meetings/2026-11-23.md`. Aperto il contract-change #72 su A-20 (significato di `maxTeamSize`).
+- **Perché:** al kickoff tutte le proposte sono state approvate; congelare il data model sblocca R02, R06A, R10 e DOC-ARCH-DRAFT. La tabella delle transizioni serve a DOC-STATE (Matteo): così i diagrammi di stato si disegnano senza dover cambiare il contratto. Il contract-change su A-20 lo applica Vincenzo nella PR di S0-ASSUMPTIONS, per non avere due PR sulla stessa tabella.
+- **File:** `docs/design/data-model.md`, `docs/meetings/2026-11-23.md`.
+- **Come verificare:** leggere `data-model.md` (l'ER Mermaid si vede nell'anteprima di GitHub) e confrontarlo con i commenti di posizione su #4; `npm run deps -- S0-DATAMODEL`.
+- **Prossimi passi:** review di Vincenzo e merge; poi S0-API (#61) con le stesse decisioni.
+- **Commit/PR:** `063faec`, PR #73.
+
+### 2026-11-23 17:33 · CLEANUP · chore(repo): riscritta la history per togliere i co-autori Claude
+- **Cosa:** tolti i trailer `Co-Authored-By: Claude … <noreply@anthropic.com>` da 9 commit del 17/11 (setup e squash di #47) con `git filter-repo` su un clone mirror; force-push di `develop`, `main`, `history`, del branch della #61 e del tag `history-latest`, con la branch protection allentata per pochi secondi e poi ripristinata (verificata con `gh api`).
+- **Perché:** GitHub mostrava di nuovo Claude tra i contributor, perché conta i co-autori del branch di default; solo riscrivere la history li toglie. Fatto adesso e non a febbraio perché c'era una sola PR aperta e lo Sprint 0 non era iniziato. Il controllo si ripete periodicamente.
+- **File:** nessun file cambiato: identici gli alberi di tutti i branch, stesso numero di commit; cambiano solo gli hash (quelli citati nelle voci precedenti non valgono più sul branch).
+- **Come verificare:** `git log origin/develop origin/main -i --grep='co-authored-by: claude'` non restituisce nulla.
+- **Prossimi passi:** Matteo e Vincenzo riallineano le copie locali con `git fetch origin && git reset --hard origin/develop`.
+- **Commit/PR:** nessuno (operazione sulla history).
 
 ### 2026-11-23 13:20 · SCAFFOLD · docs(plan): piano, Start here e guide personali aggiornati alla fine dello scaffold
 - **Cosa:** tutti i documenti globali e personali raccontano ora lo stato reale dopo lo scaffold:
