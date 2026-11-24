@@ -1,4 +1,4 @@
-﻿# SideQuest – Registro di avanzamento
+# SideQuest – Registro di avanzamento
 
 Come usare questo file: vedi "Progress log rules" in `CLAUDE.md` (§9b). Le voci si scrivono **in italiano**.
 Le voci più recenti vanno IN CIMA alla propria sezione. Non modificare mai le sezioni degli altri membri.
