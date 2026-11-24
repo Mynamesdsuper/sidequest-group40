@@ -154,7 +154,7 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 - **File:** `docs/design/data-model.md`, `docs/meetings/2026-11-23.md`.
 - **Come verificare:** leggere `data-model.md` (l'ER Mermaid si vede nell'anteprima di GitHub) e confrontarlo con i commenti di posizione su #4; `npm run deps -- S0-DATAMODEL`.
 - **Prossimi passi:** review di Vincenzo e merge; poi S0-API (#61) con le stesse decisioni.
-- **Commit/PR:** da aggiungere.
+- **Commit/PR:** `063faec`, PR #73.
 
 ### 2026-11-23 17:33 · CLEANUP · chore(repo): riscritta la history per togliere i co-autori Claude
 - **Cosa:** tolti i trailer `Co-Authored-By: Claude … <noreply@anthropic.com>` da 9 commit del 17/11 (setup e squash di #47) con `git filter-repo` su un clone mirror; force-push di `develop`, `main`, `history`, del branch della #61 e del tag `history-latest`, con la branch protection allentata per pochi secondi e poi ripristinata (verificata con `gh api`).
