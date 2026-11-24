@@ -148,6 +148,14 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P3 – Domenico Panaro
 
+### 2026-11-24 12:20 · S0-API · docs(design): contratti REST e API pubbliche congelati con le decisioni del kickoff
+- **Cosa:** applicate a `module-contracts.md` le 6 decisioni sulle API pubbliche approvate al kickoff del 23/11: opzioni di transazione (`{ transaction, lock }` e hook `onCommit`), accessi concessi solo da `MissionAccessPort` (tolti `missions.grantAccess/revokeAccess`), `users.getSummaries`, `missions.listByAuthor` e `participations.listForUser` per la dashboard, endpoint dei team in `teams` con la 5b (giocano i membri attuali), `Viewer` in `res.locals.viewer`. Superficie REST e API segnate FROZEN. Nuovi codici 409 coerenti con il data model: `TEAM_TOO_LARGE` sull'accettazione di team e `MISSION_TEAM_FULL` / `ALREADY_PARTICIPATING` sull'ingresso in un team con una partecipazione attiva (`maxTeamSize`, A-20); `points` della dashboard = somma del `PointsLedger`. Fatto il merge di `develop` (voci di `PROGRESS.md` in ordine di ora).
+- **Perché:** al kickoff tutte le proposte sono state approvate; congelare i contratti sblocca R02, R06A, R10 e DOC-ARCH-DRAFT. I nuovi codici vengono dalla definizione di `maxTeamSize` decisa su #4 (contract-change #72).
+- **File:** `docs/design/module-contracts.md`, `backend/src/modules/teams/teams.openapi.yaml`.
+- **Come verificare:** leggere la sezione "Public API decisions" di `module-contracts.md`; i frammenti YAML si leggono senza errori; `npx jest tests/unit` in `backend` → 38 test verdi.
+- **Prossimi passi:** review e merge della #61; Vincenzo e Matteo scrivono i frammenti OpenAPI dei loro moduli dalle tabelle entro il 29/11.
+- **Commit/PR:** #61.
+
 ### 2026-11-23 13:20 · SCAFFOLD · docs(plan): piano, Start here e guide personali aggiornati alla fine dello scaffold
 - **Cosa:** tutti i documenti globali e personali raccontano ora lo stato reale dopo lo scaffold:
   - `tasks.json`: SCAFFOLD-FE passa a owner P3 (preso in carico il 19/11); label della issue #52 aggiornata (`owner:P3-domenico`); `npm run deps -- --mine P1/P3` lo mostrano al posto giusto.

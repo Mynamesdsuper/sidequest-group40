@@ -1,4 +1,6 @@
-# Module contracts (PROPOSED draft, frozen in Sprint 0 by tasks S0-API and S0-EVENTS)
+# Module contracts (public APIs and REST surface FROZEN by S0-API; events frozen by S0-EVENTS)
+
+Public APIs and REST surface frozen with the decisions of the Sprint 0 kickoff of 2026-11-23 (minutes in `docs/meetings/2026-11-23.md`, discussion in [#61](https://github.com/Mynamesdsuper/sidequest-group40/pull/61)). **Every change from now on needs the `contract-change` process.** Domain event payloads are frozen by S0-EVENTS (P2).
 
 Signatures below are a **specification in TypeScript notation inside Markdown**; no `.ts` file exists yet. Modules interact only through their public API (`index.ts`), ports (`shared/ports`) or domain events. Port = **Strategy** interface; the registry (`bindPort` / `getPort`) = **Dependency Injection**; the event bus = **Observer**.
 
@@ -41,21 +43,23 @@ interface TeamMembershipPort {
 
 ### `participations` (P2)
 ```ts
-accept(missionId: string, actor: Actor, participant: { type: 'USER' } | { type: 'TEAM'; teamId: string }): Promise<ParticipationDto>;
+type TxOptions = { onCommit?: (t: Transaction, result: ParticipationDto) => Promise<void> }; // decision 1
+accept(missionId: string, actor: Actor, participant: { type: 'USER' } | { type: 'TEAM'; teamId: string }, opts?: TxOptions): Promise<ParticipationDto>;
 getForViewer(participationId: string, viewer: Viewer): Promise<ParticipationDto>;
-submitObjective(participationId: string, objectiveId: string, contributorId: string, input: SubmissionInput, expectedVersion?: number): Promise<ParticipationDto>;
-abandon(participationId: string, actor: Actor): Promise<ParticipationDto>;
+submitObjective(participationId: string, objectiveId: string, contributorId: string, input: SubmissionInput, expectedVersion?: number, opts?: TxOptions): Promise<ParticipationDto>;
+abandon(participationId: string, actor: Actor, opts?: TxOptions): Promise<ParticipationDto>;
 review(progressId: string, reviewer: Actor, verdict: 'APPROVE' | 'REJECT', reason?: string): Promise<ParticipationDto>;
+listForUser(userId: string): Promise<ParticipationSummary[]>; // read only, includes team participations (decision 4)
 ```
 `participantType: USER | TEAM` is supported from day one, so R11 can build on it.
 
 ### `missions` (P1)
 ```ts
-getMissionForParticipation(missionId: string): Promise<MissionInternal>; // internal, objectives included
+getMissionForParticipation(missionId: string, opts?: { transaction?: Transaction; lock?: boolean }): Promise<MissionInternal>; // internal, objectives included (decision 1)
 canView(viewer: Viewer | null, missionId: string): Promise<boolean>;
-grantAccess(missionId: string, userId: string, source: 'MANUAL' | 'INVITE'): Promise<void>;
-revokeAccess(missionId: string, userId: string, source: 'MANUAL' | 'INVITE'): Promise<void>;
+listByAuthor(userId: string): Promise<MissionSummary[]>; // read only (decision 4)
 ```
+Access grants go only through `MissionAccessPort.grant/revoke` (decision 2).
 
 ### `teams` (P3)
 ```ts
@@ -68,13 +72,14 @@ membersOf(teamId: string): Promise<string[]>;
 ```ts
 getPublicProfile(id: string): Promise<PublicProfileDto>;
 findByNickname(nickname: string): Promise<UserSummary | null>;
+getSummaries(ids: string[]): Promise<Map<string, UserSummary>>; // decision 3
 ```
 
 ### `auth` (P1)
-Middleware exported for all modules: `requireAuth`, `optionalAuth`, `requireRole(role)`.
+Middleware exported for all modules: `requireAuth`, `optionalAuth`, `requireRole(role)`. They put the `Viewer` (`shared/ports`) in `res.locals.viewer`; user IDs and roles are never read from the body (decision 6).
 
 ### `notifications`, `dashboard`, `invitations` (P2, P2, P3)
-`notifications` binds `NotifierPort` and `RealtimePort`. `dashboard` aggregates the public APIs of `missions` and `participations` (read only). `invitations` grants access through `missions.grantAccess` and consumes `MissionAccessPort`.
+`notifications` binds `NotifierPort` and `RealtimePort`. `dashboard` aggregates the public APIs of `missions` and `participations` (read only). `invitations` grants and revokes access through `getPort('missionAccess')` (decision 2).
 
 ## Domain events (`shared/events/domain-events`)
 
@@ -82,7 +87,7 @@ Middleware exported for all modules: `requireAuth`, `optionalAuth`, `requireRole
 
 Events are published by the owning module and consumed through the typed in-process bus. Each module README lists the events it emits and consumes.
 
-## REST surface (S0-API, PROPOSED until the Sprint 0 kickoff, then FROZEN)
+## REST surface (S0-API, FROZEN)
 
 Every row becomes one operation in the OpenAPI fragment of the owning module (`backend/src/modules/<module>/<module>.openapi.yaml`) with `x-owner`, `x-requirement` and `x-status: planned` (→ `done` when implemented). The owner of each module writes their own fragment from this table.
 
@@ -154,7 +159,7 @@ Every row becomes one operation in the OpenAPI fragment of the owning module (`b
 ### `dashboard` (P2 · R06)
 | Method | Path | Auth | Success | Main errors |
 |---|---|---|---|---|
-| GET | `/me/dashboard` | U | 200 `{ createdMissions, participations, waitlistEntries, points }` with statuses | 401 |
+| GET | `/me/dashboard` | U | 200 `{ createdMissions, participations, waitlistEntries, points }` with statuses; `points` = `SUM(PointsLedger.points)` | 401 |
 
 ### `invitations` (P3 · R08)
 | Method | Path | Auth | Success | Main errors |
@@ -176,13 +181,13 @@ Every row becomes one operation in the OpenAPI fragment of the owning module (`b
 | POST | `/teams/{id}/invitations` | team admin | 201 PENDING `{ nickname }` | 403, 404, 409 `TEAM_FULL` / `ALREADY_MEMBER` / `INVITATION_PENDING` |
 | GET | `/teams/{id}/invitations?status=` | team admin | 200 list | 403, 404 |
 | GET | `/me/team-invitations?status=` | U | 200 list of received team invitations | 401 |
-| POST | `/team-invitations/{id}/accept` | invitee | 200 (re-checks the 6-member cap under lock) | 404, 409 `INVITATION_NOT_PENDING` / `TEAM_FULL` |
+| POST | `/team-invitations/{id}/accept` | invitee | 200 (re-checks the 6-member cap under lock; if the team has an active participation, also its `maxTeamSize` and A-20) | 404, 409 `INVITATION_NOT_PENDING` / `TEAM_FULL` / `MISSION_TEAM_FULL` / `ALREADY_PARTICIPATING` |
 | POST | `/team-invitations/{id}/decline` | invitee | 200 | 404, 409 `INVITATION_NOT_PENDING` |
 | POST | `/team-invitations/{id}/revoke` | team admin | 200 | 403, 404, 409 `INVITATION_NOT_PENDING` |
 | POST | `/teams/{id}/leave` | member | 204 (last member → team disbanded, A-19) | 404, 409 `ADMIN_MUST_TRANSFER` |
 | DELETE | `/teams/{id}/members/{userId}` | team admin | 204 | 403, 404, 409 `CANNOT_REMOVE_SELF` |
 | POST | `/teams/{id}/transfer-admin` | team admin | 200 `{ userId }` | 403, 404 |
-| POST | `/teams/{id}/participations` | team admin | 201 team participation `{ missionId }` (wraps `participations.accept`, A-20) | 403, 404, 409 `TEAM_TOO_SMALL` + the 409s of the individual accept |
+| POST | `/teams/{id}/participations` | team admin | 201 team participation `{ missionId }` (wraps `participations.accept`, A-20) | 403, 404, 409 `TEAM_TOO_SMALL` / `TEAM_TOO_LARGE` (more members than `maxTeamSize`) + the 409s of the individual accept |
 | GET | `/team-participations/{id}` | member, author, A | 200 snapshot + `lastSeq` + `serverNow` (A-21) | 404 |
 | POST | `/team-participations/{id}/objectives/{objectiveId}/submissions` | member | 200 snapshot + `seq` (wraps `participations.submitObjective`) | as individual submissions |
 | POST | `/team-participations/{id}/abandon` | team admin | 200 | 403, 404, 409 `INVALID_STATE` |
@@ -192,11 +197,12 @@ Not REST: live updates use the Socket.IO events of `docs/api/realtime-events.md`
 ### Error codes
 Shared: `VALIDATION_ERROR`, `INVALID_JSON`, `UNAUTHORIZED`, `FORBIDDEN`, `NOT_FOUND`, `VERSION_CONFLICT`, `INVALID_STATE`, `RATE_LIMITED`, `INTERNAL_ERROR`. Module codes are the ones in the tables; each module documents them in its fragment. A `409` always carries a code the client can switch on.
 
-## Public API review (S0-API): proposed changes, to confirm at the kickoff
+## Public API decisions (S0-API, agreed at the kickoff of 2026-11-23)
 
-1. **Transactions across modules.** A-18 locks the mission row inside the acceptance transaction, and A-21 writes the `TeamProgressEvent` in the same transaction as the progress change. Proposal: `missions.getMissionForParticipation(missionId, opts?: { transaction?: Transaction; lock?: boolean })`, and `participations.accept/submitObjective/abandon(..., opts?: { onCommit?: (t: Transaction, result: ParticipationDto) => Promise<void> })`, a hook run inside the transaction before the commit. `teams` passes a hook that appends the event and returns `seq`; `participations` never imports `teams`.
-2. **One way to grant access.** `missions.grantAccess/revokeAccess` and `MissionAccessPort.grant/revoke` do the same thing. Proposal: keep only the port (bound by R07); `invitations` uses `getPort('missionAccess')`.
-3. **`users` lookups.** `invitations` and `teams` need nicknames for lists. Proposal: add `users.getSummaries(ids: string[]): Promise<Map<string, UserSummary>>` next to `findByNickname`.
-4. **`dashboard` reads.** Proposal: `missions.listByAuthor(userId)` and `participations.listForUser(userId)` (includes team participations through `TeamMembershipPort`), both read only.
-5. **Team participation endpoints live in `teams`** (as the `teams` README says), wrapping the `participations` public API: the team checks (team admin, `minTeamSize`, membership) stay with R11's owner, while capacity, timer, A-20 and the state machine stay in one place in `participations`. Open question for P2: who takes part for a team, the members at acceptance or the current members (see S0-DATAMODEL, issue #4, P2)?
-6. **`auth` middleware** stays as listed (`requireAuth`, `optionalAuth`, `requireRole`); they put the `Viewer` (`shared/ports`) in `res.locals.viewer`, never read from the body.
+1. **Transactions across modules.** A-18 locks the mission row inside the acceptance transaction, and A-21 writes the `TeamProgressEvent` in the same transaction as the progress change. So `missions.getMissionForParticipation(missionId, { transaction, lock })` takes the caller's transaction and row lock, and `participations.accept/submitObjective/abandon(..., { onCommit })` run the hook inside the transaction, before the commit. `teams` passes a hook that appends the event and returns `seq`; `participations` never imports `teams`.
+2. **One way to grant access:** only `MissionAccessPort.grant/revoke` (bound by R07). `missions.grantAccess/revokeAccess` are removed; `invitations` uses `getPort('missionAccess')`.
+3. **`users` lookups:** `users.getSummaries(ids)` next to `findByNickname`, for the nicknames in the lists of `invitations` and `teams`.
+4. **`dashboard` reads:** `missions.listByAuthor(userId)` and `participations.listForUser(userId)` (team participations included, through `TeamMembershipPort`), both read only.
+5. **Team participation endpoints live in `teams`**, wrapping the `participations` public API: the team checks (team admin, `minTeamSize`, `maxTeamSize`, membership) stay with R11's owner, while capacity, timer, A-20 and the state machine stay in one place in `participations`.
+   - **5b. Who plays for a team:** the team's **current members** (A-20: "Members who leave lose access; their contributions stay"). A member who joins a team with an active participation takes part, within the mission's `maxTeamSize`; if they already take part in the same mission (individually or through another team) the join is refused with 409 `ALREADY_PARTICIPATING`.
+6. **`auth` middleware** (`requireAuth`, `optionalAuth`, `requireRole`) put the `Viewer` in `res.locals.viewer`, never read from the body.

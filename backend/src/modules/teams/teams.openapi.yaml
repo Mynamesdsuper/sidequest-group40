@@ -115,7 +115,7 @@ paths:
     parameters: [*id]
     post:
       tags: [Teams]
-      summary: Accept a team invitation (invitee); re-checks the 6-member cap under lock
+      summary: Accept a team invitation (invitee); re-checks the 6-member cap under lock, and maxTeamSize and A-20 if the team has an active participation
       x-owner: P3
       x-requirement: R10
       x-status: planned
@@ -123,7 +123,7 @@ paths:
       responses:
         '200': { description: 'Invitation accepted, the caller is a MEMBER' }
         '404': { $ref: '#/components/responses/NotFound' }
-        '409': { description: INVITATION_NOT_PENDING or TEAM_FULL, content: *error }
+        '409': { description: 'INVITATION_NOT_PENDING, TEAM_FULL, or (team with an active participation) MISSION_TEAM_FULL or ALREADY_PARTICIPATING', content: *error }
 
   /team-invitations/{id}/decline:
     parameters: [*id]
@@ -213,7 +213,7 @@ paths:
         '403': { description: Not the team admin, content: *error }
         '404': { $ref: '#/components/responses/NotFound' }
         '409':
-          description: TEAM_TOO_SMALL, MISSION_FULL, MISSION_NOT_OPEN, ALREADY_PARTICIPATING or NO_ATTEMPTS_LEFT
+          description: TEAM_TOO_SMALL, TEAM_TOO_LARGE, MISSION_FULL, MISSION_NOT_OPEN, ALREADY_PARTICIPATING or NO_ATTEMPTS_LEFT
           content: *error
 
   /team-participations/{id}:
