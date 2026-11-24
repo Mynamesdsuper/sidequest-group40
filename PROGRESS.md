@@ -120,7 +120,7 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 - **File:** `backend/src/shared/events/domain-events.ts`, `backend/src/shared/ports/{ports,defaults}.ts`, `backend/tests/unit/core.test.ts`, `docs/api/realtime-events.md`, `docs/design/module-contracts.md`.
 - **Come verificare:** `cd backend && npm run typecheck && npm run lint && npx jest tests/unit` (38 test verdi).
 - **Prossimi passi:** approvazione di P1 e P3 sulla PR (contract-change); allineare con la #61, che tocca anche `module-contracts.md`.
-- **Commit/PR:** da aggiungere.
+- **Commit/PR:** `2d007ed`, #74.
 
 ### 2026-11-24 16:00 · S0-DATAMODEL / S0-API · direttiva #66: commenti su #4 e #61
 - **Cosa:** commentato la #4 (tutti i punti P2 d'accordo e già presenti nel modello congelato, #73) e approvata la #61 con 3 note: lista d'attesa per i team senza endpoint REST, codici d'errore mancanti su waitlist e claim, risposta ANSWER sbagliata = 200 e non errore. Direttiva #66 chiusa.
