@@ -1,4 +1,4 @@
-# SideQuest – Registro di avanzamento
+﻿# SideQuest – Registro di avanzamento
 
 Come usare questo file: vedi "Progress log rules" in `CLAUDE.md` (§9b). Le voci si scrivono **in italiano**.
 Le voci più recenti vanno IN CIMA alla propria sezione. Non modificare mai le sezioni degli altri membri.
@@ -118,7 +118,7 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 - **File:** `docs/decisions/assumptions.md`.
 - **Come verificare:** `grep -c "| ACCEPTED |" docs/decisions/assumptions.md` dà 26; confronta A-11, A-12, A-19 e A-20 con `docs/design/data-model.md` (M1, U1/P4, T1, M3, P2).
 - **Prossimi passi:** review di P2; dopo il merge chiudere #3 e #72. Il coordinatore deve aggiornare "PROPOSED" in `docs/plan/PLAN.md`, che è un suo file. Poi i frammenti OpenAPI di `auth`, `users`, `missions` e R01 (da mer 25/11).
-- **Commit/PR:** (da aggiungere)
+- **Commit/PR:** 0e71237 · #75
 
 ## P2 – Matteo Marino
 
