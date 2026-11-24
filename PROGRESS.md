@@ -112,6 +112,14 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P1 – Vincenzo Pio Lubrano
 
+### 2026-11-24 16:54 · S0-ASSUMPTIONS · docs(decisions): assunzioni A-01..A-26 ratificate (ACCEPTED)
+- **Cosa:** tutte le 26 assunzioni passano da PROPOSED ad ACCEPTED. Sei righe sono state aggiornate con le decisioni del kickoff: A-11 (limite di tempo facoltativo anche per le ORDINARY, da 1 minuto a 7 giorni), A-12 (punti solo dal `PointsLedger`), A-15 (niente promemoria "5 minuti"), A-19 (squadra sciolta conservata con `disbandedAt`, nome unico solo tra le squadre attive), A-20 (significato di `maxTeamSize` dalla contract-change #72; giocano i membri attuali), A-26 (limiti di lunghezza nel data model). In testa al file c'è una tabella con le modifiche e le loro fonti.
+- **Perché:** al kickoff del 23/11 (`docs/meetings/2026-11-23.md`) il team ha approvato tutte le proposte. Le assunzioni devono dire la stessa cosa del data model congelato (#73), altrimenti ogni modulo le interpreterebbe a modo suo. Da ora ogni modifica passa da una contract-change.
+- **File:** `docs/decisions/assumptions.md`.
+- **Come verificare:** `grep -c "| ACCEPTED |" docs/decisions/assumptions.md` dà 26; confronta A-11, A-12, A-19 e A-20 con `docs/design/data-model.md` (M1, U1/P4, T1, M3, P2).
+- **Prossimi passi:** review di P2; dopo il merge chiudere #3 e #72. Il coordinatore deve aggiornare "PROPOSED" in `docs/plan/PLAN.md`, che è un suo file. Poi i frammenti OpenAPI di `auth`, `users`, `missions` e R01 (da mer 25/11).
+- **Commit/PR:** (da aggiungere)
+
 ## P2 – Matteo Marino
 
 ### 2026-11-19 13:56 · SCAFFOLD-E2E · DONE: scaffold e2e mergiato in develop
