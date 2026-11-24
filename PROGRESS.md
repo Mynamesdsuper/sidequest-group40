@@ -172,6 +172,22 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P3 – Domenico Panaro
 
+### 2026-11-24 19:00 · S0-API · docs(design): lista d'attesa per i team e codici di errore della lista d'attesa
+- **Cosa:** nuovo endpoint `POST /teams/{id}/waitlist-entries` nel modulo `teams` (team admin, involucro della lista d'attesa di `participations`); l'offerta di una voce TEAM la reclama il team admin con `/waitlist-entries/{id}/claim`. Aggiunti i codici 409 proposti da Matteo: `MISSION_NOT_OPEN`, `OWN_MISSION`, `NO_ATTEMPTS_LEFT` sull'ingresso in lista e i controlli ripetuti sotto lock su `/claim`. Fatto di nuovo il merge di `develop` (dopo #73, #74, #75), voci di `PROGRESS.md` in ordine di ora.
+- **Perché:** il data model congelato (W1) prevede voci di lista d'attesa TEAM, ma mancava il percorso REST. Decisione del coordinatore su proposta di Matteo nella review della #61: endpoint in `teams`, come `/teams/{id}/participations`, così i controlli di team restano in R11 e la coda FIFO resta in un solo posto (R09). Aggiunto prima del merge della #61, quindi senza contract-change.
+- **File:** `docs/design/module-contracts.md`, `backend/src/modules/teams/teams.openapi.yaml`.
+- **Come verificare:** tabelle `participations` e `teams` di `module-contracts.md`; il frammento YAML si legge senza errori (16 percorsi); `npx jest tests/unit` in `backend` → 38 test verdi.
+- **Prossimi passi:** nuova approvazione e merge della #61 (DONE di S0-API); contract-change per l'evento `user.suspended` proposto da Vincenzo.
+- **Commit/PR:** #61.
+
+### 2026-11-24 18:55 · S0-DATAMODEL · DONE: data model congelato su `develop`
+- **Cosa:** PR #73 approvata e mergiata alle 16:43 (`81fbdaf`); chiusa la issue #4. Il contract-change #72 (`maxTeamSize` in A-20) è stato applicato da Vincenzo nella #75 (S0-ASSUMPTIONS).
+- **Perché:** con data model, assunzioni (#75) ed eventi (#74) congelati, per chiudere lo Sprint 0 manca solo S0-API (#61).
+- **File:** `docs/design/data-model.md`, `docs/meetings/2026-11-23.md`.
+- **Come verificare:** `npm run deps -- S0-DATAMODEL` → DONE.
+- **Prossimi passi:** nessuno per questo task; ogni modifica ora passa da un contract-change.
+- **Commit/PR:** #73 (`81fbdaf`).
+
 ### 2026-11-24 12:20 · S0-API · docs(design): contratti REST e API pubbliche congelati con le decisioni del kickoff
 - **Cosa:** applicate a `module-contracts.md` le 6 decisioni sulle API pubbliche approvate al kickoff del 23/11: opzioni di transazione (`{ transaction, lock }` e hook `onCommit`), accessi concessi solo da `MissionAccessPort` (tolti `missions.grantAccess/revokeAccess`), `users.getSummaries`, `missions.listByAuthor` e `participations.listForUser` per la dashboard, endpoint dei team in `teams` con la 5b (giocano i membri attuali), `Viewer` in `res.locals.viewer`. Superficie REST e API segnate FROZEN. Nuovi codici 409 coerenti con il data model: `TEAM_TOO_LARGE` sull'accettazione di team e `MISSION_TEAM_FULL` / `ALREADY_PARTICIPATING` sull'ingresso in un team con una partecipazione attiva (`maxTeamSize`, A-20); `points` della dashboard = somma del `PointsLedger`. Fatto il merge di `develop` (voci di `PROGRESS.md` in ordine di ora).
 - **Perché:** al kickoff tutte le proposte sono state approvate; congelare i contratti sblocca R02, R06A, R10 e DOC-ARCH-DRAFT. I nuovi codici vengono dalla definizione di `maxTeamSize` decisa su #4 (contract-change #72).

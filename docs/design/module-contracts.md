@@ -146,9 +146,9 @@ Every row becomes one operation in the OpenAPI fragment of the owning module (`b
 | POST | `/participations/{id}/objectives/{objectiveId}/review` | author | 200 `{ verdict: APPROVE \| REJECT, reason? }` | 400, 403, 404, 409 `INVALID_STATE` |
 | POST | `/participations/{id}/abandon` | participant | 200 (A-14) | 404, 409 `INVALID_STATE` |
 | GET | `/proofs/{id}/file` | participant(s), author, A | 200 image (A-25) | 404 |
-| POST | `/missions/{id}/waitlist-entries` | U | 201 WAITING entry (R09) | 404, 409 `MISSION_NOT_FULL` / `ALREADY_WAITING` / `ALREADY_PARTICIPATING` |
-| DELETE | `/waitlist-entries/{id}` | owner of the entry | 204 | 404 |
-| POST | `/waitlist-entries/{id}/claim` | owner of the entry | 201 participation (the real acceptance, A-18) | 404, 409 `OFFER_EXPIRED` / `NOT_OFFERED` |
+| POST | `/missions/{id}/waitlist-entries` | U | 201 WAITING entry (R09; individual only, teams: see `teams`) | 404, 409 `MISSION_NOT_FULL` / `MISSION_NOT_OPEN` / `ALREADY_WAITING` / `ALREADY_PARTICIPATING` / `OWN_MISSION` / `NO_ATTEMPTS_LEFT` |
+| DELETE | `/waitlist-entries/{id}` | owner of the entry (the team admin for a TEAM entry) | 204 | 404 |
+| POST | `/waitlist-entries/{id}/claim` | owner of the entry (the team admin for a TEAM entry) | 201 participation (the real acceptance, A-18; everything is re-checked under the mission lock) | 404, 409 `OFFER_EXPIRED` / `NOT_OFFERED` / `MISSION_NOT_OPEN` / `NO_ATTEMPTS_LEFT` / `ALREADY_PARTICIPATING` (+ `TEAM_TOO_SMALL` / `TEAM_TOO_LARGE` for a TEAM entry) |
 
 ### `notifications` (P2 · R06)
 | Method | Path | Auth | Success | Main errors |
@@ -189,6 +189,7 @@ Every row becomes one operation in the OpenAPI fragment of the owning module (`b
 | DELETE | `/teams/{id}/members/{userId}` | team admin | 204 | 403, 404, 409 `CANNOT_REMOVE_SELF` |
 | POST | `/teams/{id}/transfer-admin` | team admin | 200 `{ userId }` | 403, 404 |
 | POST | `/teams/{id}/participations` | team admin | 201 team participation `{ missionId }` (wraps `participations.accept`, A-20) | 403, 404, 409 `TEAM_TOO_SMALL` / `TEAM_TOO_LARGE` (more members than `maxTeamSize`) + the 409s of the individual accept |
+| POST | `/teams/{id}/waitlist-entries` | team admin | 201 WAITING TEAM entry `{ missionId }` (wraps the `participations` waitlist, R09 + R11); the offer is claimed by the team admin through `/waitlist-entries/{id}/claim` | 403, 404, 409 `TEAM_TOO_SMALL` / `TEAM_TOO_LARGE` + the 409s of the individual waitlist entry |
 | GET | `/team-participations/{id}` | member, author, A | 200 snapshot + `lastSeq` + `serverNow` (A-21) | 404 |
 | POST | `/team-participations/{id}/objectives/{objectiveId}/submissions` | member | 200 snapshot + `seq` (wraps `participations.submitObjective`) | as individual submissions |
 | POST | `/team-participations/{id}/abandon` | team admin | 200 | 403, 404, 409 `INVALID_STATE` |
