@@ -59,6 +59,14 @@ describe('Validator rules', () => {
     expect(valueOf(v.isoDate().validate('2026-11-17')).getUTCDate()).toBe(17);
     expect(errorsOf(v.isoDate().validate('17/11/2026'))[0].message).toBe('must be an ISO 8601 date');
     expect(errorsOf(v.isoDate().validate('2026-13-40'))[0].message).toBe('must be an ISO 8601 date');
+    // Impossible days are rejected, not rolled over into the next month.
+    expect(errorsOf(v.isoDate().validate('2026-02-31'))[0].message).toBe('must be an ISO 8601 date');
+    expect(errorsOf(v.isoDate().validate('2026-04-31T10:00:00Z'))[0].message).toBe('must be an ISO 8601 date');
+    expect(valueOf(v.isoDate().validate('2028-02-29')).getUTCDate()).toBe(29);
+    // An offset may move the UTC day: the date as written is what counts.
+    expect(valueOf(v.isoDate().validate('2026-02-28T23:30:00-02:00')).toISOString()).toBe(
+      '2026-03-01T01:30:00.000Z',
+    );
     expect(valueOf(v.latitude().validate(-90))).toBe(-90);
     expect(errorsOf(v.latitude().validate(90.1))[0].message).toBe('must be at most 90');
     expect(errorsOf(v.longitude().validate(-180.5))[0].message).toBe('must be at least -180');

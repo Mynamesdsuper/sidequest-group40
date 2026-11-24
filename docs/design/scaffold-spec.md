@@ -1,6 +1,6 @@
 # Scaffold specification (task SCAFFOLD, owner P3)
 
-> **This file is a verbatim copy of the relevant sections of the setup prompt** (`docs/plan/setup-prompt.md`). It is the specification for the task **SCAFFOLD**, to be implemented later on the P3 desktop machine. **No part of it was implemented during the laptop setup session.** Where the text says "setup creates" or "from setup", read "the task SCAFFOLD creates". Section numbers below refer to the original prompt.
+> **This file is the specification of the task SCAFFOLD**, written during the planning of the project and implemented by SCAFFOLD-BE, SCAFFOLD-FE, SCAFFOLD-E2E and SCAFFOLD (PRs #57, #60, #59, #63). Where the text says "setup creates" or "from setup", read "the task SCAFFOLD creates". Section numbers follow the original planning document.
 
 Contents: §4 (stack table and §4.1), §6.1–§6.3, §6.5, §7, the `ci.yml` / `sonar.yml` part of §9 step 7, and the SCAFFOLD checklist of §8.3.
 
@@ -147,8 +147,6 @@ Map component: P1 creates `shared/map/` during R02 (a reusable Leaflet component
 
 ## 7. What the scaffold must contain (infrastructure only) — the task SCAFFOLD, NOT this session
 
-> **SPECIFICATION ONLY in this session (see §0.1).** Copy §7.1–§7.7 verbatim into `docs/design/scaffold-spec.md`. The only items of §7 that this session actually produces are: the root `CLAUDE.md`, a short `README.md` (see §0.1), `CONTRIBUTING.md`, `.gitignore` (written already with the entries of §7.5, so the scaffold needs no change there), `.gitattributes`, `.editorconfig`, the `.github/` templates, `CODEOWNERS`, the two workflows `plan.yml` and `deps-labeler.yml`, and `docs/ingsw/README.md` (the structure of §7.8 as a list). Everything else in §7, including the demo-account fixtures, `.nvmrc`, `.prettierrc`, `ci.yml` and `sonar.yml`, belongs to the task SCAFFOLD.
-
 ### 7.1 Backend
 
 - `package.json` scripts: `dev`, `build`, `start`, `lint`, `format`, `typecheck`, `test`, `test:unit`, `test:integration`, `test:coverage` (lcov for Sonar), `db:migrate`, `db:migrate:undo`, `db:seed`, `db:reset` (migrate from scratch + seed; refuses to run when `NODE_ENV=production`).
@@ -256,7 +254,7 @@ It must already be accurate for what exists. Sections:
 ## §8.3 (excerpt): SCAFFOLD acceptance checklist
 
 The issue body of **SCAFFOLD** must contain this acceptance checklist:
-- implement `docs/design/scaffold-spec.md` exactly: §6.1–§6.3, §6.5 and §7 of the setup prompt; infrastructure only, no requirement logic, stubs only where the spec says so;
+- implement `docs/design/scaffold-spec.md` exactly: §6.1–§6.3, §6.5 and §7 of this specification; infrastructure only, no requirement logic, stubs only where the spec says so;
 - create `ci.yml` (jobs `backend`, `frontend`, `e2e`, `plan`) and `sonar.yml`, then delete `plan.yml`;
 - local checks green: lint, typecheck, unit and integration tests, frontend production build, E2E smoke test, `docker compose up -d db`, migrations and empty seeds;
 - open the PR from `chore/scaffold` to `develop`; it touches shared paths, so it needs the approval of Vincenzo or Matteo;

@@ -4,6 +4,8 @@ SideQuest · Group 40 · Federico II · A.A. 2026/27. Repository: https://github
 
 This guide is for **you**. Read it once fully, then use the starter prompts (section 10) with Claude Code. The master plan is `docs/plan/PLAN.md` (PDF next to it).
 
+> **Status on Mon 23 Nov 2026: the code scaffold is done.** Backend, frontend, E2E tests, Docker and CI are on `develop` (SCAFFOLD-BE #57, SCAFFOLD-FE #60, SCAFFOLD-E2E #59, SCAFFOLD #63), and every PR needs the CI checks `backend`, `frontend`, `e2e` and `plan` green. Prepare your computer with `npm run setup:dev` and the README quick start. Your SCAFFOLD-E2E is done (PR #59). Next: **S0-EVENTS** (lead, by 29 Nov) and your part of S0-API, then DOC-STATE and DOC-UC01-DRAFT, then R06A from 7 Dec.
+
 ## 1. You and your scope
 
 | Item | Detail |
@@ -12,7 +14,7 @@ This guide is for **you**. Read it once fully, then use the starter prompts (sec
 | **Backend modules** | `participations` (supports `participantType: USER | TEAM` from day one), `notifications` (real `NotifierPort` and `RealtimePort`), `dashboard` |
 | **Frontend features** | `core/realtime`, `features/participation`, `waitlist`, `notifications`, `dashboard` (publishes `ObjectiveListComponent` and `ProofFormComponent` for P3) |
 | **INGSW** | UC-01 Cockburn use case + mockups, state diagram, design example, test plan + methodology, `TimerPolicy` documented unit tests |
-| **Scaffold part** | SCAFFOLD-E2E (18–22 Nov 2026): the Playwright E2E skeleton and the demo Docker stack from `docs/design/scaffold-spec.md` |
+| **Scaffold part** | SCAFFOLD-E2E (18–22 Nov 2026): the Playwright E2E skeleton and the demo Docker stack from `docs/design/scaffold-spec.md` — **done** (PR #59, 19 Nov) |
 | **TECWEB** | E2E specs of your requirements |
 | **E2E specs** | E2E-05, E2E-06, E2E-07, E2E-08 |
 | **Unit-test method** | UT-1: `TimerPolicy.evaluate(participation, now)` |
@@ -39,7 +41,7 @@ Accept the collaborator invitation (email, or https://github.com/notifications) 
 
 Ordered by start date. A task may be started only when all its blockers are DONE (`npm run deps -- <ID>`).
 
-1. **SCAFFOLD-E2E** – Scaffold part 3: Playwright e2e, fixtures, smoke test, demo compose
+1. **SCAFFOLD-E2E** – Scaffold part 3: Playwright e2e, fixtures, smoke test, demo compose — **DONE** (PR #59, merged 19 Nov)
    - Dates: 2026-11-18 → 2026-11-22 (milestone M1)
    - Blocked by: SETUP
    - Deliverables: E2E part of `docs/design/scaffold-spec.md` (§7.3): Playwright with desktop and mobile projects, `webServer`, `globalSetup` reset, fixtures (`api`, `auth` stub, `clock`, `users`), `smoke.spec.ts`; `docker-compose.demo.yml`. Write config and fixtures from day one; the smoke test goes green once SCAFFOLD-BE (P3) and SCAFFOLD-FE (P1) are merged, so open your PR after them. Full checklist in the issue. Start it with Starter prompt 2 and task ID `SCAFFOLD-E2E`
@@ -116,7 +118,7 @@ Ordered by start date. A task may be started only when all its blockers are DONE
 
 | Your task | Unblocks | Whose | When they want to start |
 |---|---|---|---|
-| SCAFFOLD-E2E (due 2026-11-22) | SCAFFOLD | P3 | starts 2026-11-23 |
+| SCAFFOLD-E2E (done 2026-11-19) | SCAFFOLD | P3 | done 2026-11-23 |
 | S0-EVENTS (due 2026-11-29) | R10 | P3 | starts 2026-12-07 |
 | DOC-STATE (due 2026-12-13) | DOC-ARCH | P3 | starts 2027-02-01 |
 | R06A (due 2026-12-16) | R08 | P3 | starts 2027-01-04 |
@@ -139,8 +141,8 @@ Ordered by start date. A task may be started only when all its blockers are DONE
 
 | Your task | Blocked by | Whose | Their due date |
 |---|---|---|---|
-| SCAFFOLD-E2E | SETUP | P3 | due 2026-11-17 |
-| SCAFFOLD-E2E (smoke test green) | SCAFFOLD-BE, SCAFFOLD-FE (merged, not a formal blocker) | P3, P1 | due 2026-11-21, 2026-11-22 |
+| SCAFFOLD-E2E | SETUP | P3 | done 2026-11-17 |
+| SCAFFOLD-E2E (smoke test green) | SCAFFOLD-BE, SCAFFOLD-FE (merged, not a formal blocker) | P3 | done 2026-11-18, 2026-11-19 |
 | S0-EVENTS | SETUP | P3 | due 2026-11-17 |
 | DOC-STATE | S0-ASSUMPTIONS | P1 | due 2026-11-29 |
 | DOC-UC01-DRAFT | S0-ASSUMPTIONS | P1 | due 2026-11-29 |
@@ -278,7 +280,7 @@ This is my first session on this computer. Do the following, in order, and stop 
 4. Read, in this order: CLAUDE.md, PROGRESS.md (to know what has been done so far), docs/plan/PLAN.md, docs/guides/P2-matteo-marino.md, docs/reference/requirements.md, docs/decisions/assumptions.md, docs/design/data-model.md, docs/design/module-contracts.md, CONTRIBUTING.md. Then summarise for me in Italian, in at most 15 lines: my scope, my files, my first tasks, my blockers.
 5. Check whether the SCAFFOLD issue is closed (npm run deps -- SCAFFOLD). If it is NOT closed yet, the code does not exist: skip this step, tell me, and remind me to run it again later. If it is closed, prepare the local environment: install Docker Desktop if missing, npm run setup:dev, create the .env files from .env.example (generate a random TOKEN_SECRET), docker compose up -d db, run migrations and seeds on the dev DB, start backend and frontend, open the health page, run the backend tests and the E2E smoke test. Report what works and fix only problems that are inside my ownership or local configuration; for anything else, draft an issue for the owner.
 6. Self-assign all my issues: gh issue list --label owner:P2-matteo --state open, then gh issue edit <n> --add-assignee @me for each.
-7. Run npm run deps -- --mine P2 and show me the result. My first tasks are: SCAFFOLD-E2E first (18–22 Nov, the E2E part of the code scaffold), then S0-EVENTS (lead) and your part of S0-API, then DOC-STATE and DOC-UC01-DRAFT. Propose which READY task to start and why. Do NOT start coding until I confirm.
+7. Run npm run deps -- --mine P2 and show me the result. The code scaffold is done (my SCAFFOLD-E2E is PR #59). My first tasks are: S0-EVENTS (lead) and my part of S0-API, then DOC-STATE and DOC-UC01-DRAFT. Propose which READY task to start and why. Do NOT start coding until I confirm.
 Rules for this and every session: follow CLAUDE.md; prefer what was taught in the lectures and never add a dependency without asking me; only edit files I own; never push to develop or main; never start a task whose blockers are not merged; explain what you do so that I can defend it at the exam.
 ```
 
