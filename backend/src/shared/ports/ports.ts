@@ -1,5 +1,5 @@
 // Port interfaces (Strategy pattern): one module needs a capability, another module provides it.
-// Signatures: docs/design/module-contracts.md (frozen by S0-API / S0-EVENTS).
+// Signatures: docs/design/module-contracts.md (frozen by S0-API / S0-EVENTS (done)).
 
 export interface Viewer {
   id: string;
@@ -9,9 +9,23 @@ export interface Viewer {
 export type AccessSource = 'MANUAL' | 'INVITE';
 export type Availability = 'AVAILABLE' | 'FULL' | 'CLOSED';
 
+/** Notification types (A-15), frozen by S0-EVENTS; payloads in docs/api/realtime-events.md. */
+export type NotificationType =
+  | 'mission.accepted'
+  | 'participation.status.changed'
+  | 'proof.reviewed'
+  | 'invitation.received'
+  | 'invitation.responded'
+  | 'invitation.revoked'
+  | 'waitlist.offered'
+  | 'waitlist.offer.expired'
+  | 'team.invitation.received'
+  | 'team.member.joined'
+  | 'team.member.left';
+
 /** Bound by R06A (P2). */
 export interface NotifierPort {
-  notify(userId: string, type: string, payload: object): Promise<void>;
+  notify(userId: string, type: NotificationType, payload: object): Promise<void>;
 }
 
 /** Bound by R06A (P2). */
@@ -41,6 +55,8 @@ export interface TeamMembershipPort {
   isMember(teamId: string, userId: string): Promise<boolean>;
   isAdmin(teamId: string, userId: string): Promise<boolean>;
   membersOf(teamId: string): Promise<string[]>;
+  /** IDs of the teams the user currently belongs to (A-20 check, dashboard). */
+  teamsOf(userId: string): Promise<string[]>;
 }
 
 export interface Ports {

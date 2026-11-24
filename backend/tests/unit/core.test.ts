@@ -66,11 +66,11 @@ describe('EventBus (Observer)', () => {
   test('delivers to every subscriber in order and supports unsubscribe', async () => {
     const bus = new EventBus();
     const seen: string[] = [];
-    bus.subscribe('team.member.joined', (p) => void seen.push(`a:${String(p.teamId)}`));
-    const off = bus.subscribe('team.member.joined', async (p) => void seen.push(`b:${String(p.teamId)}`));
-    await bus.publish('team.member.joined', { teamId: 't1' });
+    bus.subscribe('team.member.joined', (p) => void seen.push(`a:${p.teamId}`));
+    const off = bus.subscribe('team.member.joined', async (p) => void seen.push(`b:${p.teamId}`));
+    await bus.publish('team.member.joined', { teamId: 't1', userId: 'u1' });
     off();
-    await bus.publish('team.member.joined', { teamId: 't2' });
+    await bus.publish('team.member.joined', { teamId: 't2', userId: 'u1' });
     expect(seen).toEqual(['a:t1', 'b:t1', 'a:t2']);
   });
 
@@ -82,14 +82,14 @@ describe('EventBus (Observer)', () => {
       throw new Error('boom');
     });
     bus.subscribe('mission.published', () => void seen.push('ok'));
-    await expect(bus.publish('mission.published', {})).resolves.toBeUndefined();
+    await expect(bus.publish('mission.published', { missionId: 'm1', authorId: 'u1' })).resolves.toBeUndefined();
     expect(seen).toEqual(['ok']);
     expect(spy).toHaveBeenCalled();
     spy.mockRestore();
   });
 
   test('events without subscribers are fine', async () => {
-    await expect(new EventBus().publish('user.registered', {})).resolves.toBeUndefined();
+    await expect(new EventBus().publish('user.registered', { userId: 'u1' })).resolves.toBeUndefined();
   });
 });
 
@@ -99,13 +99,14 @@ describe('port registry (Strategy + Dependency Injection)', () => {
   test('safe defaults before any binding', async () => {
     expect(await getPort('teamMembership').isMember('t', 'u')).toBe(false);
     expect(await getPort('teamMembership').membersOf('t')).toEqual([]);
+    expect(await getPort('teamMembership').teamsOf('u')).toEqual([]);
     expect(await getPort('participationQuery').availability(['m1', 'm2'])).toEqual({
       m1: 'AVAILABLE',
       m2: 'AVAILABLE',
     });
     expect(await getPort('participationQuery').hasStarted('m1')).toBe(false);
     expect(await getPort('missionAccess').canView(null, 'm1')).toBe(true);
-    await expect(getPort('notifier').notify('u', 'test', {})).resolves.toBeUndefined();
+    await expect(getPort('notifier').notify('u', 'mission.accepted', {})).resolves.toBeUndefined();
     expect(() => getPort('realtime').emitToRoom('r', 'e', {})).not.toThrow();
   });
 
@@ -114,6 +115,7 @@ describe('port registry (Strategy + Dependency Injection)', () => {
       isMember: async () => true,
       isAdmin: async () => true,
       membersOf: async () => ['u'],
+      teamsOf: async () => ['t'],
     };
     bindPort('teamMembership', real);
     expect(getPort('teamMembership')).toBe(real);
