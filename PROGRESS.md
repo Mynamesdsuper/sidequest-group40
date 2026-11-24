@@ -172,6 +172,30 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P3 – Domenico Panaro
 
+### 2026-11-24 19:00 · S0-API · docs(design): lista d'attesa per i team e codici di errore della lista d'attesa
+- **Cosa:** nuovo endpoint `POST /teams/{id}/waitlist-entries` nel modulo `teams` (team admin, involucro della lista d'attesa di `participations`); l'offerta di una voce TEAM la reclama il team admin con `/waitlist-entries/{id}/claim`. Aggiunti i codici 409 proposti da Matteo: `MISSION_NOT_OPEN`, `OWN_MISSION`, `NO_ATTEMPTS_LEFT` sull'ingresso in lista e i controlli ripetuti sotto lock su `/claim`. Fatto di nuovo il merge di `develop` (dopo #73, #74, #75), voci di `PROGRESS.md` in ordine di ora.
+- **Perché:** il data model congelato (W1) prevede voci di lista d'attesa TEAM, ma mancava il percorso REST. Decisione del coordinatore su proposta di Matteo nella review della #61: endpoint in `teams`, come `/teams/{id}/participations`, così i controlli di team restano in R11 e la coda FIFO resta in un solo posto (R09). Aggiunto prima del merge della #61, quindi senza contract-change.
+- **File:** `docs/design/module-contracts.md`, `backend/src/modules/teams/teams.openapi.yaml`.
+- **Come verificare:** tabelle `participations` e `teams` di `module-contracts.md`; il frammento YAML si legge senza errori (16 percorsi); `npx jest tests/unit` in `backend` → 38 test verdi.
+- **Prossimi passi:** nuova approvazione e merge della #61 (DONE di S0-API); contract-change per l'evento `user.suspended` proposto da Vincenzo.
+- **Commit/PR:** #61.
+
+### 2026-11-24 18:55 · S0-DATAMODEL · DONE: data model congelato su `develop`
+- **Cosa:** PR #73 approvata e mergiata alle 16:43 (`81fbdaf`); chiusa la issue #4. Il contract-change #72 (`maxTeamSize` in A-20) è stato applicato da Vincenzo nella #75 (S0-ASSUMPTIONS).
+- **Perché:** con data model, assunzioni (#75) ed eventi (#74) congelati, per chiudere lo Sprint 0 manca solo S0-API (#61).
+- **File:** `docs/design/data-model.md`, `docs/meetings/2026-11-23.md`.
+- **Come verificare:** `npm run deps -- S0-DATAMODEL` → DONE.
+- **Prossimi passi:** nessuno per questo task; ogni modifica ora passa da un contract-change.
+- **Commit/PR:** #73 (`81fbdaf`).
+
+### 2026-11-24 12:20 · S0-API · docs(design): contratti REST e API pubbliche congelati con le decisioni del kickoff
+- **Cosa:** applicate a `module-contracts.md` le 6 decisioni sulle API pubbliche approvate al kickoff del 23/11: opzioni di transazione (`{ transaction, lock }` e hook `onCommit`), accessi concessi solo da `MissionAccessPort` (tolti `missions.grantAccess/revokeAccess`), `users.getSummaries`, `missions.listByAuthor` e `participations.listForUser` per la dashboard, endpoint dei team in `teams` con la 5b (giocano i membri attuali), `Viewer` in `res.locals.viewer`. Superficie REST e API segnate FROZEN. Nuovi codici 409 coerenti con il data model: `TEAM_TOO_LARGE` sull'accettazione di team e `MISSION_TEAM_FULL` / `ALREADY_PARTICIPATING` sull'ingresso in un team con una partecipazione attiva (`maxTeamSize`, A-20); `points` della dashboard = somma del `PointsLedger`. Fatto il merge di `develop` (voci di `PROGRESS.md` in ordine di ora).
+- **Perché:** al kickoff tutte le proposte sono state approvate; congelare i contratti sblocca R02, R06A, R10 e DOC-ARCH-DRAFT. I nuovi codici vengono dalla definizione di `maxTeamSize` decisa su #4 (contract-change #72).
+- **File:** `docs/design/module-contracts.md`, `backend/src/modules/teams/teams.openapi.yaml`.
+- **Come verificare:** leggere la sezione "Public API decisions" di `module-contracts.md`; i frammenti YAML si leggono senza errori; `npx jest tests/unit` in `backend` → 38 test verdi.
+- **Prossimi passi:** review e merge della #61; Vincenzo e Matteo scrivono i frammenti OpenAPI dei loro moduli dalle tabelle entro il 29/11.
+- **Commit/PR:** #61.
+
 ### 2026-11-24 11:45 · S0-DATAMODEL · docs(design): data model congelato e verbale del kickoff
 - **Cosa:** `data-model.md` riscritto con tutte le decisioni del kickoff del 23/11 (8 punti principali e 12 della "parte 2" di #4, più gli altri punti della review accettati così come proposti): convenzioni (nomi delle tabelle, `varchar` + `CHECK`, unicità su `lower()`, `onDelete`, indici per ogni tabella), ER completo con una linea per ogni FK, nuova sezione con le transizioni di stato di Mission, Participation, ObjectiveProgress, WaitlistEntry e degli inviti; documento segnato FROZEN. Compilate le decisioni e gli action item nel verbale `docs/meetings/2026-11-23.md`. Aperto il contract-change #72 su A-20 (significato di `maxTeamSize`).
 - **Perché:** al kickoff tutte le proposte sono state approvate; congelare il data model sblocca R02, R06A, R10 e DOC-ARCH-DRAFT. La tabella delle transizioni serve a DOC-STATE (Matteo): così i diagrammi di stato si disegnano senza dover cambiare il contratto. Il contract-change su A-20 lo applica Vincenzo nella PR di S0-ASSUMPTIONS, per non avere due PR sulla stessa tabella.
@@ -222,7 +246,6 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 - **Prossimi passi:** accordo di Vincenzo e Matteo (file condivisi, contract-change) e merge; il resto al CLEANUP (#48).
 - **Commit/PR:** `49ca239`, PR #70 (contract-change #69).
 
-
 ### 2026-11-23 12:04 · SCAFFOLD · fix(shared): quattro correzioni dopo la revisione dello scaffold
 - **Cosa:** revisione completa dello scaffold su `develop` (backend, frontend, e2e, CI, script) e correzione dei 4 problemi concreti trovati:
   1. **Nomi delle migrazioni** (`shared/db/migrator.ts`): Umzug registrava in `SequelizeMeta` il nome del file *con l'estensione*, quindi `npm run db:migrate` (tsx, `.ts`) e l'immagine Docker (`node dist`, `.js`) vedevano due migrazioni diverse e la stessa migrazione poteva ripartire. Ora il nome è registrato senza estensione (`resolve` di Umzug).
@@ -242,7 +265,6 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 - **Come verificare:** `gh api repos/Mynamesdsuper/sidequest-group40/branches/develop/protection -q .required_status_checks.contexts` → `plan`, `backend`, `frontend`, `e2e` (uguale per `main`); `npm run deps -- SCAFFOLD` → DONE.
 - **Prossimi passi:** SONAR-SETUP (ora READY); le correzioni della revisione (#68) e la prima pulizia (#70) aspettano l'approvazione.
 - **Commit/PR:** #63 (`dacfcbd`).
-
 
 ### 2026-11-21 01:22 · S0-DATAMODEL · docs(meetings): agenda del kickoff dello Sprint 0 (lun 23/11)
 - **Cosa:** scritto `docs/meetings/2026-11-23.md` (45 minuti, 5 punti):
@@ -296,6 +318,33 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 - **Come verificare:** `git log --oneline -1 bbfaefe` su `develop`; `npm run deps -- SCAFFOLD-FE` → DONE.
 - **Prossimi passi:** SCAFFOLD (integrazione).
 - **Commit/PR:** #60 (`bbfaefe`).
+
+### 2026-11-19 01:18 · S0-API · docs(design): superficie REST completa e revisione delle API pubbliche
+- **Cosa:** iniziato S0-API (#5, branch `docs/s0-api-rest-contracts`, issue a `status:in-progress`). In `docs/design/module-contracts.md` la vecchia lista di 19 rotte è sostituita da:
+  - le convenzioni REST del corso (Massé);
+  - una tabella per modulo con metodo, percorso, chi può chiamarlo, risposta e codici di errore principali: 60 operazioni in tutto, per R01–R12;
+  - il catalogo dei codici di errore;
+  - 6 modifiche proposte alle API pubbliche dei moduli.
+
+  Riempiti i frammenti OpenAPI dei miei moduli con i percorsi segnaposto (`x-owner`, `x-requirement`, `x-status: planned`): `teams` 17 operazioni, `invitations` 6.
+- **Perché:** i contratti si congelano prima che R01–R12 inizino, così i tre membri costruiscono su percorsi e codici d'errore concordati e il frontend sa cosa chiamare. Scelte principali:
+  - azioni come risorse controller (`/publish`, `/accept`, `/claim`…);
+  - `/me/...` per i dati dell'utente, così nessun ID utente arriva dal client;
+  - 404 per le risorse non visibili (A-16) e 403 solo su risorse che il chiamante vede;
+  - un `409` porta sempre un codice su cui il client può decidere;
+  - `VERSION_CONFLICT` con lo stato attuale (A-20).
+
+  Revisione delle API pubbliche:
+  1. hook `onCommit` nella transazione di `participations`, così `teams` scrive il `TeamProgressEvent` nella stessa transazione (A-21) senza che `participations` importi `teams`, e lock della riga della missione per A-18;
+  2. un solo modo di concedere l'accesso (`MissionAccessPort`);
+  3. `users.getSummaries`;
+  4. letture per la `dashboard`;
+  5. endpoint di squadra nel modulo `teams`, che avvolgono `participations`;
+  6. il `Viewer` in `res.locals`.
+- **File:** `docs/design/module-contracts.md`, `backend/src/modules/teams/teams.openapi.yaml`, `backend/src/modules/invitations/invitations.openapi.yaml`, `PROGRESS.md`.
+- **Come verificare:** in `backend/`: `npm test` → 49 test verdi (il documento unito si carica e `/api/docs.json` risponde); `npm run lint`. Documento unito controllato con `npx @redocly/cli lint` (24 operazioni con `/health`, nessun errore nei frammenti; resta solo l'avviso già esistente su `/health` senza `security` in `common.yaml`, file condiviso). Swagger UI su http://localhost:3000/api/docs mostra le rotte `Teams` e `Invitations`.
+- **Prossimi passi:** al kickoff (lun 23/11) Vincenzo e Matteo confermano le tabelle e le 6 modifiche; poi ognuno riempie il frammento OpenAPI dei propri moduli copiando la sua tabella, e il documento passa a FROZEN. Domanda aperta per P2: chi partecipa per una squadra (membri al momento dell'accettazione o membri attuali).
+- **Commit/PR:** `750684d`, PR #61 (bozza fino al kickoff).
 
 ### 2026-11-19 00:55 · SCAFFOLD-FE · feat(frontend): scaffold del frontend Angular (fatto da P3 al posto di P1)
 - **Cosa:** creato `frontend/` con Angular 22 (standalone, signals, SCSS, routing, senza SSR, nessuna libreria di componenti UI), solo infrastruttura:
