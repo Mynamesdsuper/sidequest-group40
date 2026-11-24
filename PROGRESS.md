@@ -112,7 +112,31 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P1 – Vincenzo Pio Lubrano
 
+### 2026-11-24 16:54 · S0-ASSUMPTIONS · docs(decisions): assunzioni A-01..A-26 ratificate (ACCEPTED)
+- **Cosa:** tutte le 26 assunzioni passano da PROPOSED ad ACCEPTED. Sei righe sono state aggiornate con le decisioni del kickoff: A-11 (limite di tempo facoltativo anche per le ORDINARY, da 1 minuto a 7 giorni), A-12 (punti solo dal `PointsLedger`), A-15 (niente promemoria "5 minuti"), A-19 (squadra sciolta conservata con `disbandedAt`, nome unico solo tra le squadre attive), A-20 (significato di `maxTeamSize` dalla contract-change #72; giocano i membri attuali), A-26 (limiti di lunghezza nel data model). In testa al file c'è una tabella con le modifiche e le loro fonti.
+- **Perché:** al kickoff del 23/11 (`docs/meetings/2026-11-23.md`) il team ha approvato tutte le proposte. Le assunzioni devono dire la stessa cosa del data model congelato (#73), altrimenti ogni modulo le interpreterebbe a modo suo. Da ora ogni modifica passa da una contract-change.
+- **File:** `docs/decisions/assumptions.md`.
+- **Come verificare:** `grep -c "| ACCEPTED |" docs/decisions/assumptions.md` dà 26; confronta A-11, A-12, A-19 e A-20 con `docs/design/data-model.md` (M1, U1/P4, T1, M3, P2).
+- **Prossimi passi:** review di P2; dopo il merge chiudere #3 e #72. Il coordinatore deve aggiornare "PROPOSED" in `docs/plan/PLAN.md`, che è un suo file. Poi i frammenti OpenAPI di `auth`, `users`, `missions` e R01 (da mer 25/11).
+- **Commit/PR:** 0e71237 · #75
+
 ## P2 – Matteo Marino
+
+### 2026-11-24 16:25 · S0-EVENTS · docs: congelati eventi di dominio, eventi realtime e porte
+- **Cosa:** tipizzati i payload di tutti i 20 eventi di dominio (`domain-events.ts`), riscritto `docs/api/realtime-events.md` (payload, room, ack di `team-progress:join`, protocollo di riconnessione, tipi di notifica con destinatari e payload, porte), aggiunto `TeamMembershipPort.teamsOf(userId)` e il tipo `NotificationType` per `NotifierPort`.
+- **Perché:** R06A, R10 e R12 partono da questo contratto. Payload con soli ID e fatti piccoli, mai contenuti degli obiettivi (A-07); destinatari dei team risolti al momento della consegna con i membri attuali (decisione 5b, #61). Il protocollo ora dice "prima join, poi snapshot": con l'ordine inverso un evento poteva cadere tra lo snapshot e l'ingresso nella room. `teamsOf` serve al controllo A-20 in accettazione e a `participations.listForUser` (decisione 4).
+- **File:** `backend/src/shared/events/domain-events.ts`, `backend/src/shared/ports/{ports,defaults}.ts`, `backend/tests/unit/core.test.ts`, `docs/api/realtime-events.md`, `docs/design/module-contracts.md`.
+- **Come verificare:** `cd backend && npm run typecheck && npm run lint && npx jest tests/unit` (38 test verdi).
+- **Prossimi passi:** approvazione di P1 e P3 sulla PR (contract-change); allineare con la #61, che tocca anche `module-contracts.md`.
+- **Commit/PR:** `2d007ed`, #74.
+
+### 2026-11-24 16:00 · S0-DATAMODEL / S0-API · direttiva #66: commenti su #4 e #61
+- **Cosa:** commentato la #4 (tutti i punti P2 d'accordo e già presenti nel modello congelato, #73) e approvata la #61 con 3 note: lista d'attesa per i team senza endpoint REST, codici d'errore mancanti su waitlist e claim, risposta ANSWER sbagliata = 200 e non errore. Direttiva #66 chiusa.
+- **Perché:** la direttiva chiedeva la revisione dei punti dei miei moduli prima del congelamento di modello dati e API.
+- **File:** nessuno (solo commenti su GitHub).
+- **Come verificare:** commenti su #4, #61 e #66.
+- **Prossimi passi:** risposta del coordinatore sulla lista d'attesa dei team.
+- **Commit/PR:** #4, #61, #66.
 
 ### 2026-11-19 13:56 · SCAFFOLD-E2E · DONE: scaffold e2e mergiato in develop
 - **Cosa:** SCAFFOLD-E2E chiuso. La PR #59 è stata mergiata in `develop` (squash `c233d2d`) dopo la #60 del frontend; la issue #53 è stata chiusa a mano.
@@ -156,6 +180,22 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 - **Prossimi passi:** review e merge della #61; Vincenzo e Matteo scrivono i frammenti OpenAPI dei loro moduli dalle tabelle entro il 29/11.
 - **Commit/PR:** #61.
 
+### 2026-11-24 11:45 · S0-DATAMODEL · docs(design): data model congelato e verbale del kickoff
+- **Cosa:** `data-model.md` riscritto con tutte le decisioni del kickoff del 23/11 (8 punti principali e 12 della "parte 2" di #4, più gli altri punti della review accettati così come proposti): convenzioni (nomi delle tabelle, `varchar` + `CHECK`, unicità su `lower()`, `onDelete`, indici per ogni tabella), ER completo con una linea per ogni FK, nuova sezione con le transizioni di stato di Mission, Participation, ObjectiveProgress, WaitlistEntry e degli inviti; documento segnato FROZEN. Compilate le decisioni e gli action item nel verbale `docs/meetings/2026-11-23.md`. Aperto il contract-change #72 su A-20 (significato di `maxTeamSize`).
+- **Perché:** al kickoff tutte le proposte sono state approvate; congelare il data model sblocca R02, R06A, R10 e DOC-ARCH-DRAFT. La tabella delle transizioni serve a DOC-STATE (Matteo): così i diagrammi di stato si disegnano senza dover cambiare il contratto. Il contract-change su A-20 lo applica Vincenzo nella PR di S0-ASSUMPTIONS, per non avere due PR sulla stessa tabella.
+- **File:** `docs/design/data-model.md`, `docs/meetings/2026-11-23.md`.
+- **Come verificare:** leggere `data-model.md` (l'ER Mermaid si vede nell'anteprima di GitHub) e confrontarlo con i commenti di posizione su #4; `npm run deps -- S0-DATAMODEL`.
+- **Prossimi passi:** review di Vincenzo e merge; poi S0-API (#61) con le stesse decisioni.
+- **Commit/PR:** `063faec`, PR #73.
+
+### 2026-11-23 17:33 · CLEANUP · chore(repo): riscritta la history per togliere i co-autori Claude
+- **Cosa:** tolti i trailer `Co-Authored-By: Claude … <noreply@anthropic.com>` da 9 commit del 17/11 (setup e squash di #47) con `git filter-repo` su un clone mirror; force-push di `develop`, `main`, `history`, del branch della #61 e del tag `history-latest`, con la branch protection allentata per pochi secondi e poi ripristinata (verificata con `gh api`).
+- **Perché:** GitHub mostrava di nuovo Claude tra i contributor, perché conta i co-autori del branch di default; solo riscrivere la history li toglie. Fatto adesso e non a febbraio perché c'era una sola PR aperta e lo Sprint 0 non era iniziato. Il controllo si ripete periodicamente.
+- **File:** nessun file cambiato: identici gli alberi di tutti i branch, stesso numero di commit; cambiano solo gli hash (quelli citati nelle voci precedenti non valgono più sul branch).
+- **Come verificare:** `git log origin/develop origin/main -i --grep='co-authored-by: claude'` non restituisce nulla.
+- **Prossimi passi:** Matteo e Vincenzo riallineano le copie locali con `git fetch origin && git reset --hard origin/develop`.
+- **Commit/PR:** nessuno (operazione sulla history).
+
 ### 2026-11-23 13:20 · SCAFFOLD · docs(plan): piano, Start here e guide personali aggiornati alla fine dello scaffold
 - **Cosa:** tutti i documenti globali e personali raccontano ora lo stato reale dopo lo scaffold:
   - `tasks.json`: SCAFFOLD-FE passa a owner P3 (preso in carico il 19/11); label della issue #52 aggiornata (`owner:P3-domenico`); `npm run deps -- --mine P1/P3` lo mostrano al posto giusto.
@@ -190,7 +230,6 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 - **Prossimi passi:** accordo di Vincenzo e Matteo (file condivisi, contract-change) e merge; il resto al CLEANUP (#48).
 - **Commit/PR:** `49ca239`, PR #70 (contract-change #69).
 
-
 ### 2026-11-23 12:04 · SCAFFOLD · fix(shared): quattro correzioni dopo la revisione dello scaffold
 - **Cosa:** revisione completa dello scaffold su `develop` (backend, frontend, e2e, CI, script) e correzione dei 4 problemi concreti trovati:
   1. **Nomi delle migrazioni** (`shared/db/migrator.ts`): Umzug registrava in `SequelizeMeta` il nome del file *con l'estensione*, quindi `npm run db:migrate` (tsx, `.ts`) e l'immagine Docker (`node dist`, `.js`) vedevano due migrazioni diverse e la stessa migrazione poteva ripartire. Ora il nome è registrato senza estensione (`resolve` di Umzug).
@@ -210,7 +249,6 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 - **Come verificare:** `gh api repos/Mynamesdsuper/sidequest-group40/branches/develop/protection -q .required_status_checks.contexts` → `plan`, `backend`, `frontend`, `e2e` (uguale per `main`); `npm run deps -- SCAFFOLD` → DONE.
 - **Prossimi passi:** SONAR-SETUP (ora READY); le correzioni della revisione (#68) e la prima pulizia (#70) aspettano l'approvazione.
 - **Commit/PR:** #63 (`dacfcbd`).
-
 
 ### 2026-11-21 01:22 · S0-DATAMODEL · docs(meetings): agenda del kickoff dello Sprint 0 (lun 23/11)
 - **Cosa:** scritto `docs/meetings/2026-11-23.md` (45 minuti, 5 punti):

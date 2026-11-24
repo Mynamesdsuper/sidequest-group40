@@ -34,5 +34,6 @@ export const defaultPorts: Ports = {
     isMember: async () => false,
     isAdmin: async () => false,
     membersOf: async () => [],
+    teamsOf: async () => [],
   },
 };

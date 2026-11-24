@@ -12,10 +12,10 @@ Signatures below are a **specification in TypeScript notation inside Markdown**;
 | `RealtimePort` | `emitToUser`, `emitToRoom`, `joinRoom`, `leaveRoom` | no-op | R06A (P2) |
 | `ParticipationQueryPort` | `hasStarted(missionId)`, `availability(missionIds)`, `isUserEngaged(missionId, userId)` | `false`, `AVAILABLE`, `false` | R04/R09 (P2) |
 | `MissionAccessPort` | `canView(viewer \| null, missionId)`, `grant(missionId, userId, source)`, `revoke(missionId, userId, source)` | published and public, or the viewer is author or admin | R07 (P1) |
-| `TeamMembershipPort` | `isMember`, `isAdmin`, `membersOf` | deny | R10 (P3) |
+| `TeamMembershipPort` | `isMember`, `isAdmin`, `membersOf`, `teamsOf` | deny | R10 (P3) |
 
 ```ts
-interface NotifierPort { notify(userId: string, type: string, payload: object): Promise<void>; }
+interface NotifierPort { notify(userId: string, type: NotificationType, payload: object): Promise<void>; } // types: realtime-events.md §4
 interface RealtimePort {
   emitToUser(userId: string, event: string, payload: object): void;
   emitToRoom(room: string, event: string, payload: object): void;
@@ -36,6 +36,7 @@ interface TeamMembershipPort {
   isMember(teamId: string, userId: string): Promise<boolean>;
   isAdmin(teamId: string, userId: string): Promise<boolean>;
   membersOf(teamId: string): Promise<string[]>;
+  teamsOf(userId: string): Promise<string[]>; // S0-EVENTS: A-20 check and participations.listForUser
 }
 ```
 
@@ -85,7 +86,7 @@ Middleware exported for all modules: `requireAuth`, `optionalAuth`, `requireRole
 
 `user.registered`, `mission.published`, `mission.updated`, `mission.closed`, `mission.access.granted`, `mission.access.revoked`, `participation.accepted`, `participation.objective.submitted`, `participation.objective.reviewed`, `participation.status.changed`, `waitlist.offered`, `waitlist.offer.expired`, `invitation.created`, `invitation.responded`, `invitation.revoked`, `team.invitation.created`, `team.invitation.responded`, `team.member.joined`, `team.member.left`, `team.progress.updated`.
 
-Events are published by the owning module and consumed through the typed in-process bus. Each module README lists the events it emits and consumes.
+Events are published by the owning module and consumed through the typed in-process bus, only after the DB commit. Payloads, producers and subscribers are FROZEN in `docs/api/realtime-events.md` §1 (S0-EVENTS). Each module README lists the events it emits and consumes.
 
 ## REST surface (S0-API, FROZEN)
 
