@@ -122,6 +122,22 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P2 – Matteo Marino
 
+### 2026-11-24 16:25 · S0-EVENTS · docs: congelati eventi di dominio, eventi realtime e porte
+- **Cosa:** tipizzati i payload di tutti i 20 eventi di dominio (`domain-events.ts`), riscritto `docs/api/realtime-events.md` (payload, room, ack di `team-progress:join`, protocollo di riconnessione, tipi di notifica con destinatari e payload, porte), aggiunto `TeamMembershipPort.teamsOf(userId)` e il tipo `NotificationType` per `NotifierPort`.
+- **Perché:** R06A, R10 e R12 partono da questo contratto. Payload con soli ID e fatti piccoli, mai contenuti degli obiettivi (A-07); destinatari dei team risolti al momento della consegna con i membri attuali (decisione 5b, #61). Il protocollo ora dice "prima join, poi snapshot": con l'ordine inverso un evento poteva cadere tra lo snapshot e l'ingresso nella room. `teamsOf` serve al controllo A-20 in accettazione e a `participations.listForUser` (decisione 4).
+- **File:** `backend/src/shared/events/domain-events.ts`, `backend/src/shared/ports/{ports,defaults}.ts`, `backend/tests/unit/core.test.ts`, `docs/api/realtime-events.md`, `docs/design/module-contracts.md`.
+- **Come verificare:** `cd backend && npm run typecheck && npm run lint && npx jest tests/unit` (38 test verdi).
+- **Prossimi passi:** approvazione di P1 e P3 sulla PR (contract-change); allineare con la #61, che tocca anche `module-contracts.md`.
+- **Commit/PR:** `2d007ed`, #74.
+
+### 2026-11-24 16:00 · S0-DATAMODEL / S0-API · direttiva #66: commenti su #4 e #61
+- **Cosa:** commentato la #4 (tutti i punti P2 d'accordo e già presenti nel modello congelato, #73) e approvata la #61 con 3 note: lista d'attesa per i team senza endpoint REST, codici d'errore mancanti su waitlist e claim, risposta ANSWER sbagliata = 200 e non errore. Direttiva #66 chiusa.
+- **Perché:** la direttiva chiedeva la revisione dei punti dei miei moduli prima del congelamento di modello dati e API.
+- **File:** nessuno (solo commenti su GitHub).
+- **Come verificare:** commenti su #4, #61 e #66.
+- **Prossimi passi:** risposta del coordinatore sulla lista d'attesa dei team.
+- **Commit/PR:** #4, #61, #66.
+
 ### 2026-11-19 13:56 · SCAFFOLD-E2E · DONE: scaffold e2e mergiato in develop
 - **Cosa:** SCAFFOLD-E2E chiuso. La PR #59 è stata mergiata in `develop` (squash `c233d2d`) dopo la #60 del frontend; la issue #53 è stata chiusa a mano.
 - **Perché:** nel corpo della #59 c'era `Closes #<53>` con le parentesi angolari, quindi GitHub non ha collegato la issue e non l'ha chiusa al merge (il task risultava ancora READY in `npm run deps`). Da ora nei template si scrive `Closes #53`, senza parentesi.
