@@ -258,7 +258,7 @@ erDiagram
 | respondedAt | timestamp | nullable; set on ACCEPTED or DECLINED (I1) |
 
 - Only for RESTRICTED missions; one row per (mission, invitee), reopened as `PENDING` on a new invitation (A-17).
-- **Accept and revoke at the same time** (I1): every transition is a conditional `UPDATE … WHERE id = :id AND status = 'PENDING'` (for revoke: `status IN ('PENDING', 'ACCEPTED')`). The operation that updates no row gets 409 `INVITATION_NOT_PENDING`.
+- **Accept and revoke at the same time** (I1): every transition is a conditional `UPDATE … WHERE id = :id AND status = 'PENDING'` (for revoke: `status IN ('PENDING', 'ACCEPTED')`). The operation that updates no row gets 409: `INVITATION_NOT_PENDING` for accept and decline, `INVITATION_NOT_REVOCABLE` for revoke (codes of S0-API).
 - **Indexes:** `(inviteeId, status)`, `inviterId` (`missionId` is covered by the unique index).
 
 ### Team (`Teams`, module `teams`)
