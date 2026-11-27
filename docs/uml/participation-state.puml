@@ -1,0 +1,16 @@
+' Owner: P2 Matteo Marino · DOC-STATE · draft, to be redrawn in Visual Paradigm.
+
+@startuml mission-state
+' Mission diagram'
+  [*] --> DRAFT : createDraft()
+  DRAFT --> PUBLISHED : publish()[objectives >= 1]/publishedAt = clock.now()
+  DRAFT --> [*] : delete()
+  PUBLISHED --> CLOSED : close(by author | admin)
+  PUBLISHED --> CLOSED : authorSuspended()
+  CLOSED --> ARCHIVED: archive(by author | admin)[noparticipation ACTIVE or SUBMITTED]
+  ARCHIVED --> [*]
+@enduml
+
+@startuml participation-state
+' Participation diagram'
+@enduml

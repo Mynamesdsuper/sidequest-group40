@@ -122,6 +122,14 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P2 – Matteo Marino
 
+### 2026-11-27 19:02 · DOC-STATE · docs(uml): bozza PlantUML del diagramma di stato di Mission
+- **Cosa:** creato `docs/uml/participation-state.puml` con il primo dei due diagrammi, il ciclo di vita di Mission (DRAFT → PUBLISHED → CLOSED → ARCHIVED, più la cancellazione della DRAFT) con eventi, guardie e azioni, e il blocco ancora vuoto per Participation.
+- **Perché:** DOC-STATE chiede i diagrammi di stato di Mission e Participation come bozza PlantUML, da ridisegnare in Visual Paradigm. Le transizioni vengono dalla tabella "State transitions" di `docs/design/data-model.md` e da A-04, A-05 e A-13. Due frecce PUBLISHED → CLOSED separano la chiusura dell'autore o dell'admin da quella per sospensione dell'autore (A-04). Entrambi i diagrammi stanno nello stesso file perché in CODEOWNERS a P2 è assegnato solo `participation-state.puml`.
+- **File:** `docs/uml/participation-state.puml`.
+- **Come verificare:** aprire il file in VS Code con l'estensione PlantUML (jebbs) e premere `Alt+D` con il cursore nel blocco `mission-state`.
+- **Prossimi passi:** diagramma di Participation (tabella in `data-model.md`, A-08…A-11, A-14, A-18, A-20); poi ridisegno in Visual Paradigm e PR verso `develop` con P3 come reviewer.
+- **Commit/PR:** da aggiungere.
+
 ### 2026-11-24 16:25 · S0-EVENTS · docs: congelati eventi di dominio, eventi realtime e porte
 - **Cosa:** tipizzati i payload di tutti i 20 eventi di dominio (`domain-events.ts`), riscritto `docs/api/realtime-events.md` (payload, room, ack di `team-progress:join`, protocollo di riconnessione, tipi di notifica con destinatari e payload, porte), aggiunto `TeamMembershipPort.teamsOf(userId)` e il tipo `NotificationType` per `NotifierPort`.
 - **Perché:** R06A, R10 e R12 partono da questo contratto. Payload con soli ID e fatti piccoli, mai contenuti degli obiettivi (A-07); destinatari dei team risolti al momento della consegna con i membri attuali (decisione 5b, #61). Il protocollo ora dice "prima join, poi snapshot": con l'ordine inverso un evento poteva cadere tra lo snapshot e l'ingresso nella room. `teamsOf` serve al controllo A-20 in accettazione e a `participations.listForUser` (decisione 4).
