@@ -13,4 +13,28 @@
 
 @startuml participation-state
 ' Participation diagram'
+  [*] --> ACTIVE: acceptance()
+  [*] --> ACTIVE: claimWaitlistOffer()
+  ACTIVE --> SUBMITTED: submit()[objectives are all submitted and at least one waiting for review]
+  SUBMITTED --> ACTIVE: proofRejected()[time remains]
+  note on link
+    the rejected objective can be resubmitted (A-10)
+  end note
+  ACTIVE --> COMPLETED: objectiveApproved() [all approved and (INDIVIDUAL or contributors >= minContributors)]
+  SUBMITTED --> COMPLETED: reviewApproved() [all approved and (INDIVIDUAL or contributors >= minContributors)]
+  COMPLETED: entry / endedAt = clock.now()
+  COMPLETED: entry / write PointsLedger (A-12)
+  COMPLETED --> [*]
+  SUBMITTED --> FAILED: proofRejected() [deadline passed, A-11]
+  ACTIVE --> FAILED: wrongAnswer() [wrongAnswers = 5, A-10]
+  FAILED --> [*]
+  FAILED: entry / endedAt = clock.now()
+  ACTIVE --> ABANDONED: withdraw() [confirmed]
+  ABANDONED: counts as an attempt (A-14)
+  ABANDONED: entry / endedAt = clock.now()
+  ABANDONED --> [*]
+  ACTIVE --> EXPIRED: tick() [clock.now() > deadlineAt + 10s and objectives unsubmitted]
+  EXPIRED --> [*]
+  EXPIRED: entry / endedAt = clock.now()
+
 @enduml

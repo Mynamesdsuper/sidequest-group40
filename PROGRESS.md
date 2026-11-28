@@ -122,13 +122,21 @@ Ogni titolo di voce ha data **e ora** (`AAAA-MM-GG HH:MM`): il PDF della storia 
 
 ## P2 – Matteo Marino
 
+### 2026-11-28 13:26 · DOC-STATE · docs(uml): bozza PlantUML del diagramma di stato di Participation
+- **Cosa:** completato il secondo diagramma in `docs/uml/participation-state.puml`, il ciclo di vita di Participation: ingresso in ACTIVE (accettazione o claim di un'offerta della waitlist), SUBMITTED, i quattro stati finali COMPLETED, FAILED, ABANDONED ed EXPIRED, con eventi, guardie e azioni `entry`.
+- **Perché:** è la seconda metà di DOC-STATE. Le frecce sono esattamente quelle della tabella "State transitions" di `docs/design/data-model.md` (A-08…A-14, A-18, A-20): ogni altra transizione è rifiutata con 409. `endedAt` è un'azione di `entry` degli stati finali e COMPLETED scrive il `PointsLedger` nella stessa transazione (A-12). FAILED ha due cause distinte: il rifiuto di una prova dopo la deadline (da SUBMITTED) e la quinta risposta sbagliata (da ACTIVE). EXPIRED scatta con `tick()` (sweeper ogni 30 s o lettura/scrittura) solo dopo `deadlineAt + 10 s` (A-08, A-09). Un nuovo tentativo non è una freccia ma una nuova riga con `attemptNo + 1` (A-13).
+- **File:** `docs/uml/participation-state.puml`.
+- **Come verificare:** `Alt+D` in VS Code con il cursore nel blocco `participation-state`; la sintassi di entrambi i blocchi passa `java -jar plantuml.jar -checkonly`.
+- **Prossimi passi:** ridisegno dei due diagrammi in Visual Paradigm con PNG in `docs/ingsw/img/`, poi PR verso `develop` con P3 come reviewer.
+- **Commit/PR:** da aggiungere.
+
 ### 2026-11-27 19:02 · DOC-STATE · docs(uml): bozza PlantUML del diagramma di stato di Mission
 - **Cosa:** creato `docs/uml/participation-state.puml` con il primo dei due diagrammi, il ciclo di vita di Mission (DRAFT → PUBLISHED → CLOSED → ARCHIVED, più la cancellazione della DRAFT) con eventi, guardie e azioni, e il blocco ancora vuoto per Participation.
 - **Perché:** DOC-STATE chiede i diagrammi di stato di Mission e Participation come bozza PlantUML, da ridisegnare in Visual Paradigm. Le transizioni vengono dalla tabella "State transitions" di `docs/design/data-model.md` e da A-04, A-05 e A-13. Due frecce PUBLISHED → CLOSED separano la chiusura dell'autore o dell'admin da quella per sospensione dell'autore (A-04). Entrambi i diagrammi stanno nello stesso file perché in CODEOWNERS a P2 è assegnato solo `participation-state.puml`.
 - **File:** `docs/uml/participation-state.puml`.
 - **Come verificare:** aprire il file in VS Code con l'estensione PlantUML (jebbs) e premere `Alt+D` con il cursore nel blocco `mission-state`.
 - **Prossimi passi:** diagramma di Participation (tabella in `data-model.md`, A-08…A-11, A-14, A-18, A-20); poi ridisegno in Visual Paradigm e PR verso `develop` con P3 come reviewer.
-- **Commit/PR:** da aggiungere.
+- **Commit/PR:** `c2f6e06`.
 
 ### 2026-11-24 16:25 · S0-EVENTS · docs: congelati eventi di dominio, eventi realtime e porte
 - **Cosa:** tipizzati i payload di tutti i 20 eventi di dominio (`domain-events.ts`), riscritto `docs/api/realtime-events.md` (payload, room, ack di `team-progress:join`, protocollo di riconnessione, tipi di notifica con destinatari e payload, porte), aggiunto `TeamMembershipPort.teamsOf(userId)` e il tipo `NotificationType` per `NotifierPort`.
